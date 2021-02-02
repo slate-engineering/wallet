@@ -4,9 +4,21 @@ import fs from "fs";
 
 import { app, BrowserWindow, protocol, ipcMain } from "electron";
 
+import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
+import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
+import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
+
+import fetch from "fetch";
+
+const apiUrl = "wss://api.chain.love/rpc/v0"
+const provider = new NodejsProvider(apiUrl)
+const client = new LotusRPC(provider, { schema: mainnet.fullNode })
+
 let mainWindow;
 let state = null;
 let dev = false;
+
+
 
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === "development") {
   dev = true;
@@ -84,6 +96,17 @@ app.on("ready", async () => {
     // const result = await ipcRenderer.invoke("add-root");
 
     return "Hello World";
+  });
+
+  ipcMain.handle("get-balance", async (event, address) => {
+    // TODO(why): can cache this in local state so we can present the user nice information even when offline
+    let actor = await client.stateGetActor(address, [])
+
+    console.log("ACTOR CALL: ", actor)
+    return {
+      "balance":   actor.Balance,
+      "timestamp": new Date()
+    }
   });
 
   return createWindow();
