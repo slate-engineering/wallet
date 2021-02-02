@@ -78,6 +78,14 @@ app.on("ready", async () => {
   // TODO(why)
   // This is where you can do NodeJS stuff.
 
+  // NOTE(why)
+  ipcMain.handle("add-root", async (event, destination, root) => {
+    // Whatever this function returns, is what the client gets when it calls
+    // const result = await ipcRenderer.invoke("add-root");
+
+    return "Hello World";
+  });
+
   return createWindow();
 });
 
