@@ -1,5 +1,11 @@
 .scene {
-  height: 100%;
+  height: calc(100vh - 48px);
   min-width: 10%;
   width: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -6,7 +6,7 @@ export default class SceneTransactions extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="scene">Transactions</div>
+        <div className="body">Transactions</div>
       </React.Fragment>
     );
   }

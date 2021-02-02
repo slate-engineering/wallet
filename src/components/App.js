@@ -11,6 +11,7 @@ import { ipcRenderer } from "electron";
 
 import "~/src/scenes/Scene.css";
 import "~/src/components/App.css";
+import "~/src/components/Body.css";
 
 const WALLET_ADDRESS_TYPES = {
   1: "BLS",
@@ -19,9 +20,9 @@ const WALLET_ADDRESS_TYPES = {
 };
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <SVG.BLS height="12px" />,
-  2: <SVG.MULTISIG height="12px" />,
-  3: <SVG.SECP height="12px" />,
+  1: <SVG.BLS height="20px" />,
+  2: <SVG.MULTISIG height="20px" />,
+  3: <SVG.SECP height="20px" />,
 };
 
 const WALLET_SCENE = {
@@ -34,11 +35,12 @@ const WALLET_SCENE = {
 export default class App extends React.Component {
   state = {
     addresses: [
-      { address: "f011111", type: 1, alias: "Dog Scuttle" },
-      { address: "f022222", type: 2, alias: "Cat Monkey" },
-      { address: "f033333", type: 3, alias: "Ivory Turkey" },
+      { address: "f3rhtargx1gxz44", type: 1, alias: "Dog Scuttle" },
+      { address: "f3sxs23xzcv123x", type: 2, alias: "Cat Monkey" },
+      { address: "f0123zxcv34xsdg", type: 2, alias: "Cat Monkey 2" },
+      { address: "f0arz5oxcvkl12d", type: 3, alias: "Ivory Turkey" },
     ],
-    currentScene: "PORTFOLIO",
+    currentScene: "SEND",
   };
 
   getScene = (scene) => {
@@ -72,33 +74,34 @@ export default class App extends React.Component {
     return (
       <React.Fragment>
         <div className="root">
-          <div className="root-top">
-            <span className="navigation-item" onClick={() => this._handleNavigate("PORTFOLIO")}>
-              Portfolio
-            </span>
-            <span className="navigation-item" onClick={() => this._handleNavigate("ADD")}>
-              Add Address
-            </span>
-            <span className="navigation-item" onClick={() => this._handleNavigate("SEND")}>
-              Send Filecoin
-            </span>
-            <span className="navigation-item" onClick={() => this._handleNavigate("TRANSACTIONS")}>
-              Transactions
-            </span>
+          <div className="root-left">
+            <div className="root-left-title">Addresses</div>
+            {this.state.addresses.map((each) => {
+              return (
+                <div className="wallet-item" key={each.address}>
+                  <span className="wallet-item-left">{WALLET_ADDRESS_TYPES_SVG[each.type]}</span>{" "}
+                  <p className="wallet-item-right">{each.address}</p>
+                </div>
+              );
+            })}
           </div>
-          <div className="root-bottom">
-            <div className="root-left">
-              {this.state.addresses.map((each) => {
-                return (
-                  <div className="wallet-item" key={each.address}>
-                    <p>{each.address}</p>
-                    <p>
-                      {WALLET_ADDRESS_TYPES[each.type]} {WALLET_ADDRESS_TYPES_SVG[each.type]}
-                    </p>
-                    <p>{each.alias}</p>
-                  </div>
-                );
-              })}
+          <div className="root-right">
+            <div className="root-top">
+              <span className="navigation-item" onClick={() => this._handleNavigate("PORTFOLIO")}>
+                Portfolio
+              </span>
+              <span className="navigation-item" onClick={() => this._handleNavigate("ADD")}>
+                Add
+              </span>
+              <span className="navigation-item" onClick={() => this._handleNavigate("SEND")}>
+                Send
+              </span>
+              <span
+                className="navigation-item"
+                onClick={() => this._handleNavigate("TRANSACTIONS")}
+              >
+                Transactions
+              </span>
             </div>
             {nextScene}
           </div>
