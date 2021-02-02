@@ -75,6 +75,9 @@ function createWindow() {
 }
 
 app.on("ready", async () => {
+  // TODO(why)
+  // This is where you can do NodeJS stuff.
+
   return createWindow();
 });
 
