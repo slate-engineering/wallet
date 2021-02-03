@@ -10,7 +10,7 @@ import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
 const NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
-const NEW_DEFAULT_ACCOUNTS = { accounts: true };
+const NEW_DEFAULT_ACCOUNTS = { accounts: true, addresses: [] };
 
 let mainWindow;
 let dev = false;
@@ -117,7 +117,9 @@ app.on("ready", async () => {
     const p = path.join(__dirname, ".wallet", "accounts.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldAccountData = JSON.parse(f);
-    const nextState = { ...oldAccountData, ...nextAccountData };
+    console.log(oldAccountData);
+    console.log(nextAccountData);
+    const nextState = JSON.stringify({ ...oldAccountData, ...nextAccountData });
 
     return await fs.promises.writeFile(p, nextState, "utf8");
   });
@@ -133,7 +135,7 @@ app.on("ready", async () => {
     const p = path.join(__dirname, ".wallet", "config.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldConfig = JSON.parse(f);
-    const nextState = { ...oldConfig, ...nextConfig };
+    const nextState = JSON.stringify({ ...oldConfig, ...nextConfig });
 
     return await fs.promises.writeFile(p, nextState, "utf8");
   });
@@ -149,15 +151,16 @@ app.on("ready", async () => {
     const p = path.join(__dirname, ".wallet", "settings.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldSettings = JSON.parse(f);
-    const nextState = { ...oldSettings, ...nextSettings };
+    const nextState = JSON.stringify({ ...oldSettings, ...nextSettings });
 
     return await fs.promises.writeFile(p, nextState, "utf8");
   });
 
   const pathRoot = path.join(__dirname, ".wallet");
 
-  // TODO(jim): Delete this in the future.
-  await fs.promises.rmdir(pathRoot, { recursive: true });
+  // NOTE(jim): Enable this line
+  // if you need to wipe your state.
+  // await fs.promises.rmdir(pathRoot, { recursive: true });
 
   const pathSettings = path.join(__dirname, ".wallet", "settings.json");
   const pathConfig = path.join(__dirname, ".wallet", "config.json");

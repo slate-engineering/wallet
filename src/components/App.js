@@ -7,6 +7,7 @@ import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneAddress from "~/src/scenes/SceneAddress";
+import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
 
 import { ipcRenderer } from "electron";
 
@@ -28,7 +29,8 @@ const WALLET_ADDRESS_TYPES_SVG = {
 
 const WALLET_SCENE = {
   PORTFOLIO: <ScenePortfolio />,
-  ADD: <SceneAddAddress />,
+  ADD_ADDRESS: <SceneAddAddress />,
+  ADD_ADDRESS_PUBLIC: <SceneAddAddressPublic />,
   SEND: <SceneSendFilecoin />,
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
@@ -36,13 +38,8 @@ const WALLET_SCENE = {
 
 export default class App extends React.Component {
   state = {
-    addresses: [
-      { address: "f3rhtargx1gxz44", type: 1 },
-      { address: "f3sxs23xzcv123x", type: 2 },
-      { address: "f0123zxcv34xsdg", type: 2 },
-      { address: "f0arz5oxcvkl12d", type: 3 },
-    ],
-    currentScene: "SEND",
+    accounts: [],
+    currentScene: "ADD_ADDRESS",
     sceneData: null,
   };
 
@@ -53,19 +50,34 @@ export default class App extends React.Component {
       return next;
     }
 
-    return <div className="root-right">B</div>;
+    return <div className="root-right"></div>;
   };
 
   async componentDidMount() {
+    await this.update();
+  }
+
+  update = async () => {
     const accounts = await ipcRenderer.invoke("get-accounts");
     const settings = await ipcRenderer.invoke("get-settings");
     const config = await ipcRenderer.invoke("get-config");
 
-    this.setState({ accounts, settings, config });
-  }
+    this.setState({ accounts: accounts.addresses, settings, config });
+  };
 
   _handleNavigate = (currentScene, sceneData = {}) => {
     this.setState({ currentScene, sceneData });
+  };
+
+  _handleAddPublicAddress = async ({ address }) => {
+    // TODO(jim)
+    // Add address to accounts
+    const addresses = [{ address }, ...this.state.accounts];
+    await ipcRenderer.invoke("write-accounts", { addresses });
+
+    await this.update();
+
+    this._handleNavigate("PORTFOLIO");
   };
 
   render() {
@@ -73,21 +85,27 @@ export default class App extends React.Component {
 
     // NOTE(jim):
     // Pass local props to the scene component.
-    const sceneElement = React.cloneElement(nextScene, { scene: true, ...this.state.sceneData });
+    const sceneElement = React.cloneElement(nextScene, {
+      onNavigate: this._handleNavigate,
+      onAddPublicAddress: this._handleAddPublicAddress,
+      scene: true,
+      ...this.state.sceneData,
+    });
 
     return (
       <React.Fragment>
         <div className="root">
           <div className="root-left">
             <div className="root-left-title">Addresses</div>
-            {this.state.addresses.map((each) => {
+            {this.state.accounts.map((each) => {
+              const icon = WALLET_ADDRESS_TYPES_SVG[each.type];
               return (
                 <div
                   className="wallet-item"
                   key={each.address}
                   onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
                 >
-                  <span className="wallet-item-left">{WALLET_ADDRESS_TYPES_SVG[each.type]}</span>{" "}
+                  {icon ? <span className="wallet-item-left">{icon}</span> : null}{" "}
                   <p className="wallet-item-right">{each.address}</p>
                 </div>
               );
@@ -98,7 +116,7 @@ export default class App extends React.Component {
               <span className="navigation-item" onClick={() => this._handleNavigate("PORTFOLIO")}>
                 Portfolio
               </span>
-              <span className="navigation-item" onClick={() => this._handleNavigate("ADD")}>
+              <span className="navigation-item" onClick={() => this._handleNavigate("ADD_ADDRESS")}>
                 Add
               </span>
               <span className="navigation-item" onClick={() => this._handleNavigate("SEND")}>

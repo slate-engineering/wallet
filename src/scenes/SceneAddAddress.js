@@ -10,10 +10,18 @@ export default class SceneAddAddress extends React.Component {
       <React.Fragment>
         <div className="scene">
           <div className="body">
-            <Input
-              title="Add Filecoin Wallet Address"
-              description="X-ray powder diffraction, also known as xrd, is a rapid analytical technique primarily used for phase identification of a crystalline material and can provide information on unit cell dimensions."
-            ></Input>
+            <h1 className="body-heading">Add Filecoin address</h1>
+            <p className="body-paragraph" style={{ marginBottom: 48 }}>
+              Add an address to your Filecoin Wallet
+            </p>
+
+            <div className="body-card" onClick={() => this.props.onNavigate("ADD_ADDRESS_PUBLIC")}>
+              <h2 className="body-heading-two">Add a public address</h2>
+              <p className="body-paragraph">
+                Add a public address on the Filecoin Network. If it is yours you will be able to
+                send and receive Filecoin from the address.
+              </p>
+            </div>
           </div>
         </div>
       </React.Fragment>

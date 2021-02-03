@@ -7,22 +7,22 @@ import Input from "~/src/components/Input";
 import { ipcRenderer } from "electron";
 
 export default class ScenePortfolio extends React.Component {
-  state = {
-    address: "f099",
-    balance: "0"
-  }
-
   async componentDidMount() {
     const resp = await ipcRenderer.invoke("get-balance", this.state.address);
-    this.setState({ balance: resp.balance }) // NOTE: balance here is in attofil, needs to be divided by 10^18 for display
+    // TODO(jim):
+    // Render all account balances here.
   }
 
   render() {
     return (
       <React.Fragment>
         <div className="scene">
-          <div className="body">Portfolio</div>
-          <div>{this.state.balance}</div>
+          <div className="body">
+            <h1 className="body-heading">Portfolio</h1>
+            <p className="body-paragraph" style={{ marginBottom: 48 }}>
+              All of your account information is shown here. (WIP)
+            </p>
+          </div>
         </div>
       </React.Fragment>
     );

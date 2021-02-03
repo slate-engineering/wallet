@@ -15,9 +15,14 @@
   font-weight: 600;
 }
 
+.body-heading-two {
+  font-size: 14px;
+  font-weight: 600px;
+}
+
 .body-paragraph {
   font-size: 14px;
-  line-height: 18px;
+  line-height: 20px;
   margin-top: 8px;
 }
 
@@ -26,4 +31,13 @@
   line-height: 16px;
   margin-top: 8px;
   max-width: 488px;
+}
+
+.body-card {
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #ececec;
+  margin-top: 16px;
+  max-width: 388px;
+  cursor: pointer;
 }

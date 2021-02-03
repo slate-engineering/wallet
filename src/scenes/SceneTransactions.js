@@ -6,7 +6,12 @@ export default class SceneTransactions extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="body">Transactions</div>
+        <div className="body">
+          <h1 className="body-heading">Transactions</h1>
+          <p className="body-paragraph" style={{ marginBottom: 48 }}>
+            A list of all of your transactions.
+          </p>
+        </div>
       </React.Fragment>
     );
   }

@@ -30,6 +30,8 @@ footer, header, hgroup, menu, nav, section {
 
 html, body {
   width: 100%;
+  background-color: #FFFFFF;
+  color: #000000;
   font-family: -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
   scrollbar-width: none;
   -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -112,11 +114,11 @@ html, body {
 .wallet-item-left {
   padding-top: 4px;
   flex-shrink: 0;
+  padding-right: 10px;
 }
 
 .wallet-item-right {
   font-size: 14px;
-  padding-left: 10px;
   padding-right: 24px;
   min-width: 10%;
   width: 100%;

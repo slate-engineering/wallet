@@ -11,7 +11,7 @@ export default class SceneAddress extends React.Component {
         <div className="scene">
           <div className="body">
             <h1 className="body-heading">{this.props.address}</h1>
-            <p className="body-paragraph">Test</p>
+            <p className="body-paragraph">WIP</p>
           </div>
         </div>
       </React.Fragment>
