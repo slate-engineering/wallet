@@ -106,6 +106,10 @@ app.on("ready", async () => {
     };
   });
 
+  ipcMain.handle("get-state", async (event) => {
+    return {};
+  });
+
   ipcMain.handle("get-config", async (event, data) => {
     const p = path.join(__dirname, ".wallet", "config.json");
     const f = await fs.promises.readFile(p, "utf8");
