@@ -8,6 +8,8 @@ import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
+import signing from "@zondax/filecoin-signing-tools";
+//import TransportNodeHid from "@ledgerhq/hw-transport-node-hid"; // i need this but it breaks things
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
 const NEW_DEFAULT_CONFIG = {
@@ -116,12 +118,39 @@ app.on("ready", async () => {
     return resp.json();
   });
 
-  ipcMain.handle("get-message", asycn (event, mcid) => {
+  ipcMain.handle("get-message", async (event, mcid) => {
     return await client.chainGetMessage(mcid)
   });
 
   ipcMain.handle("sign-message", async (event, message) => {
+    try {
+    let sender = message.from
+    if (sender.startsWith("f0")) {
+      // ID form address used, lets normalize to pubkey form to make checking things easier
+      sender = await client.stateAccountKey(sender, [])
+    }
 
+    if (/* message.from is ledger address */ true) {
+
+      let pathForSender = "asdasdasd"
+      const transport = await TransportNodeHid.create() // TODO: maybe this should be a global?
+
+      const signature = signing.transactionSignRawWithDevice( message, pathForSender, transport)
+
+      return signedMessage = {
+        message: message,
+        signature: signature,
+      }
+
+      return { result: signedMessage }
+      
+    }
+
+    return { error: "unable to sign with address" }
+
+    } catch (e) {
+      return { error: e }
+    }
   });
 
   ipcMain.handle("estimate-gas", async (event, message) => {
