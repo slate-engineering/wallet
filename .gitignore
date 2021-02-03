@@ -11,6 +11,7 @@ dist/
 node_modules/
 node_modules/**/*
 *.compiled.*
+package-lock.json
 
 # Folder config file #
 ######################

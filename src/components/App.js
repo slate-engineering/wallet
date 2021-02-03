@@ -19,7 +19,7 @@ import "~/src/components/Body.css";
 const WALLET_ADDRESS_TYPES = {
   1: "BLS",
   2: "Multi Signature",
-  3: "SECP-256K",
+  3: "SECP-256K1",
 };
 
 const WALLET_ADDRESS_TYPES_SVG = {
