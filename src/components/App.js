@@ -6,6 +6,7 @@ import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
+import SceneAddress from "~/src/scenes/SceneAddress";
 
 import { ipcRenderer } from "electron";
 
@@ -30,17 +31,19 @@ const WALLET_SCENE = {
   ADD: <SceneAddAddress />,
   SEND: <SceneSendFilecoin />,
   TRANSACTIONS: <SceneTransactions />,
+  ADDRESS: <SceneAddress />,
 };
 
 export default class App extends React.Component {
   state = {
     addresses: [
-      { address: "f3rhtargx1gxz44", type: 1, alias: "Dog Scuttle" },
-      { address: "f3sxs23xzcv123x", type: 2, alias: "Cat Monkey" },
-      { address: "f0123zxcv34xsdg", type: 2, alias: "Cat Monkey 2" },
-      { address: "f0arz5oxcvkl12d", type: 3, alias: "Ivory Turkey" },
+      { address: "f3rhtargx1gxz44", type: 1 },
+      { address: "f3sxs23xzcv123x", type: 2 },
+      { address: "f0123zxcv34xsdg", type: 2 },
+      { address: "f0arz5oxcvkl12d", type: 3 },
     ],
     currentScene: "SEND",
+    sceneData: null,
   };
 
   getScene = (scene) => {
@@ -58,11 +61,11 @@ export default class App extends React.Component {
     const settings = await ipcRenderer.invoke("get-settings");
     const config = await ipcRenderer.invoke("get-config");
 
-    console.log({ settings, config, accounts });
+    this.setState({ accounts, settings, config });
   }
 
-  _handleNavigate = (currentScene) => {
-    this.setState({ currentScene });
+  _handleNavigate = (currentScene, sceneData = {}) => {
+    this.setState({ currentScene, sceneData });
   };
 
   render() {
@@ -70,7 +73,7 @@ export default class App extends React.Component {
 
     // NOTE(jim):
     // Pass local props to the scene component.
-    const sceneElement = React.cloneElement(nextScene, { scene: true });
+    const sceneElement = React.cloneElement(nextScene, { scene: true, ...this.state.sceneData });
 
     return (
       <React.Fragment>
@@ -79,7 +82,11 @@ export default class App extends React.Component {
             <div className="root-left-title">Addresses</div>
             {this.state.addresses.map((each) => {
               return (
-                <div className="wallet-item" key={each.address} onClick={() => {}}>
+                <div
+                  className="wallet-item"
+                  key={each.address}
+                  onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
+                >
                   <span className="wallet-item-left">{WALLET_ADDRESS_TYPES_SVG[each.type]}</span>{" "}
                   <p className="wallet-item-right">{each.address}</p>
                 </div>
