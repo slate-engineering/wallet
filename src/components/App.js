@@ -82,6 +82,17 @@ export default class App extends React.Component {
     this._handleNavigate("PORTFOLIO");
   };
 
+  _handleDeleteAddress = async ({ address }) => {
+    // TODO(jim)
+    // Add address to accounts
+    const addresses = [...this.state.accounts].filter((each) => each.address !== address);
+    await ipcRenderer.invoke("write-accounts", { addresses });
+
+    await this.update();
+
+    this._handleNavigate("PORTFOLIO");
+  };
+
   render() {
     const nextScene = this.getScene(this.state.currentScene);
 
@@ -90,6 +101,7 @@ export default class App extends React.Component {
     const sceneElement = React.cloneElement(nextScene, {
       onNavigate: this._handleNavigate,
       onAddPublicAddress: this._handleAddPublicAddress,
+      onDeleteAddress: this._handleDeleteAddress,
       scene: true,
       ...this.state.sceneData,
     });

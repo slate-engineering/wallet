@@ -21,7 +21,7 @@ export default class SceneAddress extends React.Component {
             </p>
 
             <div style={{ marginTop: 24 }}>
-              <Button onClick={() => this.props.onDeleteAddress({ address: this.state.address })}>
+              <Button onClick={() => this.props.onDeleteAddress({ address: this.props.address })}>
                 Delete
               </Button>
             </div>
