@@ -54,18 +54,11 @@ export default class App extends React.Component {
   };
 
   async componentDidMount() {
-    const result = await ipcRenderer.invoke("get-state");
+    const accounts = await ipcRenderer.invoke("get-accounts");
     const settings = await ipcRenderer.invoke("get-settings");
     const config = await ipcRenderer.invoke("get-config");
 
-    console.log({ settings, config });
-
-    if (!result) {
-      console.warn("NO STATE");
-      return;
-    }
-
-    this.setState(result);
+    console.log({ settings, config, accounts });
   }
 
   _handleNavigate = (currentScene) => {

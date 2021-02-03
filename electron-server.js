@@ -1,18 +1,18 @@
 import path from "path";
 import url from "url";
 import fs from "fs";
+import fetch from "fetch";
 
 import { app, BrowserWindow, protocol, ipcMain } from "electron";
-
 import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 
-import fetch from "fetch";
+const NEW_DEFAULT_SETTINGS = { settings: true };
+const NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
+const NEW_DEFAULT_ACCOUNTS = { accounts: true };
 
 let mainWindow;
-let NEW_DEFAULT_SETTINGS = { settings: true };
-let NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
 let dev = false;
 let provider = null;
 let client = null;
@@ -106,8 +106,20 @@ app.on("ready", async () => {
     };
   });
 
-  ipcMain.handle("get-state", async (event) => {
-    return {};
+  ipcMain.handle("get-accounts", async (event) => {
+    const p = path.join(__dirname, ".wallet", "accounts.json");
+    const f = await fs.promises.readFile(p, "utf8");
+
+    return JSON.parse(f);
+  });
+
+  ipcMain.handle("write-accounts", async (event, nextAccountData) => {
+    const p = path.join(__dirname, ".wallet", "accounts.json");
+    const f = await fs.promises.readFile(p, "utf8");
+    const oldAccountData = JSON.parse(f);
+    const nextState = { ...oldAccountData, ...nextAccountData };
+
+    return await fs.promises.writeFile(p, nextState, "utf8");
   });
 
   ipcMain.handle("get-config", async (event, data) => {
@@ -149,6 +161,7 @@ app.on("ready", async () => {
 
   const pathSettings = path.join(__dirname, ".wallet", "settings.json");
   const pathConfig = path.join(__dirname, ".wallet", "config.json");
+  const pathAccounts = path.join(__dirname, ".wallet", "accounts.json");
 
   const maybeRootExists = await fs.existsSync(pathRoot);
   if (!maybeRootExists) {
@@ -165,6 +178,13 @@ app.on("ready", async () => {
   const maybeConfigExists = await fs.existsSync(pathConfig);
   if (!maybeConfigExists) {
     await fs.promises.writeFile(pathConfig, JSON.stringify(NEW_DEFAULT_CONFIG), {
+      encoding: "utf8",
+    });
+  }
+
+  const maybeAccountsExist = await fs.existsSync(pathAccounts);
+  if (!maybeAccountsExist) {
+    await fs.promises.writeFile(pathAccounts, JSON.stringify(NEW_DEFAULT_ACCOUNTS), {
       encoding: "utf8",
     });
   }
