@@ -11,11 +11,11 @@ import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import fetch from "fetch";
 
 let mainWindow;
-let settings = { settings: true };
-let config = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
+let NEW_DEFAULT_SETTINGS = { settings: true };
+let NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
 let dev = false;
-const provider = new NodejsProvider(config.API_URL);
-const client = new LotusRPC(provider, { schema: mainnet.fullNode });
+let provider = null;
+let client = null;
 
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === "development") {
   dev = true;
@@ -106,10 +106,41 @@ app.on("ready", async () => {
     };
   });
 
+  ipcMain.handle("get-config", async (event, data) => {
+    const p = path.join(__dirname, ".wallet", "config.json");
+    const f = await fs.promises.readFile(p, "utf8");
+
+    return JSON.parse(f);
+  });
+
+  ipcMain.handle("write-config", async (event, data) => {
+    const p = path.join(__dirname, ".wallet", "config.json");
+    const f = await fs.promises.readFile(p, "utf8");
+    const c = JSON.parse(c);
+    const next = { ...c, ...data };
+
+    return await fs.promises.writeFile(p, next, "utf8");
+  });
+
+  ipcMain.handle("get-settings", async (event, data) => {
+    const p = path.join(__dirname, ".wallet", "settings.json");
+    const f = await fs.promises.readFile(p, "utf8");
+
+    return JSON.parse(f);
+  });
+
+  ipcMain.handle("write-settings", async (event, data) => {
+    const p = path.join(__dirname, ".wallet", "settings.json");
+    const f = await fs.promises.readFile(p, "utf8");
+    const c = JSON.parse(c);
+    const next = { ...c, ...data };
+
+    return await fs.promises.writeFile(p, next, "utf8");
+  });
+
   const pathRoot = path.join(__dirname, ".wallet");
 
-  // TODO(jim): Delete this. We're only doing this to guarantee fresh
-  // config.
+  // TODO(jim): Delete this in the future.
   await fs.promises.rmdir(pathRoot, { recursive: true });
 
   const pathSettings = path.join(__dirname, ".wallet", "settings.json");
@@ -122,13 +153,26 @@ app.on("ready", async () => {
 
   const maybeSettingsExists = await fs.existsSync(pathSettings);
   if (!maybeSettingsExists) {
-    await fs.promises.writeFile(pathSettings, JSON.stringify(settings), { encoding: "utf8" });
+    await fs.promises.writeFile(pathSettings, JSON.stringify(NEW_DEFAULT_SETTINGS), {
+      encoding: "utf8",
+    });
   }
 
   const maybeConfigExists = await fs.existsSync(pathConfig);
   if (!maybeConfigExists) {
-    await fs.promises.writeFile(pathConfig, JSON.stringify(config), { encoding: "utf8" });
+    await fs.promises.writeFile(pathConfig, JSON.stringify(NEW_DEFAULT_CONFIG), {
+      encoding: "utf8",
+    });
   }
+
+  const configJSON = await fs.promises.readFile(pathConfig, "utf8");
+  const config = JSON.parse(configJSON);
+
+  const settingsJSON = await fs.promises.readFile(pathSettings, "utf8");
+  const settings = JSON.parse(settingsJSON);
+
+  provider = new NodejsProvider(config.API_URL);
+  client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
   return createWindow();
 });
