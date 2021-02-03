@@ -117,13 +117,13 @@ app.on("ready", async () => {
     return JSON.parse(f);
   });
 
-  ipcMain.handle("write-config", async (event, data) => {
+  ipcMain.handle("write-config", async (event, nextConfig) => {
     const p = path.join(__dirname, ".wallet", "config.json");
     const f = await fs.promises.readFile(p, "utf8");
-    const c = JSON.parse(c);
-    const next = { ...c, ...data };
+    const oldConfig = JSON.parse(f);
+    const nextState = { ...oldConfig, ...nextConfig };
 
-    return await fs.promises.writeFile(p, next, "utf8");
+    return await fs.promises.writeFile(p, nextState, "utf8");
   });
 
   ipcMain.handle("get-settings", async (event, data) => {
@@ -133,13 +133,13 @@ app.on("ready", async () => {
     return JSON.parse(f);
   });
 
-  ipcMain.handle("write-settings", async (event, data) => {
+  ipcMain.handle("write-settings", async (event, nextSettings) => {
     const p = path.join(__dirname, ".wallet", "settings.json");
     const f = await fs.promises.readFile(p, "utf8");
-    const c = JSON.parse(c);
-    const next = { ...c, ...data };
+    const oldSettings = JSON.parse(f);
+    const nextState = { ...oldSettings, ...nextSettings };
 
-    return await fs.promises.writeFile(p, next, "utf8");
+    return await fs.promises.writeFile(p, nextState, "utf8");
   });
 
   const pathRoot = path.join(__dirname, ".wallet");
