@@ -1,3 +1,16 @@
+import { FilecoinNumber, Converter } from "@glif/filecoin-number";
+
+export function formatAsFilecoinConversion(number) {
+  const filecoinNumber = new FilecoinNumber(`${number}`, "attofil");
+  //const inAttoFil = filecoinNumber.toAttoFil();
+  const inFil = filecoinNumber.toFil();
+  return `${formatAsFilecoin(inFil)}`;
+}
+
+export function formatAsFilecoin(number) {
+  return `${number} FIL`;
+}
+
 export function noop() {}
 
 export function isEmpty(string) {
@@ -54,4 +67,9 @@ export function classNames() {
   }
 
   return classes.join(" ");
+}
+
+export function toDate(data) {
+  const date = new Date(data);
+  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
 }

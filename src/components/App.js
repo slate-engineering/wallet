@@ -102,8 +102,9 @@ export default class App extends React.Component {
       onNavigate: this._handleNavigate,
       onAddPublicAddress: this._handleAddPublicAddress,
       onDeleteAddress: this._handleDeleteAddress,
+      onUpdate: this.update,
       scene: true,
-      ...this.state.sceneData,
+      ...this.state,
     });
 
     return (
@@ -117,7 +118,7 @@ export default class App extends React.Component {
                 <div
                   className="wallet-item"
                   key={each.address}
-                  onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
+                  onClick={() => this._handleNavigate("ADDRESS", { ...each })}
                 >
                   {icon ? <span className="wallet-item-left">{icon}</span> : null}{" "}
                   <p className="wallet-item-right">{each.address}</p>
