@@ -22,6 +22,17 @@ export default class SceneAddAddress extends React.Component {
                 send and receive Filecoin from the address.
               </p>
             </div>
+
+            <div
+              style={{ marginTop: 24 }}
+              className="body-card"
+              onClick={() => this.props.onNavigate("ADD_ADDRESS_LEDGER")}
+            >
+              <h2 className="body-heading-two">Add a Ledger address</h2>
+              <p className="body-paragraph">
+                If you have a ledger device you can add your address here.
+              </p>
+            </div>
           </div>
         </div>
       </React.Fragment>

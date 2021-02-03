@@ -1,6 +1,6 @@
 .description-label {
   box-sizing: border-box;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   padding: 0;
   margin-bottom: 8px;
@@ -13,8 +13,8 @@
 .description-body {
   box-sizing: border-box;
   font-size: 14px;
+  line-height: 20px;
   margin-bottom: 12px;
-  line-height: 1.5;
   display: block;
   width: 100%;
   white-space: pre-wrap;

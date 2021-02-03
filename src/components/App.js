@@ -8,6 +8,7 @@ import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneAddress from "~/src/scenes/SceneAddress";
 import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
+import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
 
 import { ipcRenderer } from "electron";
 
@@ -31,6 +32,7 @@ const WALLET_SCENE = {
   PORTFOLIO: <ScenePortfolio />,
   ADD_ADDRESS: <SceneAddAddress />,
   ADD_ADDRESS_PUBLIC: <SceneAddAddressPublic />,
+  ADD_ADDRESS_LEDGER: <SceneAddAddressLedger />,
   SEND: <SceneSendFilecoin />,
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
