@@ -7,6 +7,7 @@ import { app, BrowserWindow, protocol, ipcMain } from "electron";
 import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
+import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
 const NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
@@ -200,6 +201,12 @@ app.on("ready", async () => {
 
   provider = new NodejsProvider(config.API_URL);
   client = new LotusRPC(provider, { schema: mainnet.fullNode });
+
+  const filecoinNumber = new FilecoinNumber("10000", "attoFil");
+
+  console.log(`Testing Values: ${filecoinNumber.toPicoFil()} PICO FIL`);
+  console.log(`Testing Values: ${filecoinNumber.toAttoFil()} ATTO FIL`);
+  console.log(`Testing Values: ${filecoinNumber.toFil()} FIL`);
 
   return createWindow();
 });
