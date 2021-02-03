@@ -82,7 +82,7 @@ export default class App extends React.Component {
             <div className="root-left-title">Addresses</div>
             {this.state.addresses.map((each) => {
               return (
-                <div className="wallet-item" key={each.address}>
+                <div className="wallet-item" key={each.address} onClick={() => {}}>
                   <span className="wallet-item-left">{WALLET_ADDRESS_TYPES_SVG[each.type]}</span>{" "}
                   <p className="wallet-item-right">{each.address}</p>
                 </div>
@@ -107,7 +107,7 @@ export default class App extends React.Component {
                 Transactions
               </span>
             </div>
-            {nextScene}
+            {sceneElement}
           </div>
         </div>
       </React.Fragment>

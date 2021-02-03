@@ -10,15 +10,12 @@ import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 
 import fetch from "fetch";
 
-const apiUrl = "wss://api.chain.love/rpc/v0"
-const provider = new NodejsProvider(apiUrl)
-const client = new LotusRPC(provider, { schema: mainnet.fullNode })
-
 let mainWindow;
-let state = null;
+let settings = { settings: true };
+let config = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
 let dev = false;
-
-
+const provider = new NodejsProvider(config.API_URL);
+const client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === "development") {
   dev = true;
@@ -100,14 +97,38 @@ app.on("ready", async () => {
 
   ipcMain.handle("get-balance", async (event, address) => {
     // TODO(why): can cache this in local state so we can present the user nice information even when offline
-    let actor = await client.stateGetActor(address, [])
+    let actor = await client.stateGetActor(address, []);
 
-    console.log("ACTOR CALL: ", actor)
+    console.log("ACTOR CALL: ", actor);
     return {
-      "balance":   actor.Balance,
-      "timestamp": new Date()
-    }
+      balance: actor.Balance,
+      timestamp: new Date(),
+    };
   });
+
+  const pathRoot = path.join(__dirname, ".wallet");
+
+  // TODO(jim): Delete this. We're only doing this to guarantee fresh
+  // config.
+  await fs.promises.rmdir(pathRoot, { recursive: true });
+
+  const pathSettings = path.join(__dirname, ".wallet", "settings.json");
+  const pathConfig = path.join(__dirname, ".wallet", "config.json");
+
+  const maybeRootExists = await fs.existsSync(pathRoot);
+  if (!maybeRootExists) {
+    await fs.promises.mkdir(pathRoot);
+  }
+
+  const maybeSettingsExists = await fs.existsSync(pathSettings);
+  if (!maybeSettingsExists) {
+    await fs.promises.writeFile(pathSettings, JSON.stringify(settings), { encoding: "utf8" });
+  }
+
+  const maybeConfigExists = await fs.existsSync(pathConfig);
+  if (!maybeConfigExists) {
+    await fs.promises.writeFile(pathConfig, JSON.stringify(config), { encoding: "utf8" });
+  }
 
   return createWindow();
 });

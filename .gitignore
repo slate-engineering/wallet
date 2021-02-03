@@ -6,6 +6,8 @@ builds/
 #################################
 .tmp/
 dist/
+.wallet
+.wallet/**/*
 node_modules/
 node_modules/**/*
 *.compiled.*
