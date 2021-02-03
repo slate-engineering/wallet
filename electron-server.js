@@ -10,7 +10,11 @@ import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
-const NEW_DEFAULT_CONFIG = { config: true, API_URL: "wss://api.chain.love/rpc/v0" };
+const NEW_DEFAULT_CONFIG = {
+  config: true,
+  API_URL: "wss://api.chain.love/rpc/v0",
+  INDEX_URL: "https://api.chain.love/wallet"
+};
 const NEW_DEFAULT_ACCOUNTS = { accounts: true, addresses: [] };
 
 let mainWindow;
@@ -100,11 +104,30 @@ app.on("ready", async () => {
     // TODO(why): can cache this in local state so we can present the user nice information even when offline
     let actor = await client.stateGetActor(address, []);
 
-    console.log("ACTOR CALL: ", actor);
     return {
       balance: actor.Balance,
       timestamp: new Date(),
     };
+  });
+
+  ipcMain.handle("get-transactions", async (event, address) => {
+    const resp = await fetch(indexUrl + "/index/msgs/for/" + address);
+
+    return resp.json();
+  });
+
+  ipcMain.handle("get-message", asycn (event, mcid) => {
+    return await client.chainGetMessage(mcid)
+  });
+
+  ipcMain.handle("sign-message", async (event, message) => {
+
+  });
+
+  ipcMain.handle("estimate-gas", async (event, message) => {
+    let estim = await client.gasEstimateMessageGas(message, {}, [])
+
+    return estim.json();
   });
 
   ipcMain.handle("get-accounts", async (event) => {
