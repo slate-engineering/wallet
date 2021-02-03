@@ -7,12 +7,6 @@ import Input from "~/src/components/Input";
 import { ipcRenderer } from "electron";
 
 export default class ScenePortfolio extends React.Component {
-  async componentDidMount() {
-    // const resp = await ipcRenderer.invoke("get-balance", this.state.address);
-    // TODO(jim):
-    // Render all account balances here.
-  }
-
   render() {
     return (
       <React.Fragment>

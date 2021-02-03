@@ -8,14 +8,14 @@ import Button from "~/src/components/Button";
 import { ipcRenderer } from "electron";
 
 export default class SceneAddress extends React.Component {
-  async componentDidMount() {
+  update = async () => {
     const response = await ipcRenderer.invoke("get-balance", this.props.sceneData.address);
 
-    console.log(response);
+    console.log("received balance", response);
 
     const entity = { address: this.props.sceneData.address, ...response };
 
-    console.log(entity);
+    console.log("new entity", entity);
 
     if (!entity.balance) {
       console.warn("We did not perform an update.");
@@ -30,10 +30,23 @@ export default class SceneAddress extends React.Component {
       return a;
     });
 
-    await ipcRenderer.invoke("write-accounts", { addresses });
-    console.log(response);
+    console.log("updated addresses", addresses);
 
+    await ipcRenderer.invoke("write-accounts", { addresses });
     await this.props.onUpdate();
+
+    console.log("should update");
+    this.props.onNavigate("ADDRESS", entity);
+  };
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.sceneData.balance !== prevProps.sceneData.balance) {
+      await this.update();
+    }
+  }
+
+  async componentDidMount() {
+    await this.update();
   }
 
   render() {

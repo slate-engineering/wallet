@@ -68,7 +68,7 @@ export default class App extends React.Component {
   };
 
   _handleNavigate = (currentScene, sceneData = {}) => {
-    this.setState({ currentScene, sceneData });
+    this.setState({ currentScene, sceneData: { ...sceneData, updated: new Date().getTime() } });
   };
 
   _handleAddPublicAddress = async ({ address }) => {
