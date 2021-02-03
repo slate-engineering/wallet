@@ -9,7 +9,8 @@ import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs"
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 import signing from "@zondax/filecoin-signing-tools";
-//import TransportNodeHid from "@ledgerhq/hw-transport-node-hid"; // i need this but it breaks things
+import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
+import  FilecoinApp  from "@zondax/ledger-filecoin";
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
 const NEW_DEFAULT_CONFIG = {
@@ -23,6 +24,7 @@ let mainWindow;
 let dev = false;
 let provider = null;
 let client = null;
+let transport = null;
 
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === "development") {
   dev = true;
@@ -158,6 +160,51 @@ app.on("ready", async () => {
 
     return estim.json();
   });
+
+  ipcMain.handle("get-ledger-version", async (event) => {
+    try {
+      if (transport == null) {
+        transport = await TransportNodeHid.open("")
+      }
+      const app = new FilecoinApp(transport)
+
+      const version = await app.getVersion()
+
+      console.log(version)
+      return {
+        result: version,
+      }
+
+    } catch(e) {
+      transport = null;
+      console.log("ledger error: ", e)
+      return {
+        error: e.toString(),
+      }
+    }
+  })
+
+  ipcMain.handle("get-ledger-address", async (event, path) => {
+    try {
+      if (transport == null) {
+        transport = await TransportNodeHid.open("")
+      }
+      const app = new FilecoinApp(transport)
+
+      const addrInfo = await app.getAddressAndPubKey(path)
+
+      return {
+        result: addrInfo,
+      }
+
+    } catch(e) {
+      transport = null;
+      console.log("ledger error: ", e)
+      return {
+        error: e.toString(),
+      }
+    }
+  })
 
   ipcMain.handle("get-accounts", async (event) => {
     const p = path.join(__dirname, ".wallet", "accounts.json");
