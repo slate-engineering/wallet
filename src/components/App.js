@@ -71,6 +71,10 @@ export default class App extends React.Component {
   render() {
     const nextScene = this.getScene(this.state.currentScene);
 
+    // NOTE(jim):
+    // Pass local props to the scene component.
+    const sceneElement = React.cloneElement(nextScene, { scene: true });
+
     return (
       <React.Fragment>
         <div className="root">

@@ -123,21 +123,3 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.body-heading {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.body-paragraph {
-  font-size: 14px;
-  line-height: 18px;
-  margin-top: 8px;
-}
-
-.body-aside {
-  font-size: 12px;
-  line-height: 16px;
-  margin-top: 8px;
-  max-width: 488px;
-}
