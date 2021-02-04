@@ -1,25 +1,28 @@
+import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
+import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
+import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
+import { Converter, FilecoinNumber } from "@glif/filecoin-number";
+import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
+import signing from "@zondax/filecoin-signing-tools";
+import FilecoinApp from "@zondax/ledger-filecoin";
+import { app, BrowserWindow, ipcMain, protocol } from "electron";
+import fetch from "fetch";
+import fs from "fs";
 import path from "path";
 import url from "url";
-import fs from "fs";
-import fetch from "fetch";
 
-import { app, BrowserWindow, protocol, ipcMain } from "electron";
-import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
-import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
-import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
-import { FilecoinNumber, Converter } from "@glif/filecoin-number";
-
-import signing from "@zondax/filecoin-signing-tools";
-import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import FilecoinApp from "@zondax/ledger-filecoin";
-
-const NEW_DEFAULT_SETTINGS = { settings: true };
+const NEW_DEFAULT_SETTINGS = {
+  settings: true,
+};
 const NEW_DEFAULT_CONFIG = {
   config: true,
   API_URL: "wss://api.chain.love/rpc/v0",
   INDEX_URL: "https://api.chain.love/wallet",
 };
-const NEW_DEFAULT_ACCOUNTS = { accounts: true, addresses: [] };
+const NEW_DEFAULT_ACCOUNTS = {
+  accounts: true,
+  addresses: [],
+};
 
 let mainWindow;
 let dev = false;
@@ -106,12 +109,23 @@ app.on("ready", async () => {
   });
 
   ipcMain.handle("get-balance", async (event, address) => {
-    // TODO(why): can cache this in local state so we can present the user nice information even when offline
+    // TODO(why): can cache this in local state so we can present the user nice
+    // information even when offline
     let actor = await client.stateGetActor(address, []);
 
     return {
       balance: actor.Balance,
       timestamp: new Date(),
+    };
+  });
+
+  ipcMain.handle("get-actor", async (event, address) => {
+    const actor = await client.stateGetActor(address, []);
+    return {
+      nonce: actor.Nonce,
+      balance: actor.Balance,
+      code: actor.Code,
+      head: actor.Head,
     };
   });
 
@@ -125,26 +139,63 @@ app.on("ready", async () => {
     return await client.chainGetMessage(mcid);
   });
 
-  ipcMain.handle("sign-message", async (event, message) => {
+  ipcMain.handle("sign-message", async (event, signer, message) => {
     try {
       let sender = message.from;
       if (sender.startsWith("f0")) {
-        // ID form address used, lets normalize to pubkey form to make checking things easier
+        // ID form address used, lets normalize to pubkey form to make checking
+        // things easier
         sender = await client.stateAccountKey(sender, []);
       }
 
-      if (/* message.from is ledger address */ true) {
-        let pathForSender = "asdasdasd";
-        const transport = await TransportNodeHid.create(); // TODO: maybe this should be a global?
+      if (signer.kind == "ledger") {
+        let pathForSender = signer.path;
+        if (transport == null) {
+          transport = await TransportNodeHid.open(""); // TODO: pull this out into a shared 'getTransport' func
+        }
 
-        const signature = signing.transactionSignRawWithDevice(message, pathForSender, transport);
+        console.log("about to sign: ", message);
+        console.log("path: ", pathForSender);
 
-        return (signedMessage = {
+        if (message.params == null) {
+          message.params = "";
+        }
+        const serialized = await signing.transactionSerialize(message);
+        /*
+        const signature = await signing.transactionSignRawWithDevice(
+          message,
+          pathForSender,
+          transport
+        );
+        */
+        console.log("serialized: ", serialized);
+
+        let serbuf = new Buffer(serialized, "hex");
+        const app = new FilecoinApp(transport);
+        const sigResp = await app.sign(pathForSender, serbuf);
+
+        console.log("sig resp: ", sigResp);
+        if (sigResp.return_code != 0x9000) {
+          return {
+            error: sigResp.error_message,
+          };
+        }
+
+        console.log("signature response: ", sigResp);
+
+        let signedMessage = {
           message: message,
-          signature: signature,
-        });
+          signature: {
+            type: 1,
+            data: sigResp.signature_compact.toString("base64"),
+          },
+        };
 
-        return { result: signedMessage };
+        let mcid = await client.mpoolPush(signedMessage);
+
+        console.log("pushed message with cid: ", mcid);
+
+        return { result: mcid };
       }
 
       return { error: "unable to sign with address" };
@@ -156,7 +207,18 @@ app.on("ready", async () => {
   ipcMain.handle("estimate-gas", async (event, message) => {
     let estim = await client.gasEstimateMessageGas(message, {}, []);
 
-    return estim.json();
+    return {
+      version: estim.Version,
+      from: estim.From,
+      to: estim.To,
+      value: estim.Value,
+      nonce: estim.Nonce,
+      method: estim.Method,
+      params: estim.Params,
+      gasFeeCap: estim.GasFeeCap,
+      gasLimit: estim.GasLimit,
+      gasPremium: estim.GasPremium,
+    };
   });
 
   ipcMain.handle("get-ledger-version", async (event) => {
