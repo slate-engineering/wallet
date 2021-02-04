@@ -30,12 +30,10 @@ footer, header, hgroup, menu, nav, section {
 
 html, body {
   width: 100%;
-  background-color: var(--main-bg);
-  color: var(--main-text);
   font-family: -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
 }
 
-:root {
+.root-theme-light {
   --main-bg: #ffffff;
   --main-text: #000000;
   --main-border: #ADADAD;
@@ -50,7 +48,24 @@ html, body {
   --main-placeholder: #999999;
 }
 
+.root-theme-dark {
+  --main-bg: #000000;
+  --main-text: #ffffff;
+  --main-border: #999999;
+  --main-navigation-text: #ffffff;
+  --main-navigation-bg: #222222;
+  --main-button-bg: #ffbf00;
+  --main-button-text: #000000;
+  --main-sidebar-bg: #111111;
+  --main-sidebar-text: #ADADAD;
+  --main-primary-accent: #ffbf00;
+  --main-secondary-accent: #ffcf40;
+  --main-placeholder: #999999;
+}
+
 .root {
+  background-color: var(--main-bg);
+  color: var(--main-text);
   height: 100vh;
   width: 100%;
   display: flex;

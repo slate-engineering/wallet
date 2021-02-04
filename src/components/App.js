@@ -45,6 +45,7 @@ export default class App extends React.Component {
     currentScene: "ADD_ADDRESS",
     accounts: { addresses: [] },
     context: null,
+    theme: "DARK",
   };
 
   getScene = (scene) => {
@@ -196,6 +197,10 @@ export default class App extends React.Component {
     await this.update("PORTFOLIO");
   };
 
+  _handleToggleTheme = () => {
+    this.setState({ theme: this.state.theme !== "LIGHT" ? "LIGHT" : "DARK" });
+  };
+
   render() {
     const nextScene = this.getScene(this.state.currentScene);
 
@@ -217,6 +222,11 @@ export default class App extends React.Component {
       currentScene: this.state.currentScene,
     });
 
+    const rootClasses = Utilities.classNames(
+      "root",
+      this.state.theme === "LIGHT" ? "root-theme-light" : "root-theme-dark"
+    );
+
     const portfolioClassNames = Utilities.classNames(
       "navigation-item",
       this.state.currentScene === "PORTFOLIO" ? "navigation-item--active" : null
@@ -233,10 +243,14 @@ export default class App extends React.Component {
       "navigation-item",
       this.state.currentScene === "TRANSACTIONS" ? "navigation-item--active" : null
     );
+    const darkModeClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.theme === "DARK" ? "navigation-item--active" : null
+    );
 
     return (
       <React.Fragment>
-        <div className="root">
+        <div className={rootClasses}>
           <div className="root-left">
             <div className="root-left-title">Addresses</div>
             {this.state.accounts.addresses.map((each) => {
@@ -279,6 +293,13 @@ export default class App extends React.Component {
                 onClick={() => this._handleNavigate("TRANSACTIONS")}
               >
                 Transactions
+              </span>
+              <span
+                className={darkModeClassNames}
+                style={{ marginRight: 8 }}
+                onClick={this._handleToggleTheme}
+              >
+                <SVG.Moon height="12px" />
               </span>
             </div>
             {sceneElement}
