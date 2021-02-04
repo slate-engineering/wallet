@@ -121,7 +121,10 @@ export default class App extends React.Component {
       return null;
     }
 
-    const addresses = [{ address, ...data }, ...this.state.accounts.addresses];
+    const addresses = [
+      { alias: address, transactions: [], address, ...data },
+      ...this.state.accounts.addresses,
+    ];
     await ipcRenderer.invoke("write-accounts", { addresses });
 
     await this.update(nextNavigation);
