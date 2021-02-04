@@ -39,8 +39,8 @@
   -webkit-appearance: none;
   width: 100%;
   height: 40px;
-background: var(--main-bg);
-color: var(--main-text);
+  background: var(--main-bg);
+  color: var(--main-text);
   border-radius: 4px;
   display: flex;
   font-size: 14px;
@@ -64,16 +64,6 @@ color: var(--main-text);
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: var(--main-placeholder);
     opacity: 1; /* Firefox */
-  }
-  
-  &:-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-color: var(--main-placeholder);
-  }
-  
-  &::-ms-input-placeholder {
-    /* Microsoft Edge */
-color: var(--main-placeholder);
   }
 }
 

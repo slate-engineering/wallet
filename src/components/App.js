@@ -8,6 +8,7 @@ import { ipcRenderer } from "electron";
 import * as React from "react";
 import * as Utilities from "~/src/common/utilities";
 import * as SVG from "~/src/components/SVG.js";
+
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
 import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
@@ -45,7 +46,7 @@ export default class App extends React.Component {
     currentScene: "ADD_ADDRESS",
     accounts: { addresses: [] },
     context: null,
-    theme: "DARK",
+    theme: "LIGHT",
   };
 
   getScene = (scene) => {
