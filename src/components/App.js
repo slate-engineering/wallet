@@ -176,6 +176,23 @@ export default class App extends React.Component {
       currentScene: this.state.currentScene,
     });
 
+    const portfolioClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "PORTFOLIO" ? "navigation-item--active" : null
+    );
+    const addClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "ADD_ADDRESS" ? "navigation-item--active" : null
+    );
+    const sendClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "SEND" ? "navigation-item--active" : null
+    );
+    const transactionsClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "TRANSACTIONS" ? "navigation-item--active" : null
+    );
+
     return (
       <React.Fragment>
         <div className="root">
@@ -199,17 +216,20 @@ export default class App extends React.Component {
           </div>
           <div className="root-right">
             <div className="root-top">
-              <span className="navigation-item" onClick={() => this._handleNavigate("PORTFOLIO")}>
+              <span
+                className={portfolioClassNames}
+                onClick={() => this._handleNavigate("PORTFOLIO")}
+              >
                 Portfolio
               </span>
-              <span className="navigation-item" onClick={() => this._handleNavigate("ADD_ADDRESS")}>
+              <span className={addClassNames} onClick={() => this._handleNavigate("ADD_ADDRESS")}>
                 Add
               </span>
-              <span className="navigation-item" onClick={() => this._handleNavigate("SEND")}>
+              <span className={sendClassNames} onClick={() => this._handleNavigate("SEND")}>
                 Send
               </span>
               <span
-                className="navigation-item"
+                className={transactionsClassNames}
                 onClick={() => this._handleNavigate("TRANSACTIONS")}
               >
                 Transactions

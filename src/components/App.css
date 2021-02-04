@@ -115,6 +115,17 @@ html, body {
   font-size: 12px;
   font-weight: 600;
   margin-right: 24px;
+  cursor: pointer;
+  user-select: none;
+  transition: 200ms ease all;
+  
+  &:hover {
+    color: var(--main-secondary-accent);
+  }
+}
+
+.navigation-item--active {
+  color: var(--main-primary-accent);
 }
 
 .wallet-item {
@@ -124,6 +135,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  user-select: none;
+  cursor: pointer;
+  transition: 200ms ease all;
+  
+  &:hover {
+    color: var(--main-secondary-accent);
+  }
 }
 
 .wallet-item-left {

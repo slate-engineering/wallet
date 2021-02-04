@@ -70,5 +70,14 @@ export function classNames() {
 
 export function toDate(data) {
   const date = new Date(data);
-  return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "long",
+  });
 }
