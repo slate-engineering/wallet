@@ -250,7 +250,12 @@ export default class App extends React.Component {
                   onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
                 >
                   {iconElement ? <span className="wallet-item-left">{iconElement}</span> : null}{" "}
-                  <p className="wallet-item-right">{each.alias}</p>
+                  <div className="wallet-item-right">
+                    <p className="wallet-item-right-top">
+                      {Utilities.isEmpty(each.alias) ? "Untitled" : each.alias}
+                    </p>
+                    <p className="wallet-item-right-bottom">{each.address}</p>
+                  </div>
                 </div>
               );
             })}

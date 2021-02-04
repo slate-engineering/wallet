@@ -3,6 +3,7 @@ import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 
 import Input from "~/src/components/Input";
+import SelectMenu from "~/src/components/SelectMenu";
 import Button from "~/src/components/Button";
 
 import "~/src/scenes/Scene.css";
@@ -10,27 +11,39 @@ import "~/src/scenes/Scene.css";
 export default class SceneSendFilecoin extends React.Component {
   state = {
     fil: 0.1,
-    source: "f1xc3hws5n6y5m3m44gzb3gyjzhups6wzmhe663ji",
+    source: null,
     destination: "f2puts6g7ady7oojw6ibjz4pfp37anyhk3tb56nfi",
   };
 
   _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   render() {
+    console.log(this.state);
+
     return (
       <div className="scene">
         <div className="body">
           <h1 className="body-heading">Send Filecoin</h1>
           <p className="body-paragraph">Send your Filecoin to the address of your choice.</p>
 
-          <Input
-            title="Source wallet address"
-            description="The source of your Filecoin funds."
+          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+            Source wallet address
+          </h2>
+          <p className="body-paragraph" style={{ marginBottom: 12 }}>
+            The source of your Filecoin funds.
+          </p>
+
+          <SelectMenu
             name="source"
-            style={{ marginTop: 48 }}
             value={this.state.source}
             onChange={this._handleChange}
-          ></Input>
+            options={this.props.accounts.addresses.map((each) => {
+              return {
+                value: each.address,
+                name: Utilities.isEmpty(each.alias) ? each.address : each.alias,
+              };
+            })}
+          />
 
           <Input
             title="Destination wallet address"

@@ -38,7 +38,7 @@ html, body {
 :root {
   --main-bg: #ffffff;
   --main-text: #000000;
-  --main-border: #ececec;
+  --main-border: #ADADAD;
   --main-navigation-text: #ffffff;
   --main-navigation-bg: #222222;
   --main-button-bg: #000000;
@@ -47,6 +47,7 @@ html, body {
   --main-sidebar-text: #888888;
   --main-primary-accent: #ffbf00;
   --main-secondary-accent: #ffcf40;
+  --main-placeholder: #999999;
 }
 
 .root {
@@ -130,7 +131,6 @@ html, body {
 
 .wallet-item {
   margin-top: 12px;
-  font-weight: 600;
   padding: 0px 12px 0px 12px;
   display: flex;
   align-items: center;
@@ -155,6 +155,18 @@ html, body {
   padding-right: 24px;
   min-width: 10%;
   width: 100%;
+}
+
+.wallet-item-right-top {
+  font-weight: 600;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wallet-item-right-bottom {
+  overflow: hidden;
+  font-size: 12px;
+  margin-top: 1px;
+  padding-left: 1px;
   text-overflow: ellipsis;
 }
