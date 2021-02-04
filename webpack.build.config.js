@@ -3,7 +3,6 @@ const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 const DEFAULT_WEBPACK_INCLUDE_PATH = path.resolve(__dirname, "src");
 
@@ -34,7 +33,6 @@ module.exports = {
   },
   target: "electron-renderer",
   plugins: [
-    new MonacoWebpackPlugin({ languages: ["markdown"] }),
     new HTMLWebpackPlugin({ title: "Filecoin Wallets" }),
     new MiniCSSExtractPlugin({
       filename: "bundle.css",
