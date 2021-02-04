@@ -1,20 +1,21 @@
-import * as React from "react";
-import * as SVG from "~/src/components/SVG.js";
-import * as Utilities from "~/src/common/utilities";
+import "~/src/scenes/Scene.css";
+import "~/src/components/App.css";
+import "~/src/components/Body.css";
 
-import ScenePortfolio from "~/src/scenes/ScenePortfolio";
+import { FilecoinNumber } from "@glif/filecoin-number";
+//import signing from "@zondax/filecoin-signing-tools";
+import { ipcRenderer } from "electron";
+import * as React from "react";
+import * as Utilities from "~/src/common/utilities";
+import * as SVG from "~/src/components/SVG.js";
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
+import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
+import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
+import SceneAddress from "~/src/scenes/SceneAddress";
+import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
-import SceneAddress from "~/src/scenes/SceneAddress";
-import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
-import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
-
-import { ipcRenderer } from "electron";
-
-import "~/src/components/App.css";
-import "~/src/components/Body.css";
 
 const WALLET_ADDRESS_TYPES = {
   1: "BLS",
@@ -143,9 +144,30 @@ export default class App extends React.Component {
   };
 
   _handleConfirmSendFilecoin = async ({ source, destination, fil }) => {
+    const actor = await ipcRenderer.invoke("get-actor", source);
+
+    let num = new FilecoinNumber(fil, "FIL");
+    let msg = {
+      from: source,
+      to: destination,
+      value: num.toAttoFil(),
+      nonce: actor.nonce,
+    };
+
+    console.log(msg);
+
+    let estim = await ipcRenderer.invoke("estimate-gas", msg);
+
+    console.log(estim);
+
+    let path = "m/44'/461'/0'/0/0";
+    let resp = await ipcRenderer.invoke("sign-message", { kind: "ledger", path: path }, estim);
+    //console.log("serialized: ", signing.transactionSerialize(estim));
+
+    console.log("Message CID: ", resp.result);
+
     // TODO(why): Complete, then navigate away here.
-    console.log({ source, destination, fil });
-    this._handleNavigate("ADDRESS", { address: source });
+    // this._handleNavigate("ADDRESS", { address: source });
   };
 
   _handleDeleteAddress = async ({ address }) => {

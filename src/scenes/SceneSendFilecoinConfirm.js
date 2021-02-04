@@ -26,7 +26,7 @@ export default class SceneSendFilecoinConfirm extends React.Component {
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
-              {this.props.context.source}
+              {this.props.context.destination}
             </h2>
             <p className="body-paragraph">Destination address</p>
           </React.Fragment>
