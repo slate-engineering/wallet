@@ -1,24 +1,27 @@
-import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
-import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
-import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
-import { Converter, FilecoinNumber } from "@glif/filecoin-number";
-import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import signing from "@zondax/filecoin-signing-tools";
+import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
-import { app, BrowserWindow, ipcMain, protocol } from "electron";
+import FilecoinSigning from "@zondax/filecoin-signing-tools";
 import fetch from "fetch";
 import fs from "fs";
 import path from "path";
 import url from "url";
 
+import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
+import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
+import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
+import { Converter, FilecoinNumber } from "@glif/filecoin-number";
+import { app, BrowserWindow, ipcMain, protocol } from "electron";
+
 const NEW_DEFAULT_SETTINGS = {
   settings: true,
 };
+
 const NEW_DEFAULT_CONFIG = {
   config: true,
   API_URL: "wss://api.chain.love/rpc/v0",
   INDEX_URL: "https://api.chain.love/wallet",
 };
+
 const NEW_DEFAULT_ACCOUNTS = {
   accounts: true,
   addresses: [],
@@ -151,7 +154,7 @@ app.on("ready", async () => {
       if (signer.kind == "ledger") {
         let pathForSender = signer.path;
         if (transport == null) {
-          transport = await TransportNodeHid.open(""); // TODO: pull this out into a shared 'getTransport' func
+          transport = await TransportNodeHID.open(""); // TODO: pull this out into a shared 'getTransport' func
         }
 
         console.log("about to sign: ", message);
@@ -160,9 +163,9 @@ app.on("ready", async () => {
         if (message.params == null) {
           message.params = "";
         }
-        const serialized = await signing.transactionSerialize(message);
+        const serialized = await FilecoinSigning.transactionSerialize(message);
         /*
-        const signature = await signing.transactionSignRawWithDevice(
+        const signature = await FilecoinSigning.transactionSignRawWithDevice(
           message,
           pathForSender,
           transport
@@ -224,7 +227,7 @@ app.on("ready", async () => {
   ipcMain.handle("get-ledger-version", async (event) => {
     try {
       if (transport == null) {
-        transport = await TransportNodeHid.open("");
+        transport = await TransportNodeHID.open("");
       }
       const app = new FilecoinApp(transport);
 
@@ -246,7 +249,7 @@ app.on("ready", async () => {
   ipcMain.handle("get-ledger-address", async (event, path) => {
     try {
       if (transport == null) {
-        transport = await TransportNodeHid.open("");
+        transport = await TransportNodeHID.open("");
       }
       const app = new FilecoinApp(transport);
 
