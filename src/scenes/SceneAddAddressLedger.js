@@ -29,12 +29,23 @@ function LedgerStatus(props) {
       const items = addrs.map((a) => {
         const existing = props.existingAddresses.find((each) => each.address === a.addrString);
 
+        console.log(a);
+
         return (
           <li className="body-address-item" key={a.addrString}>
             <span className="body-address-item-left">{a.addrString}</span>
             {existing ? null : (
               <span className="body-address-item-right">
-                <Button onClick={() => props.onAddPublicAddress({ address: a.addrString })}>
+                <Button
+                  onClick={() =>
+                    props.onAddPublicAddress({
+                      address: a.addrString,
+                      bytes: a.addrByte,
+                      path: a.path,
+                      compressedPK: a.compressed_pk,
+                    })
+                  }
+                >
                   Add
                 </Button>
               </span>
@@ -106,6 +117,7 @@ export default class SceneAddAddressPublic extends React.Component {
       let addrInfo = resp.result;
       addrInfo.path = path;
       addresses.push(addrInfo);
+
       this.setState({
         addresses: addresses,
       });
@@ -114,28 +126,30 @@ export default class SceneAddAddressPublic extends React.Component {
 
   render() {
     return (
-      <div className="body">
-        <h1 className="body-heading">Add Ledger Address</h1>
-        <LedgerStatus
-          curState={this.state.curState}
-          errMsg={this.state.errMsg}
-          addresses={this.state.addresses}
-          existingAddresses={this.props.accounts.addresses}
-          onAddPublicAddress={this.props.onAddPublicAddress}
-        />
-        <div
-          style={{
-            marginTop: 24,
-          }}
-        >
-          <Button
-            onClick={() => {
-              this.setState({ curState: "start" });
-              this.checkForLedger();
+      <div className="scene">
+        <div className="body">
+          <h1 className="body-heading">Add Ledger Address</h1>
+          <LedgerStatus
+            curState={this.state.curState}
+            errMsg={this.state.errMsg}
+            addresses={this.state.addresses}
+            existingAddresses={this.props.accounts.addresses}
+            onAddPublicAddress={this.props.onAddPublicAddress}
+          />
+          <div
+            style={{
+              marginTop: 24,
             }}
           >
-            Reset
-          </Button>
+            <Button
+              onClick={() => {
+                this.setState({ curState: "start" });
+                this.checkForLedger();
+              }}
+            >
+              Reset
+            </Button>
+          </div>
         </div>
       </div>
     );

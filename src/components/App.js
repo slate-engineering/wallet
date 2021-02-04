@@ -113,15 +113,20 @@ export default class App extends React.Component {
     alert("refreshed");
   };
 
-  _handleAddPublicAddress = async ({ address }, nextNavigation) => {
-    const data = await ipcRenderer.invoke("get-balance", address);
+  _handleAddPublicAddress = async (entry, nextNavigation) => {
+    if (!entry.address) {
+      alert("No address to add.");
+      return null;
+    }
+
+    const data = await ipcRenderer.invoke("get-balance", entry.address);
     if (!data.balance) {
       alert("This address was not found on the network. Try again later.");
       return null;
     }
 
     const addresses = [
-      { alias: address, transactions: [], address, ...data },
+      { alias: entry.address, transactions: [], ...entry, ...data },
       ...this.state.accounts.addresses,
     ];
     await ipcRenderer.invoke("write-accounts", { addresses });
