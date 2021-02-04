@@ -87,18 +87,42 @@ export default class App extends React.Component {
     });
   };
 
-  _handleAddPublicAddress = async ({ address }) => {
+  _handleRefreshAddress = async ({ address }) => {
     const data = await ipcRenderer.invoke("get-balance", address);
     if (!data.balance) {
-      alert("This address was not found on the network. Try again.");
+      alert("This address was not found on the network. Try again later.");
+      return null;
+    }
+
+    const addresses = this.state.accounts.addresses.map((each) => {
+      if (address === each.address) {
+        return {
+          ...each,
+          ...data,
+        };
+      }
+
+      return each;
+    });
+
+    await ipcRenderer.invoke("write-accounts", { addresses });
+
+    await this.update();
+
+    alert("refreshed");
+  };
+
+  _handleAddPublicAddress = async ({ address }, nextNavigation) => {
+    const data = await ipcRenderer.invoke("get-balance", address);
+    if (!data.balance) {
+      alert("This address was not found on the network. Try again later.");
       return null;
     }
 
     const addresses = [{ address, ...data }, ...this.state.accounts.addresses];
-    const response = await ipcRenderer.invoke("get-balance", address);
     await ipcRenderer.invoke("write-accounts", { addresses });
 
-    await this.update("PORTFOLIO");
+    await this.update(nextNavigation);
   };
 
   _handleDeleteAddress = async ({ address }) => {
@@ -116,6 +140,7 @@ export default class App extends React.Component {
     // Pass local props to the scene component.
     const sceneElement = React.cloneElement(nextScene, {
       onNavigate: this._handleNavigate,
+      onRefreshAddress: this._handleRefreshAddress,
       onAddPublicAddress: this._handleAddPublicAddress,
       onDeleteAddress: this._handleDeleteAddress,
       onUpdate: this.update,

@@ -3,6 +3,7 @@
   min-width: 10%;
   width: 100%;
   overflow-y: scroll;
+  overflow: hidden;
   scrollbar-width: none;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   ::-webkit-scrollbar {
@@ -42,10 +43,40 @@
 }
 
 .body-card {
-  padding: 16px;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px #ececec;
+  padding: 24px 16px 16px 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #acacac;
   margin-top: 16px;
   max-width: 388px;
   cursor: pointer;
+}
+
+.body-address-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.body-address-item {
+  list-style-type: none;
+  margin: 0;
+  padding: 8px;
+  margin-top: 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #acacac;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.body-address-item-left {
+  min-width: 10%;
+  width: 100%;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.body-address-item-right {
+  flex-shrink: 0;
+  padding-left: 24px;
 }

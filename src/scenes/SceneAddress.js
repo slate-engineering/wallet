@@ -52,6 +52,20 @@ export default class SceneAddress extends React.Component {
           ) : null}
 
           <h2 className="body-heading-two" style={{ marginTop: 88 }}>
+            Refresh
+          </h2>
+          <p className="body-paragraph">
+            To get a balance update hit the refresh button below. Sorry there is not a better way to
+            do this.
+          </p>
+
+          <div style={{ marginTop: 24 }}>
+            <Button onClick={() => this.props.onRefreshAddress({ address: address.address })}>
+              Refresh balance
+            </Button>
+          </div>
+
+          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
             Delete this address
           </h2>
           <p className="body-paragraph">
@@ -59,7 +73,7 @@ export default class SceneAddress extends React.Component {
           </p>
 
           <div style={{ marginTop: 24 }}>
-            <Button onClick={() => this.props.onDeleteAddress({ address: account.address })}>
+            <Button onClick={() => this.props.onDeleteAddress({ address: address.address })}>
               Delete
             </Button>
           </div>

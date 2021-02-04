@@ -31,7 +31,11 @@ export default class SceneAddAddressPublic extends React.Component {
         ></Input>
 
         <div style={{ marginTop: 24 }}>
-          <Button onClick={() => this.props.onAddPublicAddress({ address: this.state.address })}>
+          <Button
+            onClick={() =>
+              this.props.onAddPublicAddress({ address: this.state.address }, "PORTFOLIO")
+            }
+          >
             Add
           </Button>
         </div>
