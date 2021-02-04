@@ -179,11 +179,27 @@ export default class App extends React.Component {
 
     console.log(estim);
 
+    const account = this.state.accounts.addresses.find((each) => each.address === source);
+
+    // TODO(why):
+    // Use this path.
+    console.log(account.path);
+
     let path = "m/44'/461'/0'/0/0";
     let resp = await ipcRenderer.invoke("sign-message", { kind: "ledger", path: path }, estim);
     //console.log("serialized: ", signing.transactionSerialize(estim));
 
     console.log("Message CID: ", resp.result);
+
+    if (!account.transactions) {
+      account.transactions = [];
+    }
+
+    if (account.transactions) {
+      account.transactions.push({ cid: resp.result });
+    }
+
+    await this._handleUpdateAddress({ ...account });
 
     // TODO(why): Complete, then navigate away here.
     // this._handleNavigate("ADDRESS", { address: source });
