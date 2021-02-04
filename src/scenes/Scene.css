@@ -14,11 +14,10 @@
   width: 100%;
   overflow: hidden;  
   overflow-y: scroll;
-  display: flex;
   animation: CTATransition-fade-in 200ms ease;
   
   &::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
   }
   
   /* Track */

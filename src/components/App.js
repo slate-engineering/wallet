@@ -89,6 +89,24 @@ export default class App extends React.Component {
     });
   };
 
+  _handleUpdateAddress = async (data) => {
+    const addresses = this.state.accounts.addresses.map((each) => {
+      if (each.address === data.address) {
+        return {
+          ...each,
+          ...data,
+        };
+      }
+
+      return each;
+    });
+
+    await ipcRenderer.invoke("write-accounts", { addresses });
+    const accounts = await ipcRenderer.invoke("get-accounts");
+
+    this.setState({ accounts });
+  };
+
   _handleRefreshAddress = async ({ address }) => {
     const data = await ipcRenderer.invoke("get-balance", address);
     if (!data.balance) {
@@ -186,6 +204,7 @@ export default class App extends React.Component {
     const sceneElement = React.cloneElement(nextScene, {
       onNavigate: this._handleNavigate,
       onRefreshAddress: this._handleRefreshAddress,
+      onUpdateAddress: this._handleUpdateAddress,
       onAddPublicAddress: this._handleAddPublicAddress,
       onDeleteAddress: this._handleDeleteAddress,
       onSendFilecoin: this._handleSendFilecoin,
@@ -231,7 +250,7 @@ export default class App extends React.Component {
                   onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
                 >
                   {iconElement ? <span className="wallet-item-left">{iconElement}</span> : null}{" "}
-                  <p className="wallet-item-right">{each.address}</p>
+                  <p className="wallet-item-right">{each.alias}</p>
                 </div>
               );
             })}

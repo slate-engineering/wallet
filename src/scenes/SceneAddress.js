@@ -8,6 +8,14 @@ import Button from "~/src/components/Button";
 import { ipcRenderer } from "electron";
 
 export default class SceneAddress extends React.Component {
+  _handleAliasChange = (e) => {
+    const address = this.props.accounts.addresses.find(
+      (account) => account.address === this.props.context.address
+    );
+
+    this.props.onUpdateAddress({ ...address, alias: e.target.value });
+  };
+
   render() {
     const address = this.props.accounts.addresses.find(
       (account) => account.address === this.props.context.address
@@ -66,6 +74,15 @@ export default class SceneAddress extends React.Component {
               Refresh balance
             </Button>
           </div>
+
+          <Input
+            onChange={this._handleAliasChange}
+            value={address.alias}
+            name="alias"
+            title="Alias"
+            description="Give your address an alias to make it easier to remember."
+            style={{ marginTop: 48 }}
+          ></Input>
 
           <h2 className="body-heading-two" style={{ marginTop: 48 }}>
             Delete this address
