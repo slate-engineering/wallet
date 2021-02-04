@@ -60,8 +60,8 @@
     "postcss-preset-env": "^6.7.0",
     "postcss-pxtorem": "^5.1.1",
     "style-loader": "^2.0.0",
-    "webpack": "^5.11.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack": "^4.46.0",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }

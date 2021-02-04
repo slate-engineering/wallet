@@ -40,9 +40,9 @@ const WALLET_SCENE = {
 
 export default class App extends React.Component {
   state = {
-    accounts: [],
     currentScene: "ADD_ADDRESS",
-    sceneData: null,
+    accounts: { addresses: [] },
+    context: null,
   };
 
   getScene = (scene) => {
@@ -59,38 +59,54 @@ export default class App extends React.Component {
     await this.update();
   }
 
-  update = async () => {
+  update = async (currentScene) => {
     const accounts = await ipcRenderer.invoke("get-accounts");
     const settings = await ipcRenderer.invoke("get-settings");
     const config = await ipcRenderer.invoke("get-config");
 
-    this.setState({ accounts: accounts.addresses, settings, config });
+    console.log({ accounts, settings, config });
+
+    this.setState({
+      accounts,
+      settings,
+      config,
+      currentScene: currentScene ? currentScene : this.state.currentScene,
+    });
   };
 
-  _handleNavigate = (currentScene, sceneData = {}) => {
-    this.setState({ currentScene, sceneData: { ...sceneData, updated: new Date().getTime() } });
+  _handleNavigate = (currentScene, newContext = {}) => {
+    console.log("navigate", currentScene, newContext);
+    if (currentScene === this.state.currentScene) {
+      this.setState({ context: { ...newContext } });
+      return;
+    }
+
+    this.setState({
+      currentScene,
+      context: { ...newContext },
+    });
   };
 
   _handleAddPublicAddress = async ({ address }) => {
-    // TODO(jim)
-    // Add address to accounts
-    const addresses = [{ address }, ...this.state.accounts];
+    const data = await ipcRenderer.invoke("get-balance", address);
+    if (!data.balance) {
+      alert("This address was not found on the network. Try again.");
+      return null;
+    }
+
+    const addresses = [{ address, ...data }, ...this.state.accounts.addresses];
+    const response = await ipcRenderer.invoke("get-balance", address);
     await ipcRenderer.invoke("write-accounts", { addresses });
 
-    await this.update();
-
-    this._handleNavigate("PORTFOLIO");
+    await this.update("PORTFOLIO");
   };
 
   _handleDeleteAddress = async ({ address }) => {
-    // TODO(jim)
-    // Add address to accounts
-    const addresses = [...this.state.accounts].filter((each) => each.address !== address);
+    const addresses = [...this.state.accounts.addresses].filter((each) => each.address !== address);
+
     await ipcRenderer.invoke("write-accounts", { addresses });
 
-    await this.update();
-
-    this._handleNavigate("PORTFOLIO");
+    await this.update("PORTFOLIO");
   };
 
   render() {
@@ -103,8 +119,11 @@ export default class App extends React.Component {
       onAddPublicAddress: this._handleAddPublicAddress,
       onDeleteAddress: this._handleDeleteAddress,
       onUpdate: this.update,
-      scene: true,
-      ...this.state,
+      accounts: this.state.accounts,
+      config: this.state.config,
+      settings: this.state.settings,
+      context: this.state.context,
+      currentScene: this.state.currentScene,
     });
 
     return (
@@ -112,15 +131,17 @@ export default class App extends React.Component {
         <div className="root">
           <div className="root-left">
             <div className="root-left-title">Addresses</div>
-            {this.state.accounts.map((each) => {
-              const icon = WALLET_ADDRESS_TYPES_SVG[each.type];
+            {this.state.accounts.addresses.map((each) => {
+              const iconElement = WALLET_ADDRESS_TYPES_SVG[each.type];
+              console.log(each);
+
               return (
                 <div
                   className="wallet-item"
                   key={each.address}
-                  onClick={() => this._handleNavigate("ADDRESS", { ...each })}
+                  onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
                 >
-                  {icon ? <span className="wallet-item-left">{icon}</span> : null}{" "}
+                  {iconElement ? <span className="wallet-item-left">{iconElement}</span> : null}{" "}
                   <p className="wallet-item-right">{each.address}</p>
                 </div>
               );

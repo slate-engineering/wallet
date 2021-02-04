@@ -18,26 +18,24 @@ export default class SceneAddAddressPublic extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className="body">
-          <h1 className="body-heading">Add address</h1>
-          <p className="body-paragraph">Enter your public address here.</p>
+      <div className="body">
+        <h1 className="body-heading">Add address</h1>
+        <p className="body-paragraph">Enter your public address here.</p>
 
-          <Input
-            onChange={this._handleChange}
-            value={this.state.address}
-            name="address"
-            title="Public addresss"
-            style={{ marginTop: 48 }}
-          ></Input>
+        <Input
+          onChange={this._handleChange}
+          value={this.state.address}
+          name="address"
+          title="Public addresss"
+          style={{ marginTop: 48 }}
+        ></Input>
 
-          <div style={{ marginTop: 24 }}>
-            <Button onClick={() => this.props.onAddPublicAddress({ address: this.state.address })}>
-              Add
-            </Button>
-          </div>
+        <div style={{ marginTop: 24 }}>
+          <Button onClick={() => this.props.onAddPublicAddress({ address: this.state.address })}>
+            Add
+          </Button>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

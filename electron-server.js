@@ -8,15 +8,16 @@ import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
+
 import signing from "@zondax/filecoin-signing-tools";
 import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
-import  FilecoinApp  from "@zondax/ledger-filecoin";
+import FilecoinApp from "@zondax/ledger-filecoin";
 
 const NEW_DEFAULT_SETTINGS = { settings: true };
 const NEW_DEFAULT_CONFIG = {
   config: true,
   API_URL: "wss://api.chain.love/rpc/v0",
-  INDEX_URL: "https://api.chain.love/wallet"
+  INDEX_URL: "https://api.chain.love/wallet",
 };
 const NEW_DEFAULT_ACCOUNTS = { accounts: true, addresses: [] };
 
@@ -121,42 +122,39 @@ app.on("ready", async () => {
   });
 
   ipcMain.handle("get-message", async (event, mcid) => {
-    return await client.chainGetMessage(mcid)
+    return await client.chainGetMessage(mcid);
   });
 
   ipcMain.handle("sign-message", async (event, message) => {
     try {
-    let sender = message.from
-    if (sender.startsWith("f0")) {
-      // ID form address used, lets normalize to pubkey form to make checking things easier
-      sender = await client.stateAccountKey(sender, [])
-    }
-
-    if (/* message.from is ledger address */ true) {
-
-      let pathForSender = "asdasdasd"
-      const transport = await TransportNodeHid.create() // TODO: maybe this should be a global?
-
-      const signature = signing.transactionSignRawWithDevice( message, pathForSender, transport)
-
-      return signedMessage = {
-        message: message,
-        signature: signature,
+      let sender = message.from;
+      if (sender.startsWith("f0")) {
+        // ID form address used, lets normalize to pubkey form to make checking things easier
+        sender = await client.stateAccountKey(sender, []);
       }
 
-      return { result: signedMessage }
-      
-    }
+      if (/* message.from is ledger address */ true) {
+        let pathForSender = "asdasdasd";
+        const transport = await TransportNodeHid.create(); // TODO: maybe this should be a global?
 
-    return { error: "unable to sign with address" }
+        const signature = signing.transactionSignRawWithDevice(message, pathForSender, transport);
 
+        return (signedMessage = {
+          message: message,
+          signature: signature,
+        });
+
+        return { result: signedMessage };
+      }
+
+      return { error: "unable to sign with address" };
     } catch (e) {
-      return { error: e }
+      return { error: e };
     }
   });
 
   ipcMain.handle("estimate-gas", async (event, message) => {
-    let estim = await client.gasEstimateMessageGas(message, {}, [])
+    let estim = await client.gasEstimateMessageGas(message, {}, []);
 
     return estim.json();
   });
@@ -164,47 +162,45 @@ app.on("ready", async () => {
   ipcMain.handle("get-ledger-version", async (event) => {
     try {
       if (transport == null) {
-        transport = await TransportNodeHid.open("")
+        transport = await TransportNodeHid.open("");
       }
-      const app = new FilecoinApp(transport)
+      const app = new FilecoinApp(transport);
 
-      const version = await app.getVersion()
+      const version = await app.getVersion();
 
-      console.log(version)
+      console.log(version);
       return {
         result: version,
-      }
-
-    } catch(e) {
+      };
+    } catch (e) {
       transport = null;
-      console.log("ledger error: ", e)
+      console.log("ledger error: ", e);
       return {
         error: e.toString(),
-      }
+      };
     }
-  })
+  });
 
   ipcMain.handle("get-ledger-address", async (event, path) => {
     try {
       if (transport == null) {
-        transport = await TransportNodeHid.open("")
+        transport = await TransportNodeHid.open("");
       }
-      const app = new FilecoinApp(transport)
+      const app = new FilecoinApp(transport);
 
-      const addrInfo = await app.getAddressAndPubKey(path)
+      const addrInfo = await app.getAddressAndPubKey(path);
 
       return {
         result: addrInfo,
-      }
-
-    } catch(e) {
+      };
+    } catch (e) {
       transport = null;
-      console.log("ledger error: ", e)
+      console.log("ledger error: ", e);
       return {
         error: e.toString(),
-      }
+      };
     }
-  })
+  });
 
   ipcMain.handle("get-accounts", async (event) => {
     const p = path.join(__dirname, ".wallet", "accounts.json");
@@ -213,15 +209,22 @@ app.on("ready", async () => {
     return JSON.parse(f);
   });
 
+  let writeLock = false;
   ipcMain.handle("write-accounts", async (event, nextAccountData) => {
+    if (writeLock) {
+      return;
+    }
+
+    writeLock = true;
     const p = path.join(__dirname, ".wallet", "accounts.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldAccountData = JSON.parse(f);
-    console.log(oldAccountData);
-    console.log(nextAccountData);
+    console.log("old", oldAccountData);
+    console.log("new", nextAccountData);
     const nextState = JSON.stringify({ ...oldAccountData, ...nextAccountData });
 
-    return await fs.promises.writeFile(p, nextState, "utf8");
+    await fs.promises.writeFile(p, nextState, "utf8");
+    writeLock = false;
   });
 
   ipcMain.handle("get-config", async (event, data) => {
@@ -231,13 +234,19 @@ app.on("ready", async () => {
     return JSON.parse(f);
   });
 
+  let configLock = false;
   ipcMain.handle("write-config", async (event, nextConfig) => {
+    if (configLock) {
+      return;
+    }
+
+    configLock = true;
     const p = path.join(__dirname, ".wallet", "config.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldConfig = JSON.parse(f);
     const nextState = JSON.stringify({ ...oldConfig, ...nextConfig });
-
-    return await fs.promises.writeFile(p, nextState, "utf8");
+    await fs.promises.writeFile(p, nextState, "utf8");
+    configLock = false;
   });
 
   ipcMain.handle("get-settings", async (event, data) => {
@@ -247,13 +256,20 @@ app.on("ready", async () => {
     return JSON.parse(f);
   });
 
+  let settingsLock;
   ipcMain.handle("write-settings", async (event, nextSettings) => {
+    if (settingsLock) {
+      return;
+    }
+
+    settingsLock = true;
     const p = path.join(__dirname, ".wallet", "settings.json");
     const f = await fs.promises.readFile(p, "utf8");
     const oldSettings = JSON.parse(f);
     const nextState = JSON.stringify({ ...oldSettings, ...nextSettings });
 
-    return await fs.promises.writeFile(p, nextState, "utf8");
+    await fs.promises.writeFile(p, nextState, "utf8");
+    settingsLock = false;
   });
 
   const pathRoot = path.join(__dirname, ".wallet");

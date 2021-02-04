@@ -9,16 +9,14 @@ import { ipcRenderer } from "electron";
 export default class ScenePortfolio extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <div className="scene">
-          <div className="body">
-            <h1 className="body-heading">Portfolio</h1>
-            <p className="body-paragraph" style={{ marginBottom: 48 }}>
-              All of your account information is shown here. (WIP)
-            </p>
-          </div>
+      <div className="scene">
+        <div className="body">
+          <h1 className="body-heading">Portfolio</h1>
+          <p className="body-paragraph" style={{ marginBottom: 48 }}>
+            All of your account information is shown here. (WIP)
+          </p>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

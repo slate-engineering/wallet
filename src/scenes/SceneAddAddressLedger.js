@@ -97,30 +97,28 @@ export default class SceneAddAddressPublic extends React.Component {
     }
 
     return (
-      <React.Fragment>
-        <div className="body">
-          <h1 className="body-heading">Add Ledger Address</h1>
-          <LedgerStatus
-            curState={this.state.curState}
-            errMsg={this.state.errMsg}
-            addresses={this.state.addresses}
-          />
-          <div
-            style={{
-              marginTop: 24,
+      <div className="body">
+        <h1 className="body-heading">Add Ledger Address</h1>
+        <LedgerStatus
+          curState={this.state.curState}
+          errMsg={this.state.errMsg}
+          addresses={this.state.addresses}
+        />
+        <div
+          style={{
+            marginTop: 24,
+          }}
+        >
+          <Button
+            onClick={() => {
+              this.setState({ curState: "start" });
+              this.checkForLedger();
             }}
           >
-            <Button
-              onClick={() => {
-                this.setState({ curState: "start" });
-                this.checkForLedger();
-              }}
-            >
-              Reset
-            </Button>
-          </div>
+            Reset
+          </Button>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
