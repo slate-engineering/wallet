@@ -13,6 +13,8 @@ export default class SceneAddress extends React.Component {
       (account) => account.address === this.props.context.address
     );
 
+    console.log(address);
+
     if (!address) {
       return (
         <div className="scene">
