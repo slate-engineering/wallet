@@ -8,6 +8,14 @@ import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
 
 export default class SceneSendFilecoin extends React.Component {
+  state = {
+    fil: 0,
+    source: "",
+    destination: "",
+  };
+
+  _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+
   render() {
     return (
       <div className="body">
@@ -15,9 +23,21 @@ export default class SceneSendFilecoin extends React.Component {
         <p className="body-paragraph">Send your Filecoin to the address of your choice.</p>
 
         <Input
+          title="Source wallet address"
+          description="The source of your Filecoin funds."
+          name="source"
+          style={{ marginTop: 48 }}
+          value={this.state.source}
+          onChange={this._handleChange}
+        ></Input>
+
+        <Input
           title="Destination wallet address"
           description="The destination address where you would like to receive your Filecoin."
+          name="destination"
           style={{ marginTop: 48 }}
+          value={this.state.destination}
+          onChange={this._handleChange}
         ></Input>
 
         <p className="body-aside">
@@ -26,10 +46,20 @@ export default class SceneSendFilecoin extends React.Component {
           of some or all of your Filecoin tokens.
         </p>
 
-        <Input title="Filecoin Amount" unit="FIL" style={{ marginTop: 48 }}></Input>
+        <Input
+          title="Filecoin Amount"
+          unit="FIL"
+          type="number"
+          name="fil"
+          style={{ marginTop: 48 }}
+          value={this.state.fil}
+          onChange={this._handleChange}
+        ></Input>
 
         <div style={{ marginTop: 24 }}>
-          <Button>Send Filecoin</Button>
+          <Button onClick={() => this.props.onSendFilecoin({ ...this.state })}>
+            Create transaction
+          </Button>
         </div>
       </div>
     );

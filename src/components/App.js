@@ -5,6 +5,7 @@ import * as Utilities from "~/src/common/utilities";
 import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
+import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneAddress from "~/src/scenes/SceneAddress";
 import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
@@ -34,6 +35,7 @@ const WALLET_SCENE = {
   ADD_ADDRESS_PUBLIC: <SceneAddAddressPublic />,
   ADD_ADDRESS_LEDGER: <SceneAddAddressLedger />,
   SEND: <SceneSendFilecoin />,
+  SEND_CONFIRM: <SceneSendFilecoinConfirm />,
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
 };
@@ -125,6 +127,20 @@ export default class App extends React.Component {
     await this.update(nextNavigation);
   };
 
+  _handleSendFilecoin = async ({ source, destination, fil }) => {
+    console.log({ source, destination, fil });
+
+    // TODO(why): Pass what you need over to confirm here.
+    console.log("Jeromy handle pre confirmation stuff here ...");
+    this._handleNavigate("SEND_CONFIRM", { source, destination, fil });
+  };
+
+  _handleConfirmSendFilecoin = async ({ source, destination, fil }) => {
+    // TODO(why): Complete, then navigate away here.
+    console.log({ source, destination, fil });
+    this._handleNavigate("ADDRESS", { address: source });
+  };
+
   _handleDeleteAddress = async ({ address }) => {
     const addresses = [...this.state.accounts.addresses].filter((each) => each.address !== address);
 
@@ -143,6 +159,8 @@ export default class App extends React.Component {
       onRefreshAddress: this._handleRefreshAddress,
       onAddPublicAddress: this._handleAddPublicAddress,
       onDeleteAddress: this._handleDeleteAddress,
+      onSendFilecoin: this._handleSendFilecoin,
+      onConfirmSendFilecoin: this._handleConfirmSendFilecoin,
       onUpdate: this.update,
       accounts: this.state.accounts,
       config: this.state.config,
