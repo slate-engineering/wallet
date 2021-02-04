@@ -4,6 +4,8 @@ import * as Utilities from "~/src/common/utilities";
 
 import Input from "~/src/components/Input";
 
+import "~/src/scenes/Scene.css";
+
 export default class SceneAddAddress extends React.Component {
   render() {
     return (

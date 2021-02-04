@@ -6,6 +6,8 @@ import Input from "~/src/components/Input";
 
 import { ipcRenderer } from "electron";
 
+import "~/src/scenes/Scene.css";
+
 export default class ScenePortfolio extends React.Component {
   render() {
     return (

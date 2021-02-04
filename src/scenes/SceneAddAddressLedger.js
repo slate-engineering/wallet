@@ -1,11 +1,13 @@
-import "~/src/scenes/Scene.css";
-
-import { ipcRenderer } from "electron";
 import * as React from "react";
 import * as Utilities from "~/src/common/utilities";
+import * as SVG from "~/src/components/SVG.js";
+
 import Button from "~/src/components/Button";
 import Input from "~/src/components/Input";
-import * as SVG from "~/src/components/SVG.js";
+
+import { ipcRenderer } from "electron";
+
+import "~/src/scenes/Scene.css";
 
 function LedgerStatus(props) {
   const curState = props.curState;

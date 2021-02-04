@@ -13,7 +13,6 @@ import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
 
 import { ipcRenderer } from "electron";
 
-import "~/src/scenes/Scene.css";
 import "~/src/components/App.css";
 import "~/src/components/Body.css";
 

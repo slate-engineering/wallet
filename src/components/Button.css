@@ -1,4 +1,6 @@
 .button {
+  background-color: var(--main-button-bg);
+  color: var(--main-button-text);
   box-sizing: border-box;
   border-radius: 4px;
   outline: 0;
@@ -10,14 +12,14 @@
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
-  transition: 200ms ease all;
   overflow-wrap: break-word;
   user-select: none;
   cursor: pointer;
-  background-color: black;
-  color: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  transition: 200ms ease all;
+  transform: scale(1);
   
-  :hover {
-    background-color: #a82a2a;
+  &:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
 }
