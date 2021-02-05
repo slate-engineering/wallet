@@ -141,11 +141,14 @@ export default class App extends React.Component {
       return { error: "This address was not found on the network. Try again later." };
     }
 
+    const transactions = await ipcRenderer.invoke("get-transactions", address);
+
     const addresses = this.state.accounts.addresses.map((each) => {
       if (address === each.address) {
         return {
           ...each,
           ...data.result,
+          transactions,
         };
       }
 
@@ -178,16 +181,20 @@ export default class App extends React.Component {
       return { error: data.error };
     }
 
+    console.log(data);
     if (!data.result) {
       alert("This address was not found on the network. Try again later.");
       return { error: "This address was not found on the network. Try again later." };
     }
 
+    const transactions = await ipcRenderer.invoke("get-transactions", entry.address);
+
     const addresses = [
-      { alias: entry.address, transactions: [], ...entry, ...data.result },
+      { alias: entry.address, transactions: transactions, ...entry, ...data.result },
       ...this.state.accounts.addresses,
     ];
 
+    console.log("writing account");
     const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
     if (updateResponse.error) {
       alert(updateResponse.error);

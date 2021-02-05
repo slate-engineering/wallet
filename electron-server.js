@@ -103,6 +103,7 @@ app.on("ready", async () => {
   ipcMain.handle("get-balance", async (event, address) => {
     // TODO(why): can cache this in local state so we can present the user nice
     // information even when offline
+    console.log("getting balance for", address);
     try {
       let actor = await client.stateGetActor(address, []);
 
@@ -138,9 +139,17 @@ app.on("ready", async () => {
   });
 
   ipcMain.handle("get-transactions", async (event, address) => {
-    const resp = await fetch(NEW_DEFAULT_CONFIG.INDEX_URL + "/index/msgs/for/" + address);
-
-    return resp.json();
+    console.log("getting transactions for", address);
+    try {
+      const resp = await fetch(NEW_DEFAULT_CONFIG.INDEX_URL + "/index/msgs/for/" + address);
+      console.log(resp);
+      return resp.json();
+    } catch (e) {
+      console.log(e);
+      return {
+        error: e.message,
+      };
+    }
   });
 
   ipcMain.handle("get-message", async (event, mcid) => {
@@ -150,6 +159,7 @@ app.on("ready", async () => {
         result: msg,
       };
     } catch (e) {
+      console.log(e);
       return {
         error: e.toString(),
       };

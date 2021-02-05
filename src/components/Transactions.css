@@ -1,0 +1,24 @@
+.transactions {
+  font-family: "MDIO";
+  margin-top: 8px;
+  width: 100%;
+  font-size: 11px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  table-layout: fixed;
+}
+
+.transactions-row {
+  border: 1px solid var(--main-border);
+}
+
+.transactions-row-heading {
+  border: 1px solid var(--main-border);
+  padding: 8px;
+  text-align: left;
+}
+
+.transactions-row-data {
+  border: 1px solid var(--main-border);
+  padding: 8px;
+}

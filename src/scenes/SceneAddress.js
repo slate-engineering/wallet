@@ -50,14 +50,14 @@ export default class SceneAddress extends React.Component {
       <div className="scene">
         <div className="body">
           <h1 className="body-heading">{address.address}</h1>
-          <p className="body-paragraph">Filecoin Public Address</p>
+          <p className="body-paragraph">Filecoin public address</p>
 
           {hasBalance ? (
             <React.Fragment>
               <h1 className="body-heading" style={{ marginTop: 24 }}>
                 {Utilities.formatAsFilecoinConversion(address.balance)}
               </h1>
-              <p className="body-paragraph">Filecoin Balance (FIL)</p>
+              <p className="body-paragraph">Filecoin balance (FIL)</p>
             </React.Fragment>
           ) : null}
 
@@ -66,26 +66,23 @@ export default class SceneAddress extends React.Component {
               <h1 className="body-heading" style={{ marginTop: 24 }}>
                 {Utilities.toDate(address.timestamp)}
               </h1>
-              <p className="body-paragraph">Last Updated</p>
+              <p className="body-paragraph">Last updated</p>
             </React.Fragment>
           ) : null}
 
-          <h2 className="body-heading-two" style={{ marginTop: 88 }}>
-            Refresh
-          </h2>
-          <p className="body-paragraph">
-            To get a balance update hit the refresh button below. Sorry there is not a better way to
-            do this.
-          </p>
-
-          <div style={{ marginTop: 24 }}>
+          <div style={{ marginTop: 16 }}>
             <Button
               loading={this.state.refreshing}
               onClick={() => this._handleRefresh({ address: address.address })}
             >
-              Refresh balance
+              Refresh
             </Button>
           </div>
+
+          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+            Transactions
+          </h2>
+          <TransactionList onGetMessage={this.props.onGetMessage} address={address} />
 
           <Input
             onChange={this._handleAliasChange}
@@ -108,7 +105,6 @@ export default class SceneAddress extends React.Component {
               Delete
             </Button>
           </div>
-          <TransactionList onGetMessage={this.props.onGetMessage} address={address.address} />
         </div>
       </div>
     );

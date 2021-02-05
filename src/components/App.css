@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "MDIO";
+  src: url("../assets/MDIO.woff") format("woff");
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -32,6 +37,7 @@ html, body {
   --main-bg: #ffffff;
   --main-text: #000000;
   --main-border: #ADADAD;
+  --main-border-secondary: #DCDCDC;
   --main-navigation-text: #ffffff;
   --main-navigation-bg: #222222;
   --main-button-bg: #000000;
@@ -46,7 +52,8 @@ html, body {
 .root-theme-dark {
   --main-bg: #000000;
   --main-text: #ffffff;
-  --main-border: #999999;
+  --main-border: #888888;
+  --main-border-secondary: #999999;
   --main-navigation-text: #ffffff;
   --main-navigation-bg: #222222;
   --main-button-bg: #ffbf00;
