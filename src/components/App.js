@@ -76,19 +76,23 @@ export default class App extends React.Component {
       config,
       currentScene: currentScene ? currentScene : this.state.currentScene,
     });
+
+    return { success: true };
   };
 
   _handleNavigate = (currentScene, newContext = {}) => {
     console.log("navigate", currentScene, newContext);
     if (currentScene === this.state.currentScene) {
       this.setState({ context: { ...newContext } });
-      return;
+      return { success: true };
     }
 
     this.setState({
       currentScene,
       context: { ...newContext },
     });
+
+    return { success: true };
   };
 
   _handleUpdateAddress = async (data) => {
@@ -103,17 +107,38 @@ export default class App extends React.Component {
       return each;
     });
 
-    await ipcRenderer.invoke("write-accounts", { addresses });
+    const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    if (!updateResponse) {
+      alert("write account error");
+      return { error: "write account error" };
+    }
+
+    if (updateResponse.error) {
+      alert(updateResponse.error);
+      return { error: updateResponse.error };
+    }
+
     const accounts = await ipcRenderer.invoke("get-accounts");
+    if (accounts.error) {
+      alert(accounts.error);
+      return { error: accounts.error };
+    }
 
     this.setState({ accounts });
+
+    return { success: true };
   };
 
   _handleRefreshAddress = async ({ address }) => {
     const data = await ipcRenderer.invoke("get-balance", address);
+    if (data.error) {
+      alert(data.error);
+      return { error: data.error };
+    }
+
     if (!data.result) {
       alert("This address was not found on the network. Try again later.");
-      return null;
+      return { error: "This address was not found on the network. Try again later." };
     }
 
     const addresses = this.state.accounts.addresses.map((each) => {
@@ -127,38 +152,50 @@ export default class App extends React.Component {
       return each;
     });
 
-    await ipcRenderer.invoke("write-accounts", { addresses });
+    const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    console.log(updateResponse);
+    // TODO(jim): Handle error
 
-    await this.update();
-
-    alert("refreshed");
+    return await this.update();
   };
 
   _handleAddPublicAddress = async (entry, nextNavigation) => {
     if (!entry.address) {
-      alert("No address to add.");
-      return null;
+      alert("No address provided.");
+      return { error: "No address provided." };
     }
 
     const data = await ipcRenderer.invoke("get-balance", entry.address);
+    if (data.error) {
+      alert(data.error);
+      return { error: data.error };
+    }
+
     if (!data.result) {
       alert("This address was not found on the network. Try again later.");
-      return null;
+      return { error: "This address was not found on the network. Try again later." };
     }
 
     const addresses = [
       { alias: entry.address, transactions: [], ...entry, ...data.result },
       ...this.state.accounts.addresses,
     ];
-    await ipcRenderer.invoke("write-accounts", { addresses });
 
-    await this.update(nextNavigation);
+    const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    console.log(updateResponse);
+    // TODO(jim): Handle error
+
+    return await this.update(nextNavigation);
   };
 
   _handleSendFilecoin = async ({ source, destination, fil }) => {
     console.log({ source, destination, fil });
 
     const actor = await ipcRenderer.invoke("get-actor", source);
+    if (actor.error) {
+      alert(actor.error);
+      return { error: actor.error };
+    }
 
     console.log(actor);
 
@@ -173,12 +210,13 @@ export default class App extends React.Component {
     console.log(msg);
 
     let estim = await ipcRenderer.invoke("estimate-gas", msg);
-
     console.log(estim);
+    if (estim.error) {
+      alert(estim.error);
+      return { error: estim.error };
+    }
 
-    console.log("sending it over");
-
-    this._handleNavigate("SEND_CONFIRM", { source, destination, fil, actor, estim, msg });
+    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, actor, estim, msg });
   };
 
   _handleConfirmSendFilecoin = async ({ source, destination, fil, actor, estim, msg }) => {
@@ -193,8 +231,8 @@ export default class App extends React.Component {
 
     //console.log("serialized: ", signing.transactionSerialize(estim));
     if (resp.error) {
-      console.log("Error from signing: ", resp.error);
-      return;
+      alert(resp.error);
+      return { error: resp.error };
     }
 
     console.log("Message CID: ", resp.result);
@@ -207,24 +245,28 @@ export default class App extends React.Component {
       account.transactions.push({ cid: resp.result });
     }
 
-    await this._handleUpdateAddress({ ...account });
+    const updateResponse = await this._handleUpdateAddress({ ...account });
+    console.log(updateResponse);
+    // TODO(jim): handle error.
 
-    this._handleNavigate("ADDRESS", { address: source });
+    return this._handleNavigate("ADDRESS", { address: source });
   };
 
   _handleDeleteAddress = async ({ address }) => {
     const addresses = [...this.state.accounts.addresses].filter((each) => each.address !== address);
+    const deleteResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    console.log(deleteResponse);
+    // TODO(jim): handle error.
 
-    await ipcRenderer.invoke("write-accounts", { addresses });
-
-    await this.update("PORTFOLIO");
+    return await this.update("PORTFOLIO");
   };
 
   _handleGetMessage = async (mcid) => {
     const msg = await ipcRenderer.invoke("get-message", mcid);
 
     if (msg.error) {
-      throw msg.error;
+      alert(msg.error);
+      return { error: msg.error };
     }
 
     return msg;
