@@ -13,9 +13,39 @@ export default class SceneSendFilecoin extends React.Component {
     fil: 0.1,
     source: null,
     destination: "f2puts6g7ady7oojw6ibjz4pfp37anyhk3tb56nfi",
+    loading: false,
   };
 
   _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+
+  _handleSendFilecoin = async (e) => {
+    this.setState({ loading: true });
+
+    if (Utilities.isEmpty(this.state.source)) {
+      alert("You must specify a source address.");
+      return this.setState({ loading: false });
+    }
+
+    if (Utilities.isEmpty(this.state.destination)) {
+      alert("You must specify a destination.");
+      return this.setState({ loading: false });
+    }
+
+    if (this.state.fil <= 0) {
+      alert("You must provide a real amount of Filecoin to transfer.");
+      return this.setState({ loading: false });
+    }
+
+    const response = await this.props.onSendFilecoin({
+      fil: this.state.fil,
+      source: this.state.source,
+      destination: this.state.destination,
+    });
+
+    console.log(response);
+
+    // TODO(jim): On error, bail!
+  };
 
   render() {
     console.log(this.state);
@@ -71,8 +101,8 @@ export default class SceneSendFilecoin extends React.Component {
           ></Input>
 
           <div style={{ marginTop: 24 }}>
-            <Button onClick={() => this.props.onSendFilecoin({ ...this.state })}>
-              Create transaction
+            <Button onClick={this._handleSendFilecoin} loading={this.state.loading}>
+              Prepare transaction
             </Button>
           </div>
         </div>

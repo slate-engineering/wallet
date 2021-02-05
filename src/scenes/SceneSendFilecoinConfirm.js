@@ -8,6 +8,16 @@ import Button from "~/src/components/Button";
 import "~/src/scenes/Scene.css";
 
 export default class SceneSendFilecoinConfirm extends React.Component {
+  state = {
+    loading: false,
+  };
+
+  _handleSendFilecoinConfirm = async () => {
+    this.setState({ loading: true });
+    const response = await this.props.onConfirmSendFilecoin({ ...this.props.context });
+    this.setState({ loading: false });
+  };
+
   render() {
     return (
       <div className="scene">
@@ -16,6 +26,13 @@ export default class SceneSendFilecoinConfirm extends React.Component {
           <p className="body-paragraph">
             Confirm the transaction you want to make from your account.
           </p>
+
+          <React.Fragment>
+            <h2 className="body-heading-two" style={{ marginTop: 24 }}>
+              {this.props.context.estim.gasPremium}
+            </h2>
+            <p className="body-paragraph">Estimated gas cost (AttoFIL)</p>
+          </React.Fragment>
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
@@ -39,7 +56,7 @@ export default class SceneSendFilecoinConfirm extends React.Component {
           </React.Fragment>
 
           <div style={{ marginTop: 24 }}>
-            <Button onClick={() => this.props.onConfirmSendFilecoin({ ...this.props.context })}>
+            <Button onClick={this._handleSendFilecoinConfirm} loading={this.state.loading}>
               Send Filecoin transaction
             </Button>
           </div>

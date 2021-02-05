@@ -158,13 +158,9 @@ export default class App extends React.Component {
   _handleSendFilecoin = async ({ source, destination, fil }) => {
     console.log({ source, destination, fil });
 
-    // TODO(why): Pass what you need over to confirm here.
-    console.log("Jeromy handle pre confirmation stuff here ...");
-    this._handleNavigate("SEND_CONFIRM", { source, destination, fil });
-  };
-
-  _handleConfirmSendFilecoin = async ({ source, destination, fil }) => {
     const actor = await ipcRenderer.invoke("get-actor", source);
+
+    console.log(actor);
 
     let num = new FilecoinNumber(fil, "FIL");
     let msg = {
@@ -180,18 +176,21 @@ export default class App extends React.Component {
 
     console.log(estim);
 
+    console.log("sending it over");
+
+    this._handleNavigate("SEND_CONFIRM", { source, destination, fil, actor, estim, msg });
+  };
+
+  _handleConfirmSendFilecoin = async ({ source, destination, fil, actor, estim, msg }) => {
     const account = this.state.accounts.addresses.find((each) => each.address === source);
     account.actor = actor;
-
-    // TODO(why):
-    // Use this path.
-    console.log(account.path);
 
     let resp = await ipcRenderer.invoke(
       "sign-message",
       { kind: "ledger", path: account.path },
       estim
     );
+
     //console.log("serialized: ", signing.transactionSerialize(estim));
     if (resp.error) {
       console.log("Error from signing: ", resp.error);
@@ -210,8 +209,7 @@ export default class App extends React.Component {
 
     await this._handleUpdateAddress({ ...account });
 
-    // TODO(why): Complete, then navigate away here.
-    // this._handleNavigate("ADDRESS", { address: source });
+    this._handleNavigate("ADDRESS", { address: source });
   };
 
   _handleDeleteAddress = async ({ address }) => {
