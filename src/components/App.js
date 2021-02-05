@@ -395,12 +395,6 @@ export default class App extends React.Component {
                 Send
               </span>
               <span
-                className={transactionsClassNames}
-                onClick={() => this._handleNavigate("TRANSACTIONS")}
-              >
-                Transactions
-              </span>
-              <span
                 className={darkModeClassNames}
                 style={{ marginRight: 8 }}
                 onClick={this._handleToggleTheme}
