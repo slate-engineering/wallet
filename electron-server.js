@@ -1,7 +1,7 @@
 import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
 import FilecoinSigning from "@zondax/filecoin-signing-tools";
-import fetch from "fetch";
+import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import url from "url";
@@ -149,13 +149,22 @@ app.on("ready", async () => {
   });
 
   ipcMain.handle("get-transactions", async (event, address) => {
-    const resp = await fetch(indexUrl + "/index/msgs/for/" + address);
+    const resp = await fetch(NEW_DEFAULT_CONFIG.INDEX_URL + "/index/msgs/for/" + address);
 
     return resp.json();
   });
 
   ipcMain.handle("get-message", async (event, mcid) => {
-    return await client.chainGetMessage(mcid);
+    try {
+      const msg = await client.chainGetMessage({ "/": mcid });
+      return {
+        result: msg,
+      };
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
   });
 
   ipcMain.handle("sign-message", async (event, signer, message) => {
