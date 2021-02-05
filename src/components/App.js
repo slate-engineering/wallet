@@ -222,6 +222,16 @@ export default class App extends React.Component {
     await this.update("PORTFOLIO");
   };
 
+  _handleGetMessage = async (mcid) => {
+    const msg = await ipcRenderer.invoke("get-message", mcid);
+
+    if (msg.error) {
+      throw msg.error;
+    }
+
+    return msg;
+  };
+
   _handleToggleTheme = () => {
     this.setState({ theme: this.state.theme !== "LIGHT" ? "LIGHT" : "DARK" });
   };
@@ -239,6 +249,7 @@ export default class App extends React.Component {
       onDeleteAddress: this._handleDeleteAddress,
       onSendFilecoin: this._handleSendFilecoin,
       onConfirmSendFilecoin: this._handleConfirmSendFilecoin,
+      onGetMessage: this._handleGetMessage,
       onUpdate: this.update,
       accounts: this.state.accounts,
       config: this.state.config,

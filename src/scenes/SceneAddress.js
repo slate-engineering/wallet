@@ -4,6 +4,7 @@ import * as Utilities from "~/src/common/utilities";
 
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
+import TransactionList from "~/src/components/Transactions.js";
 
 import { ipcRenderer } from "electron";
 
@@ -96,6 +97,7 @@ export default class SceneAddress extends React.Component {
               Delete
             </Button>
           </div>
+          <TransactionList onGetMessage={this.props.onGetMessage} address={address.address} />
         </div>
       </div>
     );
