@@ -100,17 +100,6 @@ function createWindow() {
 }
 
 app.on("ready", async () => {
-  // TODO(why)
-  // This is where you can do NodeJS stuff.
-
-  // NOTE(why)
-  ipcMain.handle("add-root", async (event, destination, root) => {
-    // Whatever this function returns, is what the client gets when it calls
-    // const result = await ipcRenderer.invoke("add-root");
-
-    return "Hello World";
-  });
-
   ipcMain.handle("get-balance", async (event, address) => {
     // TODO(why): can cache this in local state so we can present the user nice
     // information even when offline
@@ -293,73 +282,85 @@ app.on("ready", async () => {
   });
 
   ipcMain.handle("get-accounts", async (event) => {
-    const p = path.join(__dirname, ".wallet", "accounts.json");
-    const f = await fs.promises.readFile(p, "utf8");
+    try {
+      const p = path.join(__dirname, ".wallet", "accounts.json");
+      const f = await fs.promises.readFile(p, "utf8");
 
-    return JSON.parse(f);
+      return JSON.parse(f);
+    } catch (e) {
+      console.log(e);
+      return { error: "get-accounts error" };
+    }
   });
 
-  let writeLock = false;
   ipcMain.handle("write-accounts", async (event, nextAccountData) => {
-    if (writeLock) {
-      return;
+    try {
+      const p = path.join(__dirname, ".wallet", "accounts.json");
+      const f = await fs.promises.readFile(p, "utf8");
+      const oldAccountData = JSON.parse(f);
+      console.log("old", oldAccountData);
+      console.log("new", nextAccountData);
+      const nextState = JSON.stringify({ ...oldAccountData, ...nextAccountData });
+
+      await fs.promises.writeFile(p, nextState, "utf8");
+
+      return { success: true };
+    } catch (e) {
+      console.log(e);
+      return { error: "write-accounts error" };
     }
-
-    writeLock = true;
-    const p = path.join(__dirname, ".wallet", "accounts.json");
-    const f = await fs.promises.readFile(p, "utf8");
-    const oldAccountData = JSON.parse(f);
-    console.log("old", oldAccountData);
-    console.log("new", nextAccountData);
-    const nextState = JSON.stringify({ ...oldAccountData, ...nextAccountData });
-
-    await fs.promises.writeFile(p, nextState, "utf8");
-    writeLock = false;
   });
 
   ipcMain.handle("get-config", async (event, data) => {
-    const p = path.join(__dirname, ".wallet", "config.json");
-    const f = await fs.promises.readFile(p, "utf8");
+    try {
+      const p = path.join(__dirname, ".wallet", "config.json");
+      const f = await fs.promises.readFile(p, "utf8");
 
-    return JSON.parse(f);
+      return JSON.parse(f);
+    } catch (e) {
+      console.log(e);
+      return { error: "get-config error" };
+    }
   });
 
-  let configLock = false;
   ipcMain.handle("write-config", async (event, nextConfig) => {
-    if (configLock) {
-      return;
+    try {
+      const p = path.join(__dirname, ".wallet", "config.json");
+      const f = await fs.promises.readFile(p, "utf8");
+      const oldConfig = JSON.parse(f);
+      const nextState = JSON.stringify({ ...oldConfig, ...nextConfig });
+      await fs.promises.writeFile(p, nextState, "utf8");
+      return { success: true };
+    } catch (e) {
+      console.log(e);
+      return { error: "write-config error" };
     }
-
-    configLock = true;
-    const p = path.join(__dirname, ".wallet", "config.json");
-    const f = await fs.promises.readFile(p, "utf8");
-    const oldConfig = JSON.parse(f);
-    const nextState = JSON.stringify({ ...oldConfig, ...nextConfig });
-    await fs.promises.writeFile(p, nextState, "utf8");
-    configLock = false;
   });
 
   ipcMain.handle("get-settings", async (event, data) => {
-    const p = path.join(__dirname, ".wallet", "settings.json");
-    const f = await fs.promises.readFile(p, "utf8");
+    try {
+      const p = path.join(__dirname, ".wallet", "settings.json");
+      const f = await fs.promises.readFile(p, "utf8");
 
-    return JSON.parse(f);
+      return JSON.parse(f);
+    } catch (e) {
+      console.log(e);
+      return { error: "get-settings error" };
+    }
   });
 
-  let settingsLock;
   ipcMain.handle("write-settings", async (event, nextSettings) => {
-    if (settingsLock) {
-      return;
+    try {
+      const p = path.join(__dirname, ".wallet", "settings.json");
+      const f = await fs.promises.readFile(p, "utf8");
+      const oldSettings = JSON.parse(f);
+      const nextState = JSON.stringify({ ...oldSettings, ...nextSettings });
+
+      await fs.promises.writeFile(p, nextState, "utf8");
+    } catch (e) {
+      console.log(e);
+      return { error: "write-settings error" };
     }
-
-    settingsLock = true;
-    const p = path.join(__dirname, ".wallet", "settings.json");
-    const f = await fs.promises.readFile(p, "utf8");
-    const oldSettings = JSON.parse(f);
-    const nextState = JSON.stringify({ ...oldSettings, ...nextSettings });
-
-    await fs.promises.writeFile(p, nextState, "utf8");
-    settingsLock = false;
   });
 
   const pathRoot = path.join(__dirname, ".wallet");
