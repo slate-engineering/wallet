@@ -9,13 +9,13 @@ import "~/src/scenes/Scene.css";
 
 export default class SceneSendFilecoinConfirm extends React.Component {
   state = {
-    loading: false,
+    loading: undefined,
   };
 
   _handleSendFilecoinConfirm = async () => {
-    this.setState({ loading: true });
+    this.setState({ loading: 1 });
     const response = await this.props.onConfirmSendFilecoin({ ...this.props.context });
-    this.setState({ loading: false });
+    this.setState({ loading: undefined });
   };
 
   render() {

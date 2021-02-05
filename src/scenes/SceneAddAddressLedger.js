@@ -15,7 +15,7 @@ class LedgerStatus extends React.Component {
   };
 
   _handleAddPublicAddress = async ({ address, path, compressedPK }) => {
-    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: true } });
+    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: 1 } });
 
     const response = await this.props.onAddPublicAddress({
       address,
@@ -23,7 +23,7 @@ class LedgerStatus extends React.Component {
       compressedPK,
     });
 
-    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: false } });
+    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: undefined } });
   };
 
   render() {

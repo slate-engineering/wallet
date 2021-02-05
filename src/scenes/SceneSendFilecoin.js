@@ -13,27 +13,27 @@ export default class SceneSendFilecoin extends React.Component {
     fil: 0.1,
     source: null,
     destination: "f2puts6g7ady7oojw6ibjz4pfp37anyhk3tb56nfi",
-    loading: false,
+    loading: undefined,
   };
 
   _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   _handleSendFilecoin = async (e) => {
-    this.setState({ loading: true });
+    this.setState({ loading: 1 });
 
     if (Utilities.isEmpty(this.state.source)) {
       alert("You must specify a source address.");
-      return this.setState({ loading: false });
+      return this.setState({ loading: undefined });
     }
 
     if (Utilities.isEmpty(this.state.destination)) {
       alert("You must specify a destination.");
-      return this.setState({ loading: false });
+      return this.setState({ loading: undefined });
     }
 
     if (this.state.fil <= 0) {
       alert("You must provide a real amount of Filecoin to transfer.");
-      return this.setState({ loading: false });
+      return this.setState({ loading: undefined });
     }
 
     const response = await this.props.onSendFilecoin({
@@ -44,7 +44,10 @@ export default class SceneSendFilecoin extends React.Component {
 
     console.log(response);
 
-    // TODO(jim): On error, bail!
+    if (response.error) {
+      this.setState({ loading: undefined });
+      return { error: response.error };
+    }
   };
 
   render() {

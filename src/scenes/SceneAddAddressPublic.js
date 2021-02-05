@@ -10,7 +10,7 @@ import "~/src/scenes/Scene.css";
 export default class SceneAddAddressPublic extends React.Component {
   state = {
     address: "",
-    loading: false,
+    loading: undefined,
   };
 
   _handleChange = (e) => {
@@ -18,7 +18,7 @@ export default class SceneAddAddressPublic extends React.Component {
   };
 
   _handleAddPublicAddress = async ({ address }) => {
-    this.setState({ loading: true });
+    this.setState({ loading: 1 });
     await this.props.onAddPublicAddress({ address: this.state.address }, "PORTFOLIO");
   };
 

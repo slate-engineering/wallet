@@ -9,12 +9,12 @@ import TransactionList from "~/src/components/Transactions.js";
 import { ipcRenderer } from "electron";
 
 export default class SceneAddress extends React.Component {
-  state = { refreshing: false };
+  state = { refreshing: undefined };
 
   _handleRefresh = async ({ address }) => {
-    this.setState({ refreshing: true });
+    this.setState({ refreshing: 1 });
     const response = await this.props.onRefreshAddress({ address });
-    this.setState({ refreshing: false });
+    this.setState({ refreshing: undefined });
   };
 
   _handleAliasChange = (e) => {

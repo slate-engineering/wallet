@@ -84,13 +84,15 @@ export default class TransactionList extends React.Component {
 
     return (
       <table className="transactions">
-        <tr className="transactions-row">
-          <th className="transactions-row-heading">CID</th>
-          <th className="transactions-row-heading">TO</th>
-          <th className="transactions-row-heading">FROM</th>
-          <th className="transactions-row-heading"></th>
-        </tr>
-        {items}
+        <tbody>
+          <tr className="transactions-row">
+            <th className="transactions-row-heading">CID</th>
+            <th className="transactions-row-heading">TO</th>
+            <th className="transactions-row-heading">FROM</th>
+            <th className="transactions-row-heading"></th>
+          </tr>
+          {items}
+        </tbody>
       </table>
     );
   }
