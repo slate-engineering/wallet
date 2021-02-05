@@ -9,52 +9,76 @@ import { ipcRenderer } from "electron";
 
 import "~/src/scenes/Scene.css";
 
-function LedgerStatus(props) {
-  const curState = props.curState;
-  switch (curState) {
-    case "start":
-      return <p className="body-paragraph">Checking for ledger device...</p>;
-    case "locked":
-      return <p className="body-paragraph">Please unlock your device.</p>;
-    case "error":
-      return (
-        <React.Fragment>
-          <p className="body-paragraph">Is your ledger plugged in and unlocked?</p>
-          <p className="body-paragraph">ERROR: {props.errMsg}</p>
-        </React.Fragment>
-      );
+class LedgerStatus extends React.Component {
+  state = {
+    loadingMap: {},
+  };
 
-    case "addresses":
-      let addrs = props.addresses ?? [];
-      const items = addrs.map((a) => {
-        const existing = props.existingAddresses.find((each) => each.address === a.addrString);
+  _handleAddPublicAddress = async ({ address, path, compressedPK }) => {
+    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: true } });
 
-        console.log(a);
+    const response = await this.props.onAddPublicAddress({
+      address,
+      path,
+      compressedPK,
+    });
 
+    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: false } });
+  };
+
+  render() {
+    const { curState } = this.props;
+
+    switch (curState) {
+      case "start":
+        return <p className="body-paragraph">Checking for ledger device...</p>;
+      case "locked":
+        return <p className="body-paragraph">Please unlock your device.</p>;
+      case "error":
         return (
-          <li className="body-address-item" key={a.addrString}>
-            <span className="body-address-item-left">{a.addrString}</span>
-            {existing ? null : (
-              <span className="body-address-item-right">
-                <Button
-                  onClick={() =>
-                    props.onAddPublicAddress({
-                      address: a.addrString,
-                      path: a.path,
-                      compressedPK: Buffer.from(a.compressed_pk).toString("hex"),
-                    })
-                  }
-                >
-                  Add
-                </Button>
-              </span>
-            )}
-          </li>
+          <React.Fragment>
+            <p className="body-paragraph">Is your ledger plugged in and unlocked?</p>
+            <p className="body-paragraph">ERROR: {props.errMsg}</p>
+          </React.Fragment>
         );
-      });
-      return <ul className="body-address-list">{items}</ul>;
-    default:
-      return <p className="body-paragraph">The world is happy</p>;
+
+      case "addresses":
+        let addrs = this.props.addresses ?? [];
+        const items = addrs.map((a) => {
+          const existing = this.props.existingAddresses.find(
+            (each) => each.address === a.addrString
+          );
+
+          const loading = this.state.loadingMap[a.addrString];
+
+          console.log(a);
+
+          return (
+            <li className="body-address-item" key={a.addrString}>
+              <span className="body-address-item-left">{a.addrString}</span>
+              {existing ? null : (
+                <span className="body-address-item-right">
+                  <Button
+                    loading={loading}
+                    onClick={() =>
+                      this._handleAddPublicAddress({
+                        address: a.addrString,
+                        path: a.path,
+                        compressedPK: Buffer.from(a.compressed_pk).toString("hex"),
+                      })
+                    }
+                  >
+                    Add
+                  </Button>
+                </span>
+              )}
+            </li>
+          );
+        });
+        return <ul className="body-address-list">{items}</ul>;
+      default:
+        return <p className="body-paragraph">The world is happy</p>;
+    }
   }
 }
 

@@ -25,5 +25,6 @@
 }
 
 .button--loading {
+  cursor: wait;
   padding: 4px 48px 4px 48px;
 }
