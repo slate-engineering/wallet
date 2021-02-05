@@ -181,6 +181,7 @@ export default class App extends React.Component {
     console.log(estim);
 
     const account = this.state.accounts.addresses.find((each) => each.address === source);
+    account.actor = actor;
 
     // TODO(why):
     // Use this path.
