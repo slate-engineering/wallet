@@ -4,6 +4,7 @@ import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 
+import { Converter, FilecoinNumber } from "@glif/filecoin-number";
 import { ipcRenderer } from "electron";
 
 class TransactionRow extends React.Component {
@@ -15,8 +16,13 @@ class TransactionRow extends React.Component {
   async componentDidMount() {
     const msg = await this.props.onGetMessage(this.state.txn.cid);
 
+    if (msg.error) {
+      console.error("failed to get message: ", this.state.txn.cid, msg.error);
+      return;
+    }
+
     this.setState({
-      msg: msg,
+      msg: msg.result,
     });
   }
 
@@ -30,6 +36,12 @@ class TransactionRow extends React.Component {
         ? this.props.address.alias
         : this.state.txn.from;
 
+    let value = "No message."; // todo, better placeholder...
+    if (this.state.msg) {
+      let v = new FilecoinNumber(this.state.msg.Value, "attoFIL");
+      value = v.toFil() + " FIL";
+    }
+
     return (
       <tr className="transactions-row">
         <td className="transactions-row-data">{this.state.txn.cid}</td>
@@ -38,9 +50,7 @@ class TransactionRow extends React.Component {
         <td className="transactions-row-data">
           {this.state.msg ? (
             <React.Fragment>
-              Value:{" "}
-              {Utilities.isEmpty(this.state.msg.Value) ? "No message." : this.state.msg.Value}{" "}
-              ExitCode: {this.state.txn.receipt.exit_code}
+              Value: {value} ExitCode: {this.state.txn.receipt.exit_code}
             </React.Fragment>
           ) : null}
         </td>
