@@ -171,6 +171,7 @@ export default class App extends React.Component {
       return { error: "No address provided." };
     }
 
+    console.log("getting balance");
     const data = await ipcRenderer.invoke("get-balance", entry.address);
     if (data.error) {
       alert(data.error);

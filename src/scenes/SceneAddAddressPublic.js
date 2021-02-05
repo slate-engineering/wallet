@@ -10,10 +10,16 @@ import "~/src/scenes/Scene.css";
 export default class SceneAddAddressPublic extends React.Component {
   state = {
     address: "",
+    loading: false,
   };
 
   _handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+
+  _handleAddPublicAddress = async ({ address }) => {
+    this.setState({ loading: true });
+    await this.props.onAddPublicAddress({ address: this.state.address }, "PORTFOLIO");
   };
 
   render() {
@@ -32,11 +38,7 @@ export default class SceneAddAddressPublic extends React.Component {
           ></Input>
 
           <div style={{ marginTop: 24 }}>
-            <Button
-              onClick={() =>
-                this.props.onAddPublicAddress({ address: this.state.address }, "PORTFOLIO")
-              }
-            >
+            <Button loading={this.state.loading} onClick={this._handleAddPublicAddress}>
               Add
             </Button>
           </div>
