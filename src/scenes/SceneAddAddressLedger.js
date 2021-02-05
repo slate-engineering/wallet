@@ -37,13 +37,12 @@ function LedgerStatus(props) {
             {existing ? null : (
               <span className="body-address-item-right">
                 <Button
-                  onClick={() =>
+                  onClick={() => 
                     props.onAddPublicAddress({
                       address: a.addrString,
-                      bytes: a.addrByte,
                       path: a.path,
-                      compressedPK: a.compressed_pk,
-                    })
+                      compressedPK: Buffer.from(a.compressed_pk).toString("hex"),
+                    });
                   }
                 >
                   Add

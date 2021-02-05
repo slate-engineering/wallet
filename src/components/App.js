@@ -111,7 +111,7 @@ export default class App extends React.Component {
 
   _handleRefreshAddress = async ({ address }) => {
     const data = await ipcRenderer.invoke("get-balance", address);
-    if (!data.balance) {
+    if (!data.result) {
       alert("This address was not found on the network. Try again later.");
       return null;
     }
@@ -120,7 +120,7 @@ export default class App extends React.Component {
       if (address === each.address) {
         return {
           ...each,
-          ...data,
+          ...data.result,
         };
       }
 
@@ -141,13 +141,13 @@ export default class App extends React.Component {
     }
 
     const data = await ipcRenderer.invoke("get-balance", entry.address);
-    if (!data.balance) {
+    if (!data.result) {
       alert("This address was not found on the network. Try again later.");
       return null;
     }
 
     const addresses = [
-      { alias: entry.address, transactions: [], ...entry, ...data },
+      { alias: entry.address, transactions: [], ...entry, ...data.result },
       ...this.state.accounts.addresses,
     ];
     await ipcRenderer.invoke("write-accounts", { addresses });
@@ -186,9 +186,16 @@ export default class App extends React.Component {
     // Use this path.
     console.log(account.path);
 
-    let path = "m/44'/461'/0'/0/0";
-    let resp = await ipcRenderer.invoke("sign-message", { kind: "ledger", path: path }, estim);
+    let resp = await ipcRenderer.invoke(
+      "sign-message",
+      { kind: "ledger", path: account.path },
+      estim
+    );
     //console.log("serialized: ", signing.transactionSerialize(estim));
+    if (resp.error) {
+      console.log("Error from signing: ", resp.error);
+      return;
+    }
 
     console.log("Message CID: ", resp.result);
 
