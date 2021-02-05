@@ -61,7 +61,8 @@ class TransactionRow extends React.Component {
 
 export default class TransactionList extends React.Component {
   render() {
-    const items = this.props.address.transactions.map((txn) => {
+    const txns = this.props.address.transactions ?? [];
+    const items = txns.map((txn) => {
       if (!txn.cid) {
         console.log("invalid attempt", txn);
         return null;
