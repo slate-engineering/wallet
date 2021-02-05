@@ -114,12 +114,28 @@ app.on("ready", async () => {
   ipcMain.handle("get-balance", async (event, address) => {
     // TODO(why): can cache this in local state so we can present the user nice
     // information even when offline
-    let actor = await client.stateGetActor(address, []);
+    try {
+      let actor = await client.stateGetActor(address, []);
 
-    return {
-      balance: actor.Balance,
-      timestamp: new Date(),
-    };
+      return {
+        result: {
+          balance: actor.Balance,
+          timestamp: new Date(),
+        },
+      };
+    } catch (e) {
+      if (e.toString().includes("actor not found")) {
+        return {
+          result: {
+            balance: "0",
+            timestamp: new Date(),
+          },
+        };
+      }
+      return {
+        error: e.toString(),
+      };
+    }
   });
 
   ipcMain.handle("get-actor", async (event, address) => {
