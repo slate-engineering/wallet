@@ -262,7 +262,7 @@ export default class App extends React.Component {
     }
 
     if (account.transactions) {
-      account.transactions.push({ cid: resp.result });
+      account.transactions.push({ cid: resp.result["/"] });
     }
 
     const updateResponse = await this._handleUpdateAddress({ ...account });

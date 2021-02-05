@@ -52,6 +52,16 @@ class TransactionRow extends React.Component {
 export default class TransactionList extends React.Component {
   render() {
     const items = this.props.address.transactions.map((txn) => {
+      if (!txn.cid) {
+        console.log("invalid attempt", txn);
+        return null;
+      }
+
+      if (txn.cid["/"]) {
+        console.log("incorrect cid value, patching but source is still damaged");
+        txn.cid = txn.cid["/"];
+      }
+
       return (
         <TransactionRow
           onGetMessage={this.props.onGetMessage}
