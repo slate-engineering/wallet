@@ -9,6 +9,14 @@ import TransactionList from "~/src/components/Transactions.js";
 import { ipcRenderer } from "electron";
 
 export default class SceneAddress extends React.Component {
+  state = { refreshing: false };
+
+  _handleRefresh = async ({ address }) => {
+    this.setState({ refreshing: true });
+    const response = await this.props.onRefreshAddress({ address });
+    this.setState({ refreshing: false });
+  };
+
   _handleAliasChange = (e) => {
     const address = this.props.accounts.addresses.find(
       (account) => account.address === this.props.context.address
@@ -71,7 +79,10 @@ export default class SceneAddress extends React.Component {
           </p>
 
           <div style={{ marginTop: 24 }}>
-            <Button onClick={() => this.props.onRefreshAddress({ address: address.address })}>
+            <Button
+              loading={this.state.refreshing}
+              onClick={() => this._handleRefresh({ address: address.address })}
+            >
               Refresh balance
             </Button>
           </div>

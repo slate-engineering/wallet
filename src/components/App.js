@@ -109,8 +109,8 @@ export default class App extends React.Component {
 
     const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
     if (!updateResponse) {
-      alert("write account error");
-      return { error: "write account error" };
+      alert("write-account error");
+      return { error: "write-account error" };
     }
 
     if (updateResponse.error) {
@@ -153,8 +153,14 @@ export default class App extends React.Component {
     });
 
     const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    if (updateResponse.error) {
+      alert(updateResponse.error);
+      return {
+        error: updateResponse.error,
+      };
+    }
+
     console.log(updateResponse);
-    // TODO(jim): Handle error
 
     return await this.update();
   };
@@ -182,8 +188,14 @@ export default class App extends React.Component {
     ];
 
     const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    if (updateResponse.error) {
+      alert(updateResponse.error);
+      return {
+        error: updateResponse.error,
+      };
+    }
+
     console.log(updateResponse);
-    // TODO(jim): Handle error
 
     return await this.update(nextNavigation);
   };
@@ -246,8 +258,14 @@ export default class App extends React.Component {
     }
 
     const updateResponse = await this._handleUpdateAddress({ ...account });
+    if (updateResponse.error) {
+      alert(updateResponse.error);
+      return {
+        error: updateResponse.error,
+      };
+    }
+
     console.log(updateResponse);
-    // TODO(jim): handle error.
 
     return this._handleNavigate("ADDRESS", { address: source });
   };
@@ -255,8 +273,12 @@ export default class App extends React.Component {
   _handleDeleteAddress = async ({ address }) => {
     const addresses = [...this.state.accounts.addresses].filter((each) => each.address !== address);
     const deleteResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    if (deleteResponse.error) {
+      alert(deleteResponse.error);
+      return { error: deleteResponse.error };
+    }
+
     console.log(deleteResponse);
-    // TODO(jim): handle error.
 
     return await this.update("PORTFOLIO");
   };
