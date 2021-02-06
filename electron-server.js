@@ -306,6 +306,10 @@ app.on("ready", async () => {
         error: "get pending failed: " + e.toString(),
       };
     }
+
+    return {
+      result: out,
+    };
   });
 
   ipcMain.handle("estimate-gas", async (event, message) => {
@@ -365,6 +369,40 @@ app.on("ready", async () => {
       return {
         error: e.toString(),
       };
+    }
+  });
+
+  ipcMain.handle("resolve-address", async (event, address) => {
+    if (address.startsWith("f0")) {
+      try {
+        // TODO: this wont work if someone passes in the ID address of a
+        // multisig wallet... need to figure out how to work around this...
+        const resp = await client.stateAccountKey(address, []);
+        return {
+          id_addr: address,
+          address: resp,
+        };
+      } catch (e) {
+        // TODO: there is a case where some addresses *only* have an f0 address
+        // if they were created in the genesis block
+        return {
+          error: e.toString(),
+        };
+      }
+    } else {
+      try {
+        const resp = await client.stateLookupID(address, []);
+        return {
+          result: {
+            id_addr: resp,
+            address: address,
+          },
+        };
+      } catch (e) {
+        return {
+          error: e.toString(),
+        };
+      }
     }
   });
 

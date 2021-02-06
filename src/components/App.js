@@ -139,7 +139,31 @@ export default class App extends React.Component {
       return { error: "This address was not found on the network. Try again later." };
     }
 
+    // Get both the ID address and the robust address variants for this account
+    const resolveResp = await ipcRenderer.invoke("resolve-address", address);
+    if (resolveResp.error) {
+      alert(resolveResp.error);
+      return { error: resolveResp.error };
+    }
+
+    const addrs = resolveResp.result;
+
+    // normalize to using the robust address for the 'primary' key
+    address = addrs.address;
+
     const transactions = await ipcRenderer.invoke("get-transactions", address);
+
+    // If we are refreshing a multisig, also check the multisig state
+    let msig_info = undefined;
+    if (data.result.type == 2) {
+      console.log("refreshing multisig!");
+      const resp = await ipcRenderer.invoke("get-multisig-info", address);
+      if (resp.error) {
+        alert("failed to fetch multisig info for account: " + resp.error);
+        return { error: resp.error };
+      }
+      msig_info = resp.result;
+    }
 
     const addresses = this.state.accounts.addresses.map((each) => {
       if (address === each.address) {
@@ -147,6 +171,8 @@ export default class App extends React.Component {
           ...each,
           ...data.result,
           transactions,
+          id_addr: addrs.id_addr,
+          msig_info,
         };
       }
 
