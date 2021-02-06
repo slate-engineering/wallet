@@ -10,9 +10,9 @@ import "~/src/scenes/Scene.css";
 
 export default class SceneSendFilecoin extends React.Component {
   state = {
-    fil: 0.1,
-    source: null,
-    destination: "f2puts6g7ady7oojw6ibjz4pfp37anyhk3tb56nfi",
+    fil: 0,
+    source: undefined,
+    destination: "",
     loading: undefined,
   };
 
