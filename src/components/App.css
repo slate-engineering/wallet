@@ -147,8 +147,9 @@ html, body {
 }
 
 .wallet-item {
-  margin-top: 12px;
+  margin-top: 2px;
   padding: 0px 12px 0px 12px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -177,6 +178,7 @@ html, body {
 .wallet-item-right-top {
   font-weight: 600;
   overflow: hidden;
+  padding-top: 8px;
   text-overflow: ellipsis;
 }
 
