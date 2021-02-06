@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
+import * as Constants from "~/src/common/constants";
 
 import { ipcRenderer } from "electron";
 
@@ -12,16 +13,10 @@ import "~/src/scenes/Scene.css";
 
 const SEARCH_DELAY = 1500;
 
-const WALLET_ADDRESS_TYPES = {
-  1: "SECP-256K1",
-  2: "Multi-signature",
-  3: "BLS",
-};
-
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <SVG.BLS height="14px" />,
-  2: <SVG.MULTISIG height="14px" />,
-  3: <SVG.SECP height="14px" />,
+  1: <span>❖</span>,
+  2: <span>⁂</span>,
+  3: <span>✢</span>,
 };
 
 export default class SceneAddAddressPublic extends React.Component {
@@ -94,7 +89,7 @@ export default class SceneAddAddressPublic extends React.Component {
 
               <h2 className="body-heading" style={{ marginTop: 24 }}>
                 {WALLET_ADDRESS_TYPES_SVG[this.state.data.result.type]}&nbsp;
-                {WALLET_ADDRESS_TYPES[this.state.data.result.type]}
+                {Constants.WALLET_ADDRESS_TYPES[this.state.data.result.type]}
               </h2>
               <p className="body-paragraph">Type</p>
 

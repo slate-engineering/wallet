@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
+import * as Constants from "~/src/common/constants";
 
 import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
@@ -9,20 +10,28 @@ import TransactionList from "~/src/components/Transactions.js";
 
 import { ipcRenderer } from "electron";
 
-const WALLET_ADDRESS_TYPES = {
-  1: "SECP-256K1",
-  2: "Multi-signature",
-  3: "BLS",
+const WALLET_ADDRESS_TYPES_SVG = {
+  1: <span>❖</span>,
+  2: <span>⁂</span>,
+  3: <span>✢</span>,
 };
 
-const WALLET_ADDRESS_TYPES_SVG = {
-  1: <SVG.BLS height="14px" />,
-  2: <SVG.MULTISIG height="14px" />,
-  3: <SVG.SECP height="14px" />,
+const getAlias = (props) => {
+  const address = props.accounts.addresses.find(
+    (account) => account.address === props.context.address
+  );
+
+  return address.alias;
 };
 
 export default class SceneAddress extends React.Component {
-  state = { refreshing: undefined };
+  state = { refreshing: undefined, alias: getAlias(this.props) };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.context.address !== this.props.context.address) {
+      this.setState({ refreshing: undefined, alias: getAlias(this.props) });
+    }
+  }
 
   _handleRefresh = async ({ address }) => {
     this.setState({ refreshing: 1 });
@@ -31,12 +40,18 @@ export default class SceneAddress extends React.Component {
   };
 
   _handleAliasChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+
+    return this._handleAliasSaveDebounced();
+  };
+
+  _handleAliasSaveDebounced = Utilities.debounce(async () => {
     const address = this.props.accounts.addresses.find(
       (account) => account.address === this.props.context.address
     );
 
-    this.props.onUpdateAddress({ ...address, alias: e.target.value });
-  };
+    await this.props.onUpdateAddress({ ...address, alias: this.state.alias });
+  }, 600);
 
   render() {
     const address = this.props.accounts.addresses.find(
@@ -80,7 +95,7 @@ export default class SceneAddress extends React.Component {
           {hasType ? (
             <React.Fragment>
               <h2 className="body-heading" style={{ marginTop: 24 }}>
-                {iconElement}&nbsp;{WALLET_ADDRESS_TYPES[address.type]}
+                {iconElement}&nbsp;{Constants.WALLET_ADDRESS_TYPES[address.type]}
               </h2>
               <p className="body-paragraph">Type</p>
             </React.Fragment>
@@ -120,7 +135,7 @@ export default class SceneAddress extends React.Component {
 
           <Input
             onChange={this._handleAliasChange}
-            value={address.alias}
+            value={this.state.alias}
             name="alias"
             title="Alias"
             description="Give your address an alias to make it easier to remember."

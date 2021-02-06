@@ -9,6 +9,7 @@ import { ipcRenderer } from "electron";
 import * as React from "react";
 import * as Utilities from "~/src/common/utilities";
 import * as SVG from "~/src/components/SVG.js";
+import * as Constants from "~/src/common/constants";
 
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
@@ -18,17 +19,12 @@ import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
-
-const WALLET_ADDRESS_TYPES = {
-  1: "SECP-256K1",
-  2: "Multi-signature",
-  3: "BLS",
-};
+import SceneContacts from "~/src/scenes/SceneContacts";
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <SVG.BLS height="20px" />,
-  2: <SVG.MULTISIG height="20px" />,
-  3: <SVG.SECP height="20px" />,
+  1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>❖</span>,
+  2: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>⁂</span>,
+  3: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>✢</span>,
 };
 
 const WALLET_SCENE = {
@@ -40,6 +36,7 @@ const WALLET_SCENE = {
   SEND_CONFIRM: <SceneSendFilecoinConfirm />,
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
+  CONTACTS: <SceneContacts />,
 };
 
 export default class App extends React.Component {
@@ -370,7 +367,6 @@ export default class App extends React.Component {
             <div className="root-left-title">Addresses</div>
             {this.state.accounts.addresses.map((each) => {
               const iconElement = WALLET_ADDRESS_TYPES_SVG[each.type];
-              console.log(each);
 
               return (
                 <div
@@ -402,6 +398,9 @@ export default class App extends React.Component {
               </span>
               <span className={sendClassNames} onClick={() => this._handleNavigate("SEND")}>
                 Send
+              </span>
+              <span className={sendClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
+                Contacts
               </span>
               <span
                 className={darkModeClassNames}
