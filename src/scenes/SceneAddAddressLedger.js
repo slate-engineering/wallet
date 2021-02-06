@@ -21,6 +21,7 @@ class LedgerStatus extends React.Component {
       address,
       path,
       compressedPK,
+      type,
     });
 
     this.setState({ loadingMap: { ...this.state.loadingMap, [address]: undefined } });
@@ -65,6 +66,7 @@ class LedgerStatus extends React.Component {
                         address: a.addrString,
                         path: a.path,
                         compressedPK: Buffer.from(a.compressed_pk).toString("hex"),
+                        type: "ledger",
                       })
                     }
                   >
@@ -109,8 +111,8 @@ export default class SceneAddAddressPublic extends React.Component {
       return;
     }
 
+    console.log(ledgerResp);
     const res = ledgerResp.result;
-    console.log(res);
 
     if (res.device_locked) {
       this.setState({
