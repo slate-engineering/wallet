@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
+import QRCode from "qrcode.react";
 
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
@@ -51,6 +52,8 @@ export default class SceneAddress extends React.Component {
         <div className="body">
           <h1 className="body-heading">{address.address}</h1>
           <p className="body-paragraph">Filecoin public address</p>
+
+          <QRCode value={"fil:" + address.address} />
 
           {hasBalance ? (
             <React.Fragment>
