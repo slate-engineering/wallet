@@ -5,6 +5,7 @@ import "~/src/components/Body.css";
 import { FilecoinNumber } from "@glif/filecoin-number";
 //import signing from "@zondax/filecoin-signing-tools";
 import { ipcRenderer } from "electron";
+
 import * as React from "react";
 import * as Utilities from "~/src/common/utilities";
 import * as SVG from "~/src/components/SVG.js";
@@ -19,9 +20,9 @@ import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 
 const WALLET_ADDRESS_TYPES = {
-  1: "BLS",
-  2: "Multi Signature",
-  3: "SECP-256K1",
+  1: "SECP-256K1",
+  2: "Multi-signature",
+  3: "BLS",
 };
 
 const WALLET_ADDRESS_TYPES_SVG = {
@@ -168,6 +169,28 @@ export default class App extends React.Component {
     return await this.update();
   };
 
+  _handleAddPublicAddressWithExistingData = async (entry, nextNavigation) => {
+    const transactions = await ipcRenderer.invoke("get-transactions", entry.address);
+
+    const addresses = [
+      { alias: entry.address, transactions: transactions, ...entry },
+      ...this.state.accounts.addresses,
+    ];
+
+    console.log("writing account");
+    const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
+    if (updateResponse.error) {
+      alert(updateResponse.error);
+      return {
+        error: updateResponse.error,
+      };
+    }
+
+    console.log(updateResponse);
+
+    return await this.update(nextNavigation);
+  };
+
   _handleAddPublicAddress = async (entry, nextNavigation) => {
     if (!entry.address) {
       alert("No address provided.");
@@ -187,25 +210,10 @@ export default class App extends React.Component {
       return { error: "This address was not found on the network. Try again later." };
     }
 
-    const transactions = await ipcRenderer.invoke("get-transactions", entry.address);
-
-    const addresses = [
-      { alias: entry.address, transactions: transactions, ...entry, ...data.result },
-      ...this.state.accounts.addresses,
-    ];
-
-    console.log("writing account");
-    const updateResponse = await ipcRenderer.invoke("write-accounts", { addresses });
-    if (updateResponse.error) {
-      alert(updateResponse.error);
-      return {
-        error: updateResponse.error,
-      };
-    }
-
-    console.log(updateResponse);
-
-    return await this.update(nextNavigation);
+    return await this._handleAddPublicAddressWithExistingData(
+      { ...entry, ...data.result },
+      nextNavigation
+    );
   };
 
   _handleSendFilecoin = async ({ source, destination, fil }) => {
@@ -316,6 +324,7 @@ export default class App extends React.Component {
       onRefreshAddress: this._handleRefreshAddress,
       onUpdateAddress: this._handleUpdateAddress,
       onAddPublicAddress: this._handleAddPublicAddress,
+      onAddPublicAddressWithExistingData: this._handleAddPublicAddressWithExistingData,
       onDeleteAddress: this._handleDeleteAddress,
       onSendFilecoin: this._handleSendFilecoin,
       onConfirmSendFilecoin: this._handleConfirmSendFilecoin,

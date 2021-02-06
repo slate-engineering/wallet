@@ -1,13 +1,25 @@
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
-import QRCode from "qrcode.react";
 
+import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
 import TransactionList from "~/src/components/Transactions.js";
 
 import { ipcRenderer } from "electron";
+
+const WALLET_ADDRESS_TYPES = {
+  1: "SECP-256K1",
+  2: "Multi-signature",
+  3: "BLS",
+};
+
+const WALLET_ADDRESS_TYPES_SVG = {
+  1: <SVG.BLS height="14px" />,
+  2: <SVG.MULTISIG height="14px" />,
+  3: <SVG.SECP height="14px" />,
+};
 
 export default class SceneAddress extends React.Component {
   state = { refreshing: undefined };
@@ -46,29 +58,48 @@ export default class SceneAddress extends React.Component {
 
     const hasDate = !Utilities.isEmpty(address.timestamp);
     const hasBalance = !Utilities.isEmpty(address.balance);
+    const hasType = address.type > 0;
+
+    let iconElement = null;
+    if (hasType) {
+      iconElement = WALLET_ADDRESS_TYPES_SVG[address.type];
+    }
 
     return (
       <div className="scene">
         <div className="body">
-          <h1 className="body-heading">{address.address}</h1>
-          <p className="body-paragraph">Filecoin public address</p>
+          <div className="body-inline-card">
+            <QRCode value={"fil:" + address.address} />
+          </div>
 
-          <QRCode value={"fil:" + address.address} />
+          <h1 className="body-heading" style={{ marginTop: 16 }}>
+            {address.address}
+          </h1>
+          <p className="body-paragraph">Address</p>
+
+          {hasType ? (
+            <React.Fragment>
+              <h2 className="body-heading" style={{ marginTop: 24 }}>
+                {iconElement}&nbsp;{WALLET_ADDRESS_TYPES[address.type]}
+              </h2>
+              <p className="body-paragraph">Type</p>
+            </React.Fragment>
+          ) : null}
 
           {hasBalance ? (
             <React.Fragment>
-              <h1 className="body-heading" style={{ marginTop: 24 }}>
+              <h2 className="body-heading" style={{ marginTop: 24 }}>
                 {Utilities.formatAsFilecoinConversion(address.balance)}
-              </h1>
-              <p className="body-paragraph">Filecoin balance (FIL)</p>
+              </h2>
+              <p className="body-paragraph">Balance</p>
             </React.Fragment>
           ) : null}
 
           {hasDate ? (
             <React.Fragment>
-              <h1 className="body-heading" style={{ marginTop: 24 }}>
+              <h2 className="body-heading" style={{ marginTop: 24 }}>
                 {Utilities.toDate(address.timestamp)}
-              </h1>
+              </h2>
               <p className="body-paragraph">Last updated</p>
             </React.Fragment>
           ) : null}

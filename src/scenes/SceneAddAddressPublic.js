@@ -2,10 +2,27 @@ import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 
+import { ipcRenderer } from "electron";
+
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
+import LoaderSpinner from "~/src/components/LoaderSpinner";
 
 import "~/src/scenes/Scene.css";
+
+const SEARCH_DELAY = 1500;
+
+const WALLET_ADDRESS_TYPES = {
+  1: "SECP-256K1",
+  2: "Multi-signature",
+  3: "BLS",
+};
+
+const WALLET_ADDRESS_TYPES_SVG = {
+  1: <SVG.BLS height="14px" />,
+  2: <SVG.MULTISIG height="14px" />,
+  3: <SVG.SECP height="14px" />,
+};
 
 export default class SceneAddAddressPublic extends React.Component {
   state = {
@@ -13,16 +30,40 @@ export default class SceneAddAddressPublic extends React.Component {
     loading: undefined,
   };
 
+  _handleChangeDebounced = Utilities.debounce(async () => {
+    if (Utilities.isEmpty(this.state.address)) {
+      return;
+    }
+
+    this.setState({ checking: true });
+    const data = await ipcRenderer.invoke("get-balance", this.state.address.trim());
+
+    if (data.error) {
+      alert(data.error);
+      this.setState({ checking: false });
+      return { error: data.error };
+    }
+
+    this.setState({ checking: false, data });
+  }, SEARCH_DELAY);
+
   _handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+
+    this._handleChangeDebounced();
   };
 
   _handleAddPublicAddress = async ({ address }) => {
     this.setState({ loading: 1 });
-    await this.props.onAddPublicAddress({ address: this.state.address }, "PORTFOLIO");
+
+    await this.props.onAddPublicAddressWithExistingData(
+      { address: this.state.address, ...this.state.data.result },
+      "PORTFOLIO"
+    );
   };
 
   render() {
+    console.log(this.state.data);
     return (
       <div className="scene">
         <div className="body">
@@ -37,11 +78,40 @@ export default class SceneAddAddressPublic extends React.Component {
             style={{ marginTop: 48 }}
           ></Input>
 
-          <div style={{ marginTop: 24 }}>
-            <Button loading={this.state.loading} onClick={this._handleAddPublicAddress}>
-              Add
-            </Button>
-          </div>
+          {this.state.checking ? (
+            <div className="body-status">
+              <LoaderSpinner height="16px" style={{ marginRight: 16 }} /> Searching for your
+              address...
+            </div>
+          ) : null}
+
+          {this.state.data ? (
+            <React.Fragment>
+              <h2 className="body-heading" style={{ marginTop: 48 }}>
+                {Utilities.formatAsFilecoinConversion(this.state.data.result.balance)}
+              </h2>
+              <p className="body-paragraph">Balance</p>
+
+              <h2 className="body-heading" style={{ marginTop: 24 }}>
+                {WALLET_ADDRESS_TYPES_SVG[this.state.data.result.type]}&nbsp;
+                {WALLET_ADDRESS_TYPES[this.state.data.result.type]}
+              </h2>
+              <p className="body-paragraph">Type</p>
+
+              <h2 className="body-heading" style={{ marginTop: 24 }}>
+                {Utilities.toDate(this.state.data.result.timestamp)}
+              </h2>
+              <p className="body-paragraph">Last updated</p>
+            </React.Fragment>
+          ) : null}
+
+          {this.state.data ? (
+            <div style={{ marginTop: 24 }}>
+              <Button loading={this.state.loading} onClick={this._handleAddPublicAddress}>
+                Add address to wallet
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
     );

@@ -181,9 +181,10 @@ html, body {
 }
 
 .wallet-item-right-bottom {
+  font-family: "MDIO";
   overflow: hidden;
-  font-size: 12px;
+  font-size: 10px;
   margin-top: 1px;
-  padding-left: 1px;
   text-overflow: ellipsis;
+  opacity: 0.6;
 }

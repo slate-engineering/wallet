@@ -19,7 +19,7 @@ const NEW_DEFAULT_SETTINGS = {
 
 const NEW_DEFAULT_CONFIG = {
   config: true,
-  API_URL: "wss://api.chain.love/rpc/v0",
+  API_URL: "https://api.chain.love/rpc/v0",
   INDEX_URL: "https://api.chain.love/wallet",
 };
 
@@ -101,18 +101,39 @@ function createWindow() {
   return mainWindow;
 }
 
+const MULTI_SIG_ACTOR_ID = "bafkqadtgnfwc6mrpnv2wy5djonuwo";
+
 app.on("ready", async () => {
   ipcMain.handle("get-balance", async (event, address) => {
-    // TODO(why): can cache this in local state so we can present the user nice
-    // information even when offline
-    console.log("getting balance for", address);
     try {
-      let actor = await client.stateGetActor(address, []);
+      console.log("starting request...", { address });
+      const actor = await client.stateGetActor(address, []);
+      console.log("got-balance...", { actor });
+
+      let type = 0;
+      if (address.startsWith("f1")) {
+        type = 1;
+      }
+
+      if (address.startsWith("f2")) {
+        if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
+          type = 2;
+        }
+      }
+
+      if (address.startsWith("f3")) {
+        type = 3;
+      }
+
+      if (type === 0) {
+        return { error: "Not a valid address for this wallet." };
+      }
 
       return {
         result: {
           balance: actor.Balance,
           timestamp: new Date(),
+          type,
         },
       };
     } catch (e) {

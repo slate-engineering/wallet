@@ -3,16 +3,38 @@
   flex-shrink: 0;
 }
 
+.body-inline-card {
+  display: inline-flex;
+  border: 1px solid var(--main-border);
+  padding: 16px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.body-status {
+  font-family: 'MDIO';
+  background: var(--main-primary-accent);
+  padding: 8px 24px 8px 24px;
+  border-radius: 3px;
+  margin-top: 8px;
+  display: inline-flex;
+  text-transform: uppercase;
+  align-items: center;
+  font-size: 10px;
+}
+
 .body-heading {
   font-size: 18px;
   font-weight: 600;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  max-width: 488px;
 }
 
 .body-heading-two {
   font-size: 14px;
-  font-weight: 600px;
+  font-weight: 600;
+  max-width: 488px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
 }

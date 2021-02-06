@@ -6,6 +6,18 @@ export function formatAsFilecoinConversion(number) {
   return `${formatAsFilecoin(inFil)}`;
 }
 
+export const debounce = (func, wait) => {
+  let timeout;
+
+  return function passedInFunction(...args) {
+    const later = () => {
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
 export function formatAsFilecoin(number) {
   return `${number} FIL`;
 }
