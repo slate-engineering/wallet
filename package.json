@@ -36,6 +36,7 @@
     "fetch": "^1.1.0",
     "node-fetch": "^2.6.1",
     "postcss": "^8.2.1",
+    "qrcode.react": "^1.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

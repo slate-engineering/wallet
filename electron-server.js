@@ -231,6 +231,49 @@ app.on("ready", async () => {
     }
   });
 
+  ipcMain.handle("get-multisig-info", async (event, addr) => {
+    try {
+      const actor = await client.stateGetActor(addr, []);
+
+      if (actor.Code["/"] !== "bafkqadtgnfwc6mrpnv2wy5djonuwo") {
+        return {
+          error: addr + " is not a multisig account",
+        };
+      }
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
+
+    let out = null;
+    try {
+      const resp = await client.stateReadState(addr, []);
+      const state = resp.State;
+      out = {
+        balance: resp.Balance,
+        signers: state.Signers,
+        threshold: state.NumApprovalsThreshold,
+        next_txn_id: state.NextTxnID,
+        vesting_start: state.StartEpoch,
+        vesting_duration: state.UnlockDuration,
+        vesting_balance: state.InitialBalance,
+      };
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
+
+    try {
+      out.pending = await client.msigGetPending(addr, []);
+    } catch (e) {
+      return {
+        error: "get pending failed: " + e.toString(),
+      };
+    }
+  });
+
   ipcMain.handle("estimate-gas", async (event, message) => {
     let estim = await client.gasEstimateMessageGas(message, {}, []);
 
@@ -416,6 +459,8 @@ app.on("ready", async () => {
   const settings = JSON.parse(settingsJSON);
 
   provider = new NodejsProvider(config.API_URL);
+
+  mainnet.fullNode.methods.MsigGetPending = {}; // Temporary hack until dep gets updated
   client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
   const filecoinNumber = new FilecoinNumber("10000", "attoFil");
