@@ -38,7 +38,7 @@ class LedgerStatus extends React.Component {
         return (
           <React.Fragment>
             <p className="body-paragraph">Is your ledger plugged in and unlocked?</p>
-            <p className="body-paragraph">ERROR: {props.errMsg}</p>
+            <p className="body-paragraph">ERROR: {this.props.errMsg}</p>
           </React.Fragment>
         );
 
