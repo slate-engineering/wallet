@@ -12,11 +12,25 @@ export default class SceneSendFilecoin extends React.Component {
   state = {
     fil: 0,
     source: undefined,
+    signer: undefined,
     destination: "",
     loading: undefined,
+    sourceAccount: null,
+    multisigSpend: false,
   };
 
-  _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  _handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  _handleChangeSource = (e) => {
+    const account = this.props.accounts.addresses.find((a) => a.address == e.target.value);
+    this.setState({
+      [e.target.name]: e.target.value,
+      sourceAccount: account,
+      multisigSpend: account.type == "multisig",
+    });
+  };
 
   _handleSendFilecoin = async (e) => {
     this.setState({ loading: 1 });
@@ -39,6 +53,8 @@ export default class SceneSendFilecoin extends React.Component {
     const response = await this.props.onSendFilecoin({
       fil: this.state.fil,
       source: this.state.source,
+      sourceAccount: this.state.sourceAccount,
+      signer: this.state.signer,
       destination: this.state.destination,
     });
 
@@ -69,7 +85,7 @@ export default class SceneSendFilecoin extends React.Component {
           <SelectMenu
             name="source"
             value={this.state.source}
-            onChange={this._handleChange}
+            onChange={this._handleChangeSource}
             options={this.props.accounts.addresses.map((each) => {
               return {
                 value: each.address,
@@ -77,6 +93,30 @@ export default class SceneSendFilecoin extends React.Component {
               };
             })}
           />
+
+          {this.state.multisigSpend ? (
+            <React.Fragment>
+              <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+                Signer
+              </h2>
+              <p className="body-paragraph" style={{ marginBottom: 12 }}>
+                The address to use to sign this multisig transaction.
+              </p>
+              <SelectMenu
+                name="signer"
+                value={this.state.signer}
+                onChange={this._handleChange}
+                options={this.props.accounts.addresses.map((each) => {
+                  // TODO(why) filter this to only be addresses that are in this accounts signers array
+                  // cant easily do it yet because the signers array for the multisig is all ID (f0) addresses
+                  return {
+                    value: each.address,
+                    name: Utilities.isEmpty(each.alias) ? each.address : each.alias,
+                  };
+                })}
+              />
+            </React.Fragment>
+          ) : null}
 
           <Input
             title="Destination wallet address"
