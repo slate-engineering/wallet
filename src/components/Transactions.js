@@ -27,7 +27,6 @@ class TransactionRow extends React.Component {
   }
 
   render() {
-    console.log(this.props.accounts);
     const toElement = Utilities.getAlias(this.state.txn.to, this.props.accounts);
     const fromElement = Utilities.getAlias(this.state.txn.from, this.props.accounts);
 
@@ -38,18 +37,13 @@ class TransactionRow extends React.Component {
     }
 
     return (
-      <tr className="transactions-row">
-        <td className="transactions-row-data">{this.state.txn.cid}</td>
-        <td className="transactions-row-data">{toElement}</td>
-        <td className="transactions-row-data">{fromElement}</td>
-        <td className="transactions-row-data">
-          {this.state.msg ? (
-            <React.Fragment>
-              Value: {value} ExitCode: {this.state.txn.receipt.exit_code}
-            </React.Fragment>
-          ) : null}
-        </td>
-      </tr>
+      <div className="transactions-row">
+        <div>
+          <strong>{fromElement}</strong> ➟ <strong>{toElement}</strong>{" "}
+          {this.state.msg ? value : null}
+        </div>
+        <div className="transactions-row-cid">{this.state.txn.cid}</div>
+      </div>
     );
   }
 }
@@ -79,18 +73,6 @@ export default class Transaction extends React.Component {
       );
     });
 
-    return (
-      <table className="transactions">
-        <tbody>
-          <tr className="transactions-row">
-            <th className="transactions-row-heading">CID</th>
-            <th className="transactions-row-heading">TO</th>
-            <th className="transactions-row-heading">FROM</th>
-            <th className="transactions-row-heading"></th>
-          </tr>
-          {items}
-        </tbody>
-      </table>
-    );
+    return <div className="transactions">{items}</div>;
   }
 }

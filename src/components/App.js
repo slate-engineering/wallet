@@ -41,7 +41,7 @@ const WALLET_SCENE = {
 
 export default class App extends React.Component {
   state = {
-    currentScene: "CONTACTS",
+    currentScene: "PORTFOLIO",
     accounts: { addresses: [] },
     context: null,
     theme: "LIGHT",

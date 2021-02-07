@@ -128,9 +128,11 @@ export default class SceneAddress extends React.Component {
             </Button>
           </div>
 
-          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
-            Transactions
-          </h2>
+          {address.transactions && address.transactions.length ? (
+            <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+              Transactions
+            </h2>
+          ) : null}
           <Transactions
             accounts={this.props.accounts}
             onGetMessage={this.props.onGetMessage}

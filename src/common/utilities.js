@@ -27,20 +27,18 @@ export function getAlias(address, accounts) {
     return address;
   }
 
-  if (accounts.contacts) {
-    for (const c of accounts.contacts) {
-      console.log(c);
-      if (c.address === address) {
-        return isEmpty(c.alias) ? address : c.alias;
+  if (accounts.addresses) {
+    for (const a of accounts.addresses) {
+      if (a.address === address) {
+        return isEmpty(a.alias) ? address : a.alias;
       }
     }
   }
 
-  if (accounts.addresses) {
-    for (const a of accounts.addresses) {
-      console.log(a);
-      if (a.address === address) {
-        return isEmpty(a.alias) ? address : a.alias;
+  if (accounts.contacts) {
+    for (const c of accounts.contacts) {
+      if (c.address === address) {
+        return isEmpty(c.alias) ? address : c.alias;
       }
     }
   }

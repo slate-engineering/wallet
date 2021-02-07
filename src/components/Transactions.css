@@ -1,24 +1,27 @@
 .transactions {
-  font-family: "MDIO";
   margin-top: 8px;
   width: 100%;
-  font-size: 11px;
+  font-size: 14px;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  table-layout: fixed;
 }
 
 .transactions-row {
-  border: 1px solid var(--main-border);
+  margin-bottom: 16px;
+  
+  strong {
+    font-size: 11px;
+    color: var(--main-button-text);
+    border-radius: 3px;
+    background: var(--main-primary-accent);
+    font-weight: 600;
+    padding: 3px;
+  }
 }
 
-.transactions-row-heading {
-  border: 1px solid var(--main-border);
-  padding: 8px;
-  text-align: left;
-}
-
-.transactions-row-data {
-  border: 1px solid var(--main-border);
-  padding: 8px;
+.transactions-row-cid {
+  opacity: 0.6;
+  margin-top: 4px;
+  font-family: "MDIO";
+  font-size: 11px;
 }
