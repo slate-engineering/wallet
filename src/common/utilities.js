@@ -22,6 +22,32 @@ export function formatAsFilecoin(number) {
   return `${number} FIL`;
 }
 
+export function getAlias(address, accounts) {
+  if (!accounts) {
+    return address;
+  }
+
+  if (accounts.contacts) {
+    for (const c of accounts.contacts) {
+      console.log(c);
+      if (c.address === address) {
+        return isEmpty(c.alias) ? address : c.alias;
+      }
+    }
+  }
+
+  if (accounts.addresses) {
+    for (const a of accounts.addresses) {
+      console.log(a);
+      if (a.address === address) {
+        return isEmpty(a.alias) ? address : a.alias;
+      }
+    }
+  }
+
+  return address;
+}
+
 export function noop() {}
 
 export function isEmpty(string) {

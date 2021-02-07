@@ -27,14 +27,9 @@ class TransactionRow extends React.Component {
   }
 
   render() {
-    const toElement =
-      this.state.txn.to === this.props.address.address
-        ? this.props.address.alias
-        : this.state.txn.to;
-    const fromElement =
-      this.state.txn.from === this.props.address.address
-        ? this.props.address.alias
-        : this.state.txn.from;
+    console.log(this.props.accounts);
+    const toElement = Utilities.getAlias(this.state.txn.to, this.props.accounts);
+    const fromElement = Utilities.getAlias(this.state.txn.from, this.props.accounts);
 
     let value = "No message."; // todo, better placeholder...
     if (this.state.msg) {
@@ -59,7 +54,7 @@ class TransactionRow extends React.Component {
   }
 }
 
-export default class TransactionList extends React.Component {
+export default class Transaction extends React.Component {
   render() {
     const txns = this.props.address.transactions ?? [];
     const items = txns.map((txn) => {
@@ -79,6 +74,7 @@ export default class TransactionList extends React.Component {
           key={txn.cid}
           txn={txn}
           address={this.props.address}
+          accounts={this.props.accounts}
         />
       );
     });

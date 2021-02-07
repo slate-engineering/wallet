@@ -6,7 +6,7 @@ import * as Constants from "~/src/common/constants";
 import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
-import TransactionList from "~/src/components/Transactions.js";
+import Transactions from "~/src/components/Transactions.js";
 
 import { ipcRenderer } from "electron";
 
@@ -131,7 +131,11 @@ export default class SceneAddress extends React.Component {
           <h2 className="body-heading-two" style={{ marginTop: 48 }}>
             Transactions
           </h2>
-          <TransactionList onGetMessage={this.props.onGetMessage} address={address} />
+          <Transactions
+            accounts={this.props.accounts}
+            onGetMessage={this.props.onGetMessage}
+            address={address}
+          />
 
           <Input
             onChange={this._handleAliasChange}
