@@ -41,7 +41,9 @@ html, body {
   --main-navigation-text: #ffffff;
   --main-navigation-bg: #222222;
   --main-button-bg: #000000;
+  --main-button-area-bg: var(--main-button-text);
   --main-button-text: #ffffff;
+  --main-button-area-text: var(--main-button-bg);
   --main-sidebar-bg: #F5F5F5;
   --main-sidebar-text: #888888;
   --main-primary-accent: #ffbf00;
@@ -57,7 +59,9 @@ html, body {
   --main-navigation-text: #ffffff;
   --main-navigation-bg: #222222;
   --main-button-bg: #ffbf00;
+  --main-button-area-bg: var(--main-bg);
   --main-button-text: #000000;
+  --main-button-area-text: var(--main-text);
   --main-sidebar-bg: #111111;
   --main-sidebar-text: #ADADAD;
   --main-primary-accent: #ffbf00;

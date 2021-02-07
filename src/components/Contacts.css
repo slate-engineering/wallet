@@ -1,0 +1,81 @@
+.contacts {
+  margin-top: 8px;
+  width: 100%;
+  font-size: 14px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  table-layout: fixed;
+}
+
+.contacts-row {
+  border: 1px solid var(--main-border);
+}
+
+.contacts-row-heading {
+  vertical-align: middle;
+  padding: 8px 0px 8px 0px;
+  text-align: left;
+}
+
+.contacts-row-data {
+  border: 0px;
+  box-sizing: border-box;
+}
+
+.contacts-row-data-input {
+  font-family: -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
+  padding: 8px;
+  background: var(--main-bg);
+  color: var(--main-text);
+  border: 1px solid var(--main-border);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  resize: none;
+  
+  &:focus {
+    border: 1px solid var(--main-primary-accent);
+    outline: 0px;
+  }
+  
+  scrollbar-width: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.contacts-row-data--action {
+  border: 1px solid transparent;
+  vertical-align: middle;
+  padding: 8px;
+  font-size: 16px;
+  transition: 200ms ease color;
+  
+  &:hover {
+    color: var(--main-primary-accent);
+  }
+}
+
+.contacts-row-heading--action {
+  border: 1px solid transparent;
+  padding-left: 8px;
+}
+
+.contacts-button {
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  border-radius: 24px;
+  background: var(--main-button-round-bg);
+  color: var(--main-button-round-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 200ms ease all;
+  transform: scale(1);
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}

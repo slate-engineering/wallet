@@ -41,7 +41,7 @@ const WALLET_SCENE = {
 
 export default class App extends React.Component {
   state = {
-    currentScene: "ADD_ADDRESS",
+    currentScene: "CONTACTS",
     accounts: { addresses: [] },
     context: null,
     theme: "LIGHT",
@@ -283,6 +283,22 @@ export default class App extends React.Component {
     return this._handleNavigate("ADDRESS", { address: source });
   };
 
+  _handleUpdateAccounts = async (newState) => {
+    const response = await ipcRenderer.invoke("write-accounts", {
+      ...this.state.accounts,
+      ...newState,
+    });
+
+    console.log(response);
+
+    if (response.error) {
+      alert(response.error);
+      return { error: response.error };
+    }
+
+    return await this.update();
+  };
+
   _handleDeleteAddress = async ({ address }) => {
     const addresses = [...this.state.accounts.addresses].filter((each) => each.address !== address);
     const deleteResponse = await ipcRenderer.invoke("write-accounts", { addresses });
@@ -320,6 +336,7 @@ export default class App extends React.Component {
       onNavigate: this._handleNavigate,
       onRefreshAddress: this._handleRefreshAddress,
       onUpdateAddress: this._handleUpdateAddress,
+      onUpdateAccounts: this._handleUpdateAccounts,
       onAddPublicAddress: this._handleAddPublicAddress,
       onAddPublicAddressWithExistingData: this._handleAddPublicAddressWithExistingData,
       onDeleteAddress: this._handleDeleteAddress,
@@ -351,9 +368,9 @@ export default class App extends React.Component {
       "navigation-item",
       this.state.currentScene === "SEND" ? "navigation-item--active" : null
     );
-    const transactionsClassNames = Utilities.classNames(
+    const contactsClassNames = Utilities.classNames(
       "navigation-item",
-      this.state.currentScene === "TRANSACTIONS" ? "navigation-item--active" : null
+      this.state.currentScene === "CONTACTS" ? "navigation-item--active" : null
     );
     const darkModeClassNames = Utilities.classNames(
       "navigation-item",
@@ -399,7 +416,7 @@ export default class App extends React.Component {
               <span className={sendClassNames} onClick={() => this._handleNavigate("SEND")}>
                 Send
               </span>
-              <span className={sendClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
+              <span className={contactsClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
                 Contacts
               </span>
               <span
