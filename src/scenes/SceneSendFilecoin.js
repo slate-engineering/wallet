@@ -33,7 +33,7 @@ export default class SceneSendFilecoin extends React.Component {
       // populate the 'signer' dropdown with
       const msig_info = account.msig_info ?? {};
       const msig_signers = msig_info.signers ?? [];
-      signers = this.props.accounts.addresses.filter((a) => msig_signers.includes(a.id_addr));
+      signers = this.props.accounts.addresses.filter((a) => msig_signers.includes(a.addressId));
     }
     this.setState({
       [e.target.name]: e.target.value,

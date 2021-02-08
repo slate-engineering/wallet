@@ -170,7 +170,7 @@ export default class App extends React.Component {
           ...each,
           ...data.result,
           transactions,
-          id_addr: addrs.id_addr,
+          addressId: addrs.addressId,
           msig_info,
         };
       }

@@ -319,7 +319,16 @@ app.on("ready", async () => {
     }
 
     return {
-      result: out,
+      result: {
+        balance: out.balance,
+        signers: out.signers,
+        threshold: out.threshold,
+        next_txn_id: out.next_txn_id,
+        vesting_start: out.vesting_start,
+        vesting_duration: out.vesting_duration,
+        vesting_balance: out.vesting_balance,
+        pending: out.pending,
+      },
     };
   });
 
@@ -390,7 +399,7 @@ app.on("ready", async () => {
         // multisig wallet... need to figure out how to work around this...
         const resp = await client.stateAccountKey(address, []);
         return {
-          id_addr: address,
+          addressId: address,
           address: resp,
         };
       } catch (e) {
@@ -405,7 +414,7 @@ app.on("ready", async () => {
         const resp = await client.stateLookupID(address, []);
         return {
           result: {
-            id_addr: resp,
+            addressId: resp,
             address: address,
           },
         };
