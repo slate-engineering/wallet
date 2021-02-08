@@ -51,7 +51,7 @@ class TransactionRow extends React.Component {
 export default class Transaction extends React.Component {
   render() {
     const txns = this.props.address.transactions ?? [];
-    const items = txns.map((txn) => {
+    const items = txns.map((txn, index) => {
       if (!txn.cid) {
         console.log("invalid attempt", txn);
         return null;
@@ -65,7 +65,7 @@ export default class Transaction extends React.Component {
       return (
         <TransactionRow
           onGetMessage={this.props.onGetMessage}
-          key={txn.cid}
+          key={`transactions-${index}-${txn.cid}`}
           txn={txn}
           address={this.props.address}
           accounts={this.props.accounts}

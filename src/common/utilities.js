@@ -2,6 +2,12 @@ import * as React from "react";
 
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
+const WALLET_ADDRESS_TYPES_SVG = {
+  1: "❖",
+  2: "⁂",
+  3: "✢",
+};
+
 export function formatAsFilecoinConversion(number) {
   const filecoinNumber = new FilecoinNumber(`${number}`, "attofil");
   const inFil = filecoinNumber.toFil();
@@ -34,7 +40,11 @@ export function getAlias(address, accounts, isElement = false) {
       if (a.address === address) {
         const resolution = isEmpty(a.alias) ? address : a.alias;
         if (isElement) {
-          return <strong className="transactions-tag transactions-tag--yours">{resolution}</strong>;
+          return (
+            <strong className="transactions-tag transactions-tag--yours">
+              {WALLET_ADDRESS_TYPES_SVG[a.type]} {resolution}
+            </strong>
+          );
         }
 
         return resolution;
@@ -47,7 +57,11 @@ export function getAlias(address, accounts, isElement = false) {
       if (c.address === address) {
         const resolution = isEmpty(c.alias) ? address : c.alias;
         if (isElement) {
-          return <strong className="transactions-tag">{resolution}</strong>;
+          return (
+            <strong className="transactions-tag">
+              {WALLET_ADDRESS_TYPES_SVG[c.type]} {resolution}
+            </strong>
+          );
         }
 
         return resolution;
