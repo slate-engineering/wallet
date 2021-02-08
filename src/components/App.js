@@ -3,7 +3,6 @@ import "~/src/components/App.css";
 import "~/src/components/Body.css";
 
 import { FilecoinNumber } from "@glif/filecoin-number";
-//import signing from "@zondax/filecoin-signing-tools";
 import { ipcRenderer } from "electron";
 
 import * as React from "react";
@@ -246,48 +245,61 @@ export default class App extends React.Component {
     );
   };
 
-  _handleSendFilecoin = async ({ source, destination, fil }) => {
+  _handleSendFilecoin = async ({ source, sourceAccount, signer, destination, fil }) => {
     console.log({ source, destination, fil });
 
-    const actor = await ipcRenderer.invoke("get-actor", source);
-    if (actor.error) {
-      alert(actor.error);
-      return { error: actor.error };
+    let num = new FilecoinNumber(fil, "FIL");
+
+    let msg = null;
+    if (signer) {
+      // this is a multisig transaction...
+      let res = await ipcRenderer.invoke(
+        "signing-propose-multisig",
+        source,
+        destination,
+        signer,
+        num.toAttoFil()
+      );
+
+      if (res.error) {
+        alert(res.error);
+        return { error: res.error };
+      }
+
+      msg = res.result;
+    } else {
+      const actor = await ipcRenderer.invoke("get-actor", source);
+      if (actor.error) {
+        alert(actor.error);
+        return { error: actor.error };
+      }
+
+      msg = {
+        from: source,
+        to: destination,
+        value: num.toAttoFil(),
+        nonce: actor.nonce,
+      };
     }
 
-    console.log(actor);
-
-    let num = new FilecoinNumber(fil, "FIL");
-    let msg = {
-      from: source,
-      to: destination,
-      value: num.toAttoFil(),
-      nonce: actor.nonce,
-    };
-
-    console.log(msg);
+    console.log("message to estimate: ", msg);
 
     let estim = await ipcRenderer.invoke("estimate-gas", msg);
-    console.log(estim);
+    console.log("estimation: ", estim);
     if (estim.error) {
       alert(estim.error);
       return { error: estim.error };
     }
 
-    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, actor, estim, msg });
+    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg });
   };
 
   _handleConfirmSendFilecoin = async ({ source, destination, fil, actor, estim, msg }) => {
-    const account = this.state.accounts.addresses.find((each) => each.address === source);
+    const account = this.state.accounts.addresses.find((each) => each.address === msg.from);
     account.actor = actor;
 
-    let resp = await ipcRenderer.invoke(
-      "sign-message",
-      { kind: "ledger", path: account.path },
-      estim
-    );
+    let resp = await ipcRenderer.invoke("sign-message", account, estim);
 
-    //console.log("serialized: ", signing.transactionSerialize(estim));
     if (resp.error) {
       alert(resp.error);
       return { error: resp.error };

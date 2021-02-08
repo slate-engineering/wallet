@@ -200,6 +200,17 @@ app.on("ready", async () => {
     }
   });
 
+  ipcMain.handle("signing-propose-multisig", async (event, msig, destination, signer, value) => {
+    // TODO: this could just be done clientside if we could figure out how to import the library there
+    const actor = await client.stateGetActor(signer, []);
+
+    const msg = FilecoinSigning.proposeMultisig(msig, destination, signer, value, actor.Nonce);
+
+    return {
+      result: msg,
+    };
+  });
+
   ipcMain.handle("sign-message", async (event, signer, message) => {
     try {
       let sender = message.from;
@@ -209,7 +220,7 @@ app.on("ready", async () => {
         sender = await client.stateAccountKey(sender, []);
       }
 
-      if (signer.kind == "ledger") {
+      if (signer.type == 1 && signer.path != "") {
         let pathForSender = signer.path;
         if (transport == null) {
           transport = await TransportNodeHID.open(""); // TODO: pull this out into a shared 'getTransport' func
