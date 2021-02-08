@@ -8,15 +8,19 @@
 
 .transactions-row {
   margin-bottom: 16px;
-  
-  strong {
-    font-size: 11px;
-    color: var(--main-button-text);
-    border-radius: 3px;
-    background: var(--main-primary-accent);
-    font-weight: 600;
-    padding: 3px;
-  }
+}
+
+.transactions-tag {
+  font-size: 11px;
+  color: var(--main-tag-text);
+  border-radius: 3px;
+  background: var(--main-primary-accent);
+  font-weight: 600;
+  padding: 3px;
+}
+
+.transactions-tag--yours {
+  background: var(--main-green);
 }
 
 .transactions-row-cid {

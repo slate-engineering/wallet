@@ -27,8 +27,8 @@ class TransactionRow extends React.Component {
   }
 
   render() {
-    const toElement = Utilities.getAlias(this.state.txn.to, this.props.accounts);
-    const fromElement = Utilities.getAlias(this.state.txn.from, this.props.accounts);
+    const toElement = Utilities.getAlias(this.state.txn.to, this.props.accounts, true);
+    const fromElement = Utilities.getAlias(this.state.txn.from, this.props.accounts, true);
 
     let value = "No message."; // todo, better placeholder...
     if (this.state.msg) {
@@ -39,7 +39,7 @@ class TransactionRow extends React.Component {
     return (
       <div className="transactions-row">
         <div>
-          <strong>{fromElement}</strong> ➟ <strong>{toElement}</strong>{" "}
+          {fromElement} ➟ {toElement}&nbsp;
           {this.state.msg ? value : null}
         </div>
         <div className="transactions-row-cid">{this.state.txn.cid}</div>

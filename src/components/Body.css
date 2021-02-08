@@ -24,22 +24,25 @@
 }
 
 .body-heading {
+  font-family: "GT-Zirkon-Medium";
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   overflow-wrap: break-word;
   white-space: pre-wrap;
   max-width: 488px;
 }
 
 .body-heading-two {
+  font-family: "GT-Zirkon-Medium";
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   max-width: 488px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
 }
 
 .body-paragraph {
+  opacity: 0.85;
   font-size: 14px;
   line-height: 20px;
   margin-top: 8px;

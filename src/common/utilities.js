@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
 export function formatAsFilecoinConversion(number) {
@@ -22,7 +24,7 @@ export function formatAsFilecoin(number) {
   return `${number} FIL`;
 }
 
-export function getAlias(address, accounts) {
+export function getAlias(address, accounts, isElement = false) {
   if (!accounts) {
     return address;
   }
@@ -30,7 +32,12 @@ export function getAlias(address, accounts) {
   if (accounts.addresses) {
     for (const a of accounts.addresses) {
       if (a.address === address) {
-        return isEmpty(a.alias) ? address : a.alias;
+        const resolution = isEmpty(a.alias) ? address : a.alias;
+        if (isElement) {
+          return <strong className="transactions-tag transactions-tag--yours">{resolution}</strong>;
+        }
+
+        return resolution;
       }
     }
   }
@@ -38,7 +45,12 @@ export function getAlias(address, accounts) {
   if (accounts.contacts) {
     for (const c of accounts.contacts) {
       if (c.address === address) {
-        return isEmpty(c.alias) ? address : c.alias;
+        const resolution = isEmpty(c.alias) ? address : c.alias;
+        if (isElement) {
+          return <strong className="transactions-tag">{resolution}</strong>;
+        }
+
+        return resolution;
       }
     }
   }

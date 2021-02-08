@@ -3,6 +3,16 @@
   src: url("../assets/MDIO.woff") format("woff");
 }
 
+@font-face {
+  font-family: "GT-Zirkon-Book";
+  src: url("../assets/GT-Zirkon-Book.woff") format("woff");
+}
+
+@font-face {
+  font-family: "GT-Zirkon-Medium";
+  src: url("../assets/GT-Zirkon-Medium.woff") format("woff");
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -30,43 +40,49 @@ footer, header, hgroup, menu, nav, section {
 
 html, body {
   width: 100%;
-  font-family: -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
+  font-family: "GT-Zirkon-Book", -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
+  
+  --main-green: #6fdc8c;
+  --main-primary-accent: #ffbf00;
+  --main-secondary-accent: #ffcf40;
+}
+
+input, textarea {
+  font-family: "GT-Zirkon-Book", -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
 }
 
 .root-theme-light {
   --main-bg: #ffffff;
-  --main-text: #000000;
-  --main-border: #ADADAD;
-  --main-border-secondary: #DCDCDC;
+  --main-text: #161616;
+  --main-border: #c6c6c6;
+  --main-border-secondary: #e0e0e0;
   --main-navigation-text: #ffffff;
-  --main-navigation-bg: #222222;
+  --main-navigation-bg: #262626;
   --main-button-bg: #000000;
   --main-button-area-bg: var(--main-button-text);
   --main-button-text: #ffffff;
   --main-button-area-text: var(--main-button-bg);
-  --main-sidebar-bg: #F5F5F5;
-  --main-sidebar-text: #888888;
-  --main-primary-accent: #ffbf00;
-  --main-secondary-accent: #ffcf40;
-  --main-placeholder: #999999;
+  --main-tag-text: #161616;
+  --main-sidebar-bg: #f4f4f4;
+  --main-sidebar-text: #262626;
+  --main-placeholder: #6f6f6f;
 }
 
 .root-theme-dark {
   --main-bg: #000000;
-  --main-text: #ffffff;
-  --main-border: #888888;
-  --main-border-secondary: #999999;
+  --main-text: #f4f4f4;
+  --main-border: #525252;
+  --main-border-secondary: #6f6f6f;
   --main-navigation-text: #ffffff;
-  --main-navigation-bg: #222222;
-  --main-button-bg: #ffbf00;
+  --main-navigation-bg: #161616;
+  --main-button-bg: #f4f4f4;
   --main-button-area-bg: var(--main-bg);
-  --main-button-text: #000000;
+  --main-button-text: #161616;
   --main-button-area-text: var(--main-text);
-  --main-sidebar-bg: #111111;
-  --main-sidebar-text: #ADADAD;
-  --main-primary-accent: #ffbf00;
-  --main-secondary-accent: #ffcf40;
-  --main-placeholder: #999999;
+  --main-tag-text: #161616;
+  --main-sidebar-bg: #262626;
+  --main-sidebar-text: #8d8d8d;
+  --main-placeholder: #a8a8a8;
 }
 
 .root {
@@ -116,9 +132,9 @@ html, body {
 
 .root-left-title {
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 11px;
-  letter-spacing: 0.1px;
+  letter-spacing: 0.2px;
   color: #888;
   padding: 76px 12px 4px 12px;
 }
@@ -180,7 +196,8 @@ html, body {
 }
 
 .wallet-item-right-top {
-  font-weight: 600;
+  font-family: "GT-Zirkon-Medium";
+  font-weight: 400;
   overflow: hidden;
   padding-top: 8px;
   text-overflow: ellipsis;
