@@ -22,7 +22,7 @@ import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneContacts from "~/src/scenes/SceneContacts";
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>❖</span>,
+  1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>◈</span>,
   2: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>⁂</span>,
   3: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>✢</span>,
 };
@@ -167,6 +167,13 @@ export default class App extends React.Component {
   };
 
   _handleAddPublicAddressWithExistingData = async (entry, nextNavigation) => {
+    for (let a of this.state.accounts.addresses) {
+      if (entry.address === a.address) {
+        alert("This address already exists in your wallet.");
+        return { error: "This address already exists in your wallet." };
+      }
+    }
+
     const transactions = await ipcRenderer.invoke("get-transactions", entry.address);
 
     const addresses = [

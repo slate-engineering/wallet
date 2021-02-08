@@ -51,10 +51,14 @@ export default class SceneAddAddressPublic extends React.Component {
   _handleAddPublicAddress = async ({ address }) => {
     this.setState({ loading: 1 });
 
-    await this.props.onAddPublicAddressWithExistingData(
+    const response = await this.props.onAddPublicAddressWithExistingData(
       { address: this.state.address, ...this.state.data.result },
       "PORTFOLIO"
     );
+
+    if (response.error) {
+      this.setState({ loading: undefined });
+    }
   };
 
   render() {

@@ -3,7 +3,7 @@ import * as React from "react";
 import { FilecoinNumber, Converter } from "@glif/filecoin-number";
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: "❖",
+  1: "◈",
   2: "⁂",
   3: "✢",
 };

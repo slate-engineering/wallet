@@ -11,7 +11,7 @@ import Transactions from "~/src/components/Transactions.js";
 import { ipcRenderer } from "electron";
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <span>❖</span>,
+  1: <span>◈</span>,
   2: <span>⁂</span>,
   3: <span>✢</span>,
 };

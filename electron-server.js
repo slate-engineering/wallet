@@ -105,25 +105,26 @@ const MULTI_SIG_ACTOR_ID = "bafkqadtgnfwc6mrpnv2wy5djonuwo";
 
 app.on("ready", async () => {
   ipcMain.handle("get-balance", async (event, address) => {
+    console.log("getting balance ...");
+    console.log("starting get-balance request...", { address });
+    let type = 0;
+    if (address.startsWith("f1")) {
+      type = 1;
+    }
+
+    if (address.startsWith("f2")) {
+      if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
+        type = 2;
+      }
+    }
+
+    if (address.startsWith("f3")) {
+      type = 3;
+    }
+
     try {
-      console.log("starting request...", { address });
       const actor = await client.stateGetActor(address, []);
       console.log("got-balance...", { actor });
-
-      let type = 0;
-      if (address.startsWith("f1")) {
-        type = 1;
-      }
-
-      if (address.startsWith("f2")) {
-        if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
-          type = 2;
-        }
-      }
-
-      if (address.startsWith("f3")) {
-        type = 3;
-      }
 
       if (type === 0) {
         return { error: "Not a valid address for this wallet." };
@@ -142,6 +143,7 @@ app.on("ready", async () => {
           result: {
             balance: "0",
             timestamp: new Date(),
+            type,
           },
         };
       }
