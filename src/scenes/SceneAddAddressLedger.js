@@ -21,7 +21,6 @@ class LedgerStatus extends React.Component {
       address,
       path,
       compressedPK,
-      type,
     });
 
     this.setState({ loadingMap: { ...this.state.loadingMap, [address]: undefined } });
