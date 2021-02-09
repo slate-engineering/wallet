@@ -153,7 +153,7 @@ export default class App extends React.Component {
     const transactions = await ipcRenderer.invoke("get-transactions", address);
 
     // If we are refreshing a multisig, also check the multisig state
-    let msig_info = undefined;
+    let msigInfo;
     if (data.result.type == 2) {
       console.log("refreshing multisig!");
       const resp = await ipcRenderer.invoke("get-multisig-info", address);
@@ -161,7 +161,7 @@ export default class App extends React.Component {
         alert("failed to fetch multisig info for account: " + resp.error);
         return { error: resp.error };
       }
-      msig_info = resp.result;
+      msigInfo = resp.result;
     }
 
     const addresses = this.state.accounts.addresses.map((each) => {
@@ -171,7 +171,7 @@ export default class App extends React.Component {
           ...data.result,
           transactions,
           addressId: addrs.addressId,
-          msig_info,
+          msigInfo,
         };
       }
 

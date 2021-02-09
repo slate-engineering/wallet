@@ -1,6 +1,7 @@
 import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
 import FilecoinSigning from "@zondax/filecoin-signing-tools";
+import * as Utilities from "~/src/common/utilities";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
@@ -111,13 +112,6 @@ app.on("ready", async () => {
     if (address.startsWith("f1")) {
       type = 1;
     }
-
-    if (address.startsWith("f2")) {
-      if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
-        type = 2;
-      }
-    }
-
     if (address.startsWith("f3")) {
       type = 3;
     }
@@ -125,6 +119,12 @@ app.on("ready", async () => {
     try {
       const actor = await client.stateGetActor(address, []);
       console.log("got-balance...", { actor });
+
+      if (address.startsWith("f2")) {
+        if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
+          type = 2;
+        }
+      }
 
       if (type === 0) {
         return { error: "Not a valid address for this wallet." };
@@ -220,7 +220,7 @@ app.on("ready", async () => {
         sender = await client.stateAccountKey(sender, []);
       }
 
-      if (signer.type == 1 && signer.path != "") {
+      if (signer.type == 1 && !Utilities.isEmpty(signer.path)) {
         let pathForSender = signer.path;
         if (transport == null) {
           transport = await TransportNodeHID.open(""); // TODO: pull this out into a shared 'getTransport' func

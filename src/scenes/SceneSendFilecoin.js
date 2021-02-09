@@ -27,7 +27,7 @@ export default class SceneSendFilecoin extends React.Component {
   _handleChangeSource = (e) => {
     const account = this.props.accounts.addresses.find((a) => a.address == e.target.value);
     let signers = [];
-    if (account.type == 2) {
+    if (account.type === 2) {
       // if we are trying to spend from a multisig, grab the list of account
       // addresses we have locally that are signers of the source account to
       // populate the 'signer' dropdown with
@@ -38,7 +38,7 @@ export default class SceneSendFilecoin extends React.Component {
     this.setState({
       [e.target.name]: e.target.value,
       sourceAccount: account,
-      multisigSpend: account.type == 2,
+      multisigSpend: account.type === 2,
       signers: signers,
     });
   };
