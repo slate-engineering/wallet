@@ -1,6 +1,7 @@
 import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
 import FilecoinSigning from "@zondax/filecoin-signing-tools";
+import * as Utilities from "~/src/common/utilities";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
@@ -111,13 +112,6 @@ app.on("ready", async () => {
     if (address.startsWith("f1")) {
       type = 1;
     }
-
-    if (address.startsWith("f2")) {
-      if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
-        type = 2;
-      }
-    }
-
     if (address.startsWith("f3")) {
       type = 3;
     }
@@ -125,6 +119,12 @@ app.on("ready", async () => {
     try {
       const actor = await client.stateGetActor(address, []);
       console.log("got-balance...", { actor });
+
+      if (address.startsWith("f2")) {
+        if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
+          type = 2;
+        }
+      }
 
       if (type === 0) {
         return { error: "Not a valid address for this wallet." };
@@ -200,6 +200,17 @@ app.on("ready", async () => {
     }
   });
 
+  ipcMain.handle("signing-propose-multisig", async (event, msig, destination, signer, value) => {
+    // TODO: this could just be done clientside if we could figure out how to import the library there
+    const actor = await client.stateGetActor(signer, []);
+
+    const msg = FilecoinSigning.proposeMultisig(msig, destination, signer, value, actor.Nonce);
+
+    return {
+      result: msg,
+    };
+  });
+
   ipcMain.handle("sign-message", async (event, signer, message) => {
     try {
       let sender = message.from;
@@ -209,7 +220,7 @@ app.on("ready", async () => {
         sender = await client.stateAccountKey(sender, []);
       }
 
-      if (signer.kind == "ledger") {
+      if (signer.type == 1 && !Utilities.isEmpty(signer.path)) {
         let pathForSender = signer.path;
         if (transport == null) {
           transport = await TransportNodeHID.open(""); // TODO: pull this out into a shared 'getTransport' func
@@ -306,6 +317,19 @@ app.on("ready", async () => {
         error: "get pending failed: " + e.toString(),
       };
     }
+
+    return {
+      result: {
+        balance: out.balance,
+        signers: out.signers,
+        threshold: out.threshold,
+        next_txn_id: out.next_txn_id,
+        vesting_start: out.vesting_start,
+        vesting_duration: out.vesting_duration,
+        vesting_balance: out.vesting_balance,
+        pending: out.pending,
+      },
+    };
   });
 
   ipcMain.handle("estimate-gas", async (event, message) => {
@@ -365,6 +389,40 @@ app.on("ready", async () => {
       return {
         error: e.toString(),
       };
+    }
+  });
+
+  ipcMain.handle("resolve-address", async (event, address) => {
+    if (address.startsWith("f0")) {
+      try {
+        // TODO: this wont work if someone passes in the ID address of a
+        // multisig wallet... need to figure out how to work around this...
+        const resp = await client.stateAccountKey(address, []);
+        return {
+          addressId: address,
+          address: resp,
+        };
+      } catch (e) {
+        // TODO: there is a case where some addresses *only* have an f0 address
+        // if they were created in the genesis block
+        return {
+          error: e.toString(),
+        };
+      }
+    } else {
+      try {
+        const resp = await client.stateLookupID(address, []);
+        return {
+          result: {
+            addressId: resp,
+            address: address,
+          },
+        };
+      } catch (e) {
+        return {
+          error: e.toString(),
+        };
+      }
     }
   });
 

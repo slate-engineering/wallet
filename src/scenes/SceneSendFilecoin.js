@@ -12,11 +12,36 @@ export default class SceneSendFilecoin extends React.Component {
   state = {
     fil: 0,
     source: undefined,
+    signer: undefined,
     destination: "",
     loading: undefined,
+    sourceAccount: null,
+    multisigSpend: false,
+    signers: [],
   };
 
-  _handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  _handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  _handleChangeSource = (e) => {
+    const account = this.props.accounts.addresses.find((a) => a.address == e.target.value);
+    let signers = [];
+    if (account.type === 2) {
+      // if we are trying to spend from a multisig, grab the list of account
+      // addresses we have locally that are signers of the source account to
+      // populate the 'signer' dropdown with
+      const msig_info = account.msig_info ?? {};
+      const msig_signers = msig_info.signers ?? [];
+      signers = this.props.accounts.addresses.filter((a) => msig_signers.includes(a.addressId));
+    }
+    this.setState({
+      [e.target.name]: e.target.value,
+      sourceAccount: account,
+      multisigSpend: account.type === 2,
+      signers: signers,
+    });
+  };
 
   _handleSendFilecoin = async (e) => {
     this.setState({ loading: 1 });
@@ -39,6 +64,8 @@ export default class SceneSendFilecoin extends React.Component {
     const response = await this.props.onSendFilecoin({
       fil: this.state.fil,
       source: this.state.source,
+      sourceAccount: this.state.sourceAccount,
+      signer: this.state.signer,
       destination: this.state.destination,
     });
 
@@ -69,7 +96,7 @@ export default class SceneSendFilecoin extends React.Component {
           <SelectMenu
             name="source"
             value={this.state.source}
-            onChange={this._handleChange}
+            onChange={this._handleChangeSource}
             options={this.props.accounts.addresses.map((each) => {
               return {
                 value: each.address,
@@ -77,6 +104,32 @@ export default class SceneSendFilecoin extends React.Component {
               };
             })}
           />
+
+          {this.state.multisigSpend ? (
+            this.state.signers.length > 0 ? (
+              <React.Fragment>
+                <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+                  Signer
+                </h2>
+                <p className="body-paragraph" style={{ marginBottom: 12 }}>
+                  The address to use to sign this multisig transaction.
+                </p>
+                <SelectMenu
+                  name="signer"
+                  value={this.state.signer}
+                  onChange={this._handleChange}
+                  options={this.state.signers.map((each) => {
+                    return {
+                      value: each.address,
+                      name: Utilities.isEmpty(each.alias) ? each.address : each.alias,
+                    };
+                  })}
+                />
+              </React.Fragment>
+            ) : (
+              <p> No accounts in this wallet can sign for this multisig! </p>
+            )
+          ) : null}
 
           <Input
             title="Destination wallet address"
