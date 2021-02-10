@@ -120,7 +120,9 @@ export default class SceneSendFilecoin extends React.Component {
             options={this.props.accounts.addresses.map((each) => {
               return {
                 value: each.address,
-                name: Utilities.isEmpty(each.alias) ? each.address : each.alias,
+                name: Utilities.isEmpty(each.alias)
+                  ? `${each.address} → ${Utilities.formatAsFilecoinConversion(each.balance)}`
+                  : `${each.alias} → ${Utilities.formatAsFilecoinConversion(each.balance)}`,
               };
             })}
           />
@@ -141,7 +143,7 @@ export default class SceneSendFilecoin extends React.Component {
                   options={this.state.signers.map((each) => {
                     return {
                       value: each.address,
-                      name: Utilities.isEmpty(each.alias) ? each.address : each.alias,
+                      name: Utilities.isEmpty(each.alias) ? `${each.address}` : `${each.alias}`,
                     };
                   })}
                 />
