@@ -52,6 +52,9 @@ class TransactionRow extends React.Component {
           {this.state.msg ? value : null}
         </div>
         {ActorMethods.isMultisig(this.state.code) ? (
+          // If this.state.msg.method == 2 -> This is a Propose message and we should decode the params
+          // if method == 3 its an Approve, and we should show which transaction is being approved (its an integer number)
+          // other methods can be found by name in the actor-methods file
           <div> Some multisig transaction details! </div>
         ) : null}
         <div className="transactions-row-cid">{this.state.txn.cid}</div>
