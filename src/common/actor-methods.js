@@ -104,5 +104,5 @@ export function isMultisig(code) {
     return false;
   }
   const act = actorsByCode[code];
-  return act && act.name == "multisig";
+  return act && act.name === "multisig";
 }
