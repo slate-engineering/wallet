@@ -82,3 +82,39 @@
   max-width: 480px;
   min-width: 188px;
 }
+
+.input-options {
+  margin-top: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--main-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.input-options-item {
+  padding: 8px 16px 8px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.input-options-item-left {
+  min-width: 10%;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 600;  
+  padding-top: 2px;
+}
+
+.input-options-item-right {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  line-height: 12px;
+  padding-top: 4px;
+  
+  &:hover {
+    color: var(--main-primary-accent);
+  }
+}

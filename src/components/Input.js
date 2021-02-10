@@ -96,6 +96,21 @@ export default class Input extends React.Component {
           >
             {this.props.unit}
           </div>
+          {this.props.suggestions && this.props.suggestions.length ? (
+            <div className="input-options">
+              {this.props.suggestions.map((each) => (
+                <div className="input-options-item" key={`${each.text}-${each.value}`}>
+                  <div className="input-options-item-left">{each.text}</div>
+                  <div
+                    className="input-options-item-right"
+                    onClick={() => this.props.onSelectText({ value: each.value })}
+                  >
+                    Pick
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     );

@@ -18,10 +18,30 @@ export default class SceneSendFilecoin extends React.Component {
     sourceAccount: null,
     multisigSpend: false,
     signers: [],
+    suggestedDestinations: [],
   };
 
   _handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+
+    if (e.target.name === "destination") {
+      let suggestedDestinations = [];
+      for (let c of this.props.accounts.contacts) {
+        if (c.alias.includes(e.target.value)) {
+          suggestedDestinations.push({ text: c.alias, value: c.address });
+        }
+
+        if (c.address.includes(e.target.value)) {
+          suggestedDestinations.push({ text: c.address, value: c.address });
+        }
+      }
+
+      this.setState({ suggestedDestinations });
+    }
+  };
+
+  _handleSelectText = ({ value }) => {
+    this.setState({ destination: value, suggestedDestinations: [] });
   };
 
   _handleChangeSource = (e) => {
@@ -138,6 +158,8 @@ export default class SceneSendFilecoin extends React.Component {
             style={{ marginTop: 48 }}
             value={this.state.destination}
             onChange={this._handleChange}
+            suggestions={this.state.suggestedDestinations}
+            onSelectText={this._handleSelectText}
           ></Input>
 
           <p className="body-aside">
