@@ -8,6 +8,19 @@ import * as ActorMethods from "~/src/common/actor-methods";
 import { Converter, FilecoinNumber } from "@glif/filecoin-number";
 import { ipcRenderer } from "electron";
 
+class ParamsInfo extends React.Component {
+  render() {
+    const actorInfo = ActorMethods.actorsByCode[this.props.code];
+    if (!actorInfo) {
+      return null;
+    }
+
+    const methodName = actorInfo.methods[this.props.msg.method];
+
+    return <div>{methodName}</div>;
+  }
+}
+
 class TransactionRow extends React.Component {
   static defaultProps = {
     onGetMessage: () => {
@@ -42,9 +55,16 @@ class TransactionRow extends React.Component {
       return;
     }
 
+    const params = await this.props.onDeserializeParams(msg.params, code.result, msg.method);
+    if (params.error) {
+      console.error("failed to deserialize params: ", msg.params, code.result, msg.method);
+      return;
+    }
+
     this.setState({
       msg: msg.result,
       code: code.result,
+      params: params.result,
     });
   }
 
@@ -64,11 +84,8 @@ class TransactionRow extends React.Component {
           {fromElement} ➟ {toElement}&nbsp;
           {this.state.msg ? value : null}
         </div>
-        {ActorMethods.isMultisig(this.state.code) ? (
-          // If this.state.msg.method == 2 -> This is a Propose message and we should decode the params
-          // if method == 3 its an Approve, and we should show which transaction is being approved (its an integer number)
-          // other methods can be found by name in the actor-methods file
-          <div> Some multisig transaction details! </div>
+        {this.state.msg ? (
+          <ParamsInfo msg={this.state.msg} code={this.state.code} params={this.state.params} />
         ) : null}
         <div className="transactions-row-cid">{this.state.txn.cid}</div>
       </div>
