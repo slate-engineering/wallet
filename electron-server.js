@@ -35,6 +35,7 @@ let provider = null;
 let client = null;
 let transport = null;
 let msgCache = null;
+let codeCache = null;
 
 if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === "development") {
   dev = true;
