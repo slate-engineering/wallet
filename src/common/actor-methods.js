@@ -1,4 +1,4 @@
-export const multisigActorMethods = {
+export const multisig = {
   1: "Constructor",
   2: "Propose",
   3: "Approve",
@@ -10,7 +10,7 @@ export const multisigActorMethods = {
   9: "LockBalance",
 };
 
-export const marketActorMethods = {
+export const market = {
   1: "Constructor",
   2: "AddBalance",
   3: "WithdrawBalance",
@@ -22,7 +22,7 @@ export const marketActorMethods = {
   9: "CronTick",
 };
 
-export const minerActorMethods = {
+export const miner = {
   1: "Constructor",
   2: "ControlAddresses",
   3: "ChangeWorkerAddress",
@@ -49,7 +49,7 @@ export const minerActorMethods = {
   24: "DisputeWindowedPoSt",
 };
 
-export const powerActorMethods = {
+export const power = {
   1: "Constructor",
   2: "CreateMiner",
   3: "UpdateClaimedPower",
@@ -60,14 +60,14 @@ export const powerActorMethods = {
   9: "CurrentTotalPower",
 };
 
-export const rewardActorMethods = {
+export const reward = {
   1: "Constructor",
   2: "AwardBlockReward",
   3: "ThisEpochReward",
   4: "UpdateNetworkKPI",
 };
 
-export const initActorMethods = {
+export const init = {
   1: "Constructor",
   2: "Exec",
 };
@@ -75,26 +75,26 @@ export const initActorMethods = {
 export const actorsByCode = {
   bafkqactgnfwc6mrpnfxgs5a: {
     name: "init",
-    methods: initActorMethods,
+    methods: init,
   },
   bafkqaddgnfwc6mrpojsxoylsmq: {
     name: "reward",
-    methods: rewardActorMethods,
+    methods: reward,
   },
   bafkqaetgnfwc6mrpon2g64tbm5sxa33xmvza: {
     name: "power",
-    methods: powerActorMethods,
+    methods: power,
   },
   bafkqae3gnfwc6mrpon2g64tbm5sw2ylsnnsxi: {
     name: "market",
-    methods: marketActorMethods,
+    methods: market,
   },
   bafkqadlgnfwc6mrpmfrwg33vnz2a: {
     name: "multisig",
-    methods: multisigActorMethods,
+    methods: multisig,
   },
   bafkqaetgnfwc6mrpon2g64tbm5sw22lomvza: {
     name: "miner",
-    methods: minerActorMethods,
+    methods: miner,
   },
 };
