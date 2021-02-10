@@ -1,4 +1,4 @@
-const multisigActorMethods = {
+export const multisigActorMethods = {
   1: "Constructor",
   2: "Propose",
   3: "Approve",
@@ -10,7 +10,7 @@ const multisigActorMethods = {
   9: "LockBalance",
 };
 
-const marketActorMethods = {
+export const marketActorMethods = {
   1: "Constructor",
   2: "AddBalance",
   3: "WithdrawBalance",
@@ -22,7 +22,7 @@ const marketActorMethods = {
   9: "CronTick",
 };
 
-const minerActorMethods = {
+export const minerActorMethods = {
   1: "Constructor",
   2: "ControlAddresses",
   3: "ChangeWorkerAddress",
@@ -49,7 +49,7 @@ const minerActorMethods = {
   24: "DisputeWindowedPoSt",
 };
 
-const powerActorMethods = {
+export const powerActorMethods = {
   1: "Constructor",
   2: "CreateMiner",
   3: "UpdateClaimedPower",
@@ -60,19 +60,19 @@ const powerActorMethods = {
   9: "CurrentTotalPower",
 };
 
-const rewardActorMethods = {
+export const rewardActorMethods = {
   1: "Constructor",
   2: "AwardBlockReward",
   3: "ThisEpochReward",
   4: "UpdateNetworkKPI",
 };
 
-const initActorMethods = {
+export const initActorMethods = {
   1: "Constructor",
   2: "Exec",
 };
 
-const codeCids = {
+export const actorsByCode = {
   bafkqactgnfwc6mrpnfxgs5a: {
     name: "init",
     methods: initActorMethods,
