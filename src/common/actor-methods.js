@@ -75,26 +75,32 @@ export const init = {
 export const actorsByCode = {
   bafkqactgnfwc6mrpnfxgs5a: {
     name: "init",
+    cidText: "fil/2/init",
     methods: init,
   },
   bafkqaddgnfwc6mrpojsxoylsmq: {
     name: "reward",
+    cidText: "fil/2/reward",
     methods: reward,
   },
   bafkqaetgnfwc6mrpon2g64tbm5sxa33xmvza: {
     name: "power",
+    cidText: "fil/2/storagepower",
     methods: power,
   },
   bafkqae3gnfwc6mrpon2g64tbm5sw2ylsnnsxi: {
     name: "market",
+    cidText: "fil/2/storagemarket",
     methods: market,
   },
   bafkqadlgnfwc6mrpmfrwg33vnz2a: {
     name: "multisig",
+    cidText: "fil/2/multisig",
     methods: multisig,
   },
   bafkqaetgnfwc6mrpon2g64tbm5sw22lomvza: {
     name: "miner",
+    cidText: "fil/2/storageminer",
     methods: miner,
   },
 };

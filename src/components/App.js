@@ -368,6 +368,28 @@ export default class App extends React.Component {
     return msg;
   };
 
+  _handleGetActorCode = async (address) => {
+    const code = await ipcRenderer.invoke("get-actor-code", address);
+
+    if (code.error) {
+      alert(code.error);
+      return { error: code.error };
+    }
+
+    return code;
+  };
+
+  _handleDeserializeParams = async (params, code, method) => {
+    const params = await ipcRenderer.invoke("deserialize-params", params, code, method);
+
+    if (params.error) {
+      alert(params.error);
+      return { error: params.error };
+    }
+
+    return params;
+  };
+
   _handleToggleTheme = () => {
     this.setState({ theme: this.state.theme !== "LIGHT" ? "LIGHT" : "DARK" });
   };
@@ -388,6 +410,8 @@ export default class App extends React.Component {
       onSendFilecoin: this._handleSendFilecoin,
       onConfirmSendFilecoin: this._handleConfirmSendFilecoin,
       onGetMessage: this._handleGetMessage,
+      onGetActorCode: this._handleGetActorCode,
+      onDeserializeParams: this._handleDeserializeParams,
       onUpdate: this.update,
       accounts: this.state.accounts,
       config: this.state.config,

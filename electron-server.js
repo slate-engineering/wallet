@@ -2,6 +2,7 @@ import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
 import FilecoinSigning from "@zondax/filecoin-signing-tools";
 import * as Utilities from "~/src/common/utilities";
+import * as ActorMethods from "~/src/common/actor-methods";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
@@ -215,6 +216,20 @@ app.on("ready", async () => {
       msgCache.save(true);
       return {
         result: msg,
+      };
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
+  });
+
+  ipcMain.handle("deserialize-params", async (event, params, code, method) => {
+    try {
+      const cidText = ActorMethods.actorsByCode[code].cidText;
+      const params = FilecoinSigning.deserializeParams(params, cidText, method);
+      return {
+        result: params,
       };
     } catch (e) {
       return {
