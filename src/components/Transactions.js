@@ -9,6 +9,19 @@ import { Converter, FilecoinNumber } from "@glif/filecoin-number";
 import { ipcRenderer } from "electron";
 
 class TransactionRow extends React.Component {
+  static defaultProps = {
+    onGetMessage: () => {
+      return {
+        error: "onGetMessage does not exist",
+      };
+    },
+    onGetActorCode: () => {
+      return {
+        error: "onGetActorCode does not exist",
+      };
+    },
+  };
+
   state = {
     txn: this.props.txn,
     msg: null,
@@ -64,7 +77,22 @@ class TransactionRow extends React.Component {
 }
 
 export default class Transaction extends React.Component {
+  static defaultProps = {
+    onGetMessage: () => {
+      return {
+        error: "onGetMessage does not exist",
+      };
+    },
+    onGetActorCode: () => {
+      return {
+        error: "onGetActorCode does not exist",
+      };
+    },
+  };
+
   render() {
+    console.log(this.props.onGetActorCode);
+
     const txns = this.props.address.transactions ?? [];
     const items = txns.map((txn, index) => {
       if (!txn.cid) {
