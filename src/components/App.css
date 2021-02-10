@@ -117,6 +117,7 @@ input, textarea {
 }
 
 .root-left {
+  position: relative;
   width: 180px;
   flex-shrink: 0;
   height: 100%;
@@ -128,6 +129,23 @@ input, textarea {
   &::-webkit-scrollbar {
     display: none;
   }
+  
+  &::after {
+    -webkit-app-region: drag;
+    z-index: 1;
+    content: '';
+    height: 100px;
+    width: 180px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    background-image: linear-gradient(to top, transparent, var(--main-sidebar-bg) 80%);
+  }
+}
+
+.root-left-container {
+  padding: 0 0 88px 0;
 }
 
 .root-left-title {

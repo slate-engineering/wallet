@@ -379,15 +379,15 @@ export default class App extends React.Component {
     return code;
   };
 
-  _handleDeserializeParams = async (params, code, method) => {
-    const params = await ipcRenderer.invoke("deserialize-params", params, code, method);
+  _handleDeserializeParams = async (parameters, code, method) => {
+    const p = await ipcRenderer.invoke("deserialize-params", parameters, code, method);
 
-    if (params.error) {
-      alert(params.error);
-      return { error: params.error };
+    if (p.error) {
+      alert(p.error);
+      return { error: p.error };
     }
 
-    return params;
+    return p;
   };
 
   _handleToggleTheme = () => {
@@ -450,26 +450,28 @@ export default class App extends React.Component {
       <React.Fragment>
         <div className={rootClasses}>
           <div className="root-left">
-            <div className="root-left-title">Addresses</div>
-            {this.state.accounts.addresses.map((each) => {
-              const iconElement = WALLET_ADDRESS_TYPES_SVG[each.type];
+            <div className="root-left-container">
+              <div className="root-left-title">Addresses</div>
+              {this.state.accounts.addresses.map((each) => {
+                const iconElement = WALLET_ADDRESS_TYPES_SVG[each.type];
 
-              return (
-                <div
-                  className="wallet-item"
-                  key={each.address}
-                  onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
-                >
-                  {iconElement ? <span className="wallet-item-left">{iconElement}</span> : null}{" "}
-                  <div className="wallet-item-right">
-                    <p className="wallet-item-right-top">
-                      {Utilities.isEmpty(each.alias) ? "Untitled" : each.alias}
-                    </p>
-                    <p className="wallet-item-right-bottom">{each.address}</p>
+                return (
+                  <div
+                    className="wallet-item"
+                    key={each.address}
+                    onClick={() => this._handleNavigate("ADDRESS", { address: each.address })}
+                  >
+                    {iconElement ? <span className="wallet-item-left">{iconElement}</span> : null}{" "}
+                    <div className="wallet-item-right">
+                      <p className="wallet-item-right-top">
+                        {Utilities.isEmpty(each.alias) ? "Untitled" : each.alias}
+                      </p>
+                      <p className="wallet-item-right-bottom">{each.address}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
           <div className="root-right">
             <div className="root-top">
