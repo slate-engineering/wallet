@@ -98,3 +98,11 @@ export const actorsByCode = {
     methods: miner,
   },
 };
+
+export function isMultisig(code) {
+  if (!code) {
+    return false;
+  }
+  const act = actorsByCode[code];
+  return act && act.name === "multisig";
+}

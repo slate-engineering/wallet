@@ -3,6 +3,7 @@ import "~/src/components/Transactions.css";
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
+import * as ActorMethods from "~/src/common/actor-methods";
 
 import { Converter, FilecoinNumber } from "@glif/filecoin-number";
 import { ipcRenderer } from "electron";
@@ -11,6 +12,7 @@ class TransactionRow extends React.Component {
   state = {
     txn: this.props.txn,
     msg: null,
+    code: null,
   };
 
   async componentDidMount() {
@@ -21,8 +23,15 @@ class TransactionRow extends React.Component {
       return;
     }
 
+    const code = await this.props.onGetActorCode(this.state.txn.to);
+    if (code.error) {
+      console.error("failed to get actor code: ", this.state.txn.to, code.error);
+      return;
+    }
+
     this.setState({
       msg: msg.result,
+      code: code.result,
     });
   }
 
@@ -42,6 +51,12 @@ class TransactionRow extends React.Component {
           {fromElement} ➟ {toElement}&nbsp;
           {this.state.msg ? value : null}
         </div>
+        {ActorMethods.isMultisig(this.state.code) ? (
+          // If this.state.msg.method == 2 -> This is a Propose message and we should decode the params
+          // if method == 3 its an Approve, and we should show which transaction is being approved (its an integer number)
+          // other methods can be found by name in the actor-methods file
+          <div> Some multisig transaction details! </div>
+        ) : null}
         <div className="transactions-row-cid">{this.state.txn.cid}</div>
       </div>
     );

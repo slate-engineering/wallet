@@ -177,6 +177,29 @@ app.on("ready", async () => {
     }
   });
 
+  ipcMain.handle("get-actor-code", async (event, address) => {
+    try {
+      const cached = codeCache.getKey(address);
+      if (cached) {
+        return {
+          result: cached,
+        };
+      }
+
+      const actor = await client.stateGetActor(address, []);
+
+      msgCache.setKey(address, actor.Code);
+      msgCache.save(true);
+      return {
+        result: actor.Code,
+      };
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
+  });
+
   ipcMain.handle("get-message", async (event, mcid) => {
     try {
       const cached = msgCache.getKey(mcid);
@@ -556,6 +579,7 @@ app.on("ready", async () => {
   client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
   msgCache = flatCache.load("msgcache");
+  codeCache = flatCache.load("codecache");
 
   const filecoinNumber = new FilecoinNumber("10000", "attoFil");
 
