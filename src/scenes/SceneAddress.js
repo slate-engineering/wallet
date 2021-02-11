@@ -72,19 +72,6 @@ export default class SceneAddress extends React.Component {
       );
     }
 
-    if (address.type === 2) {
-      return (
-        <SceneAddressMultisig
-          context={this.props.context}
-          accounts={this.props.accounts}
-          onRefresh={this._handleRefresh}
-          onAliasChange={this._handleAliasChange}
-          onGetActorCode={this.props.onGetActorCode}
-          onDeserializeParams={this.props.onDeserializedParams}
-        />
-      );
-    }
-
     const hasDate = !Utilities.isEmpty(address.timestamp);
     const hasBalance = !Utilities.isEmpty(address.balance);
     const hasType = address.type > 0;
@@ -92,6 +79,23 @@ export default class SceneAddress extends React.Component {
     let iconElement = null;
     if (hasType) {
       iconElement = WALLET_ADDRESS_TYPES_SVG[address.type];
+    }
+
+    if (address.type === 2) {
+      return (
+        <SceneAddressMultisig
+          alias={this.state.alias}
+          context={this.props.context}
+          accounts={this.props.accounts}
+          refreshing={this.props.refreshing}
+          onRefresh={this._handleRefresh}
+          onAliasChange={this._handleAliasChange}
+          onGetActorCode={this.props.onGetActorCode}
+          onDeserializeParams={this.props.onDeserializedParams}
+          onDeleteAddress={this.props.onDeleteAddress}
+          icon={iconElement}
+        />
+      );
     }
 
     return (
