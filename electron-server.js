@@ -227,10 +227,15 @@ app.on("ready", async () => {
 
   ipcMain.handle("deserialize-params", async (event, params, code, method) => {
     try {
-      const cidText = ActorMethods.actorsByCode[code].cidText;
-      const params = FilecoinSigning.deserializeParams(params, cidText, method);
+      const actorInfo = ActorMethods.actorsByCode[code];
+      if (!actorInfo) {
+        return {
+          error: "unknown actor code cid: " + code,
+        };
+      }
+      const decoded = FilecoinSigning.deserializeParams(params, actorInfo.cidText, method);
       return {
-        result: params,
+        result: decoded,
       };
     } catch (e) {
       return {

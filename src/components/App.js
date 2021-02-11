@@ -380,7 +380,7 @@ export default class App extends React.Component {
   };
 
   _handleDeserializeParams = async (parameters, code, method) => {
-    const p = await ipcRenderer.invoke("deserialize-params", parameters, code, method);
+    const p = await ipcRenderer.invoke("deserialize-params", parameters, code["/"], method);
 
     if (p.error) {
       alert(p.error);
