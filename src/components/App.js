@@ -380,14 +380,14 @@ export default class App extends React.Component {
   };
 
   _handleDeserializeParams = async (params, code, method) => {
-    const params = await ipcRenderer.invoke("deserialize-params", params, code, method);
+    const resp = await ipcRenderer.invoke("deserialize-params", params, code, method);
 
-    if (params.error) {
-      alert(params.error);
-      return { error: params.error };
+    if (resp.error) {
+      alert(resp.error);
+      return { error: resp.error };
     }
 
-    return params;
+    return resp;
   };
 
   _handleToggleTheme = () => {
