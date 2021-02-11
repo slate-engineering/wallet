@@ -29,3 +29,29 @@
     background: var(--main-secondary-accent);
   }
 }
+
+.scene-multisig-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.scene-multisig-layout-left {
+  flex-shrink: 0;
+  width: 280px;
+  padding: 44px 24px 24px 24px;
+}
+
+.scene-multisig-layout-right {
+  min-width: 10%;
+  width: 100%;
+}
+
+.scene-multisig-title {
+  color: var(--main-text);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  color: #888;
+}

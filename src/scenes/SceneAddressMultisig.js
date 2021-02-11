@@ -18,6 +18,24 @@ export default class SceneAddressMultisig extends React.Component {
 
     console.log(address);
 
-    return <div className="scene">Multisig</div>;
+    return (
+      <div className="scene">
+        <div className="scene-multisig-layout">
+          <div className="scene-multisig-layout-left">
+            <div className="scene-multisig-title">Signers</div>
+
+            <div className="scene-multisig-title" style={{ marginTop: 48 }}>
+              Pending
+            </div>
+          </div>
+
+          <div className="scene-multisig-layout-right">
+            <div className="scene-multisig-title" style={{ marginTop: 43 }}>
+              Account Information
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
