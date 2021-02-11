@@ -10,12 +10,21 @@ import { ipcRenderer } from "electron";
 
 class ParamsInfo extends React.Component {
   render() {
-    const actorInfo = ActorMethods.actorsByCode[this.props.code];
+    const actorInfo = ActorMethods.actorsByCode[this.props.code["/"]];
     if (!actorInfo) {
       return null;
     }
 
-    const methodName = actorInfo.methods[this.props.msg.method];
+    const methodName = actorInfo.methods[this.props.msg.Method];
+
+    if (methodName == "Propose") {
+      const filval = new FilecoinNumber(this.props.params.value, "attoFIL").toFil();
+      return (
+        <div>
+          Propose sending {filval} FIL to {this.props.params.to}
+        </div>
+      );
+    }
 
     return <div>{methodName}</div>;
   }
@@ -55,16 +64,23 @@ class TransactionRow extends React.Component {
       return;
     }
 
-    const params = await this.props.onDeserializeParams(msg.params, code.result, msg.method);
-    if (params.error) {
-      console.error("failed to deserialize params: ", msg.params, code.result, msg.method);
-      return;
+    let params;
+
+    if (msg.result.Params) {
+      let mparams = msg.result.Params;
+      let method = msg.result.Method;
+      const deser = await this.props.onDeserializeParams(mparams, code.result, method);
+      if (deser.error) {
+        console.error("failed to deserialize params: ", mparams, code.result, method, deser.error);
+        return;
+      }
+      params = deser.result;
     }
 
     this.setState({
       msg: msg.result,
       code: code.result,
-      params: params.result,
+      params: params,
     });
   }
 
@@ -125,6 +141,8 @@ export default class Transaction extends React.Component {
       return (
         <TransactionRow
           onGetMessage={this.props.onGetMessage}
+          onGetActorCode={this.props.onGetActorCode}
+          onDeserializeParams={this.props.onDeserializeParams}
           key={`transactions-${index}-${txn.cid}`}
           txn={txn}
           address={this.props.address}

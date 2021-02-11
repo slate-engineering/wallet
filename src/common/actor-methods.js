@@ -93,7 +93,7 @@ export const actorsByCode = {
     cidText: "fil/2/storagemarket",
     methods: market,
   },
-  bafkqadlgnfwc6mrpmfrwg33vnz2a: {
+  bafkqadtgnfwc6mrpnv2wy5djonuwo: {
     name: "multisig",
     cidText: "fil/2/multisig",
     methods: multisig,

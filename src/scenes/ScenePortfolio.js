@@ -50,6 +50,8 @@ export default class ScenePortfolio extends React.Component {
               <Transactions
                 accounts={this.props.accounts}
                 onGetMessage={this.props.onGetMessage}
+                onGetActorCode={this.props.onGetActorCode}
+                onDeserializeParams={this.props.onDeserializeParams}
                 address={{ transactions }}
               />
             </React.Fragment>
