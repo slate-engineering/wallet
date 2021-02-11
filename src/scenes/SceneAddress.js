@@ -7,6 +7,7 @@ import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
 import Transactions from "~/src/components/Transactions.js";
+import SceneAddressMultisig from "~/src/scenes/SceneAddressMultisig";
 
 import { ipcRenderer } from "electron";
 
@@ -68,6 +69,19 @@ export default class SceneAddress extends React.Component {
             <p className="body-paragraph">Please try a different wallet address.</p>
           </div>
         </div>
+      );
+    }
+
+    if (address.type === 2) {
+      return (
+        <SceneAddressMultisig
+          context={this.props.context}
+          accounts={this.props.accounts}
+          onRefresh={this._handleRefresh}
+          onAliasChange={this._handleAliasChange}
+          onGetActorCode={this.props.onGetActorCode}
+          onDeserializeParams={this.props.onDeserializedParams}
+        />
       );
     }
 
