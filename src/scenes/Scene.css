@@ -38,7 +38,7 @@
 
 .scene-multisig-layout-left {
   flex-shrink: 0;
-  width: 280px;
+  width: 344px;
   padding: 44px 24px 24px 24px;
 }
 
@@ -53,5 +53,20 @@
   font-weight: 400;
   font-size: 11px;
   letter-spacing: 0.2px;
-  color: #888;
+}
+
+.scene-multisig-box {
+  margin-top: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  border: 1px solid var(--main-border);
+}
+
+.scene-multisig-box-item {
+  font-size: 12px;
+  padding: 8px 16px 8px 16px;
+  border-bottom: 1px solid var(--main-border);
+  
+  &:last-child {
+    border-bottom: 0px;
+  }
 }

@@ -16,7 +16,18 @@ export default class SceneAddressMultisig extends React.Component {
       (account) => account.address === this.props.context.address
     );
 
+    let signers = [];
+    if (address.msigInfo && address.msigInfo.signers) {
+      signers = address.msigInfo.signers;
+    }
+
+    let pending = [];
+    if (address.msigInfo && address.msigInfo.pending) {
+      pending = address.msigInfo.pending;
+    }
+
     console.log(address);
+    console.log(pending);
 
     return (
       <div className="scene">
@@ -24,8 +35,25 @@ export default class SceneAddressMultisig extends React.Component {
           <div className="scene-multisig-layout-left">
             <div className="scene-multisig-title">Signers</div>
 
+            <div className="scene-multisig-box">
+              {signers.map((each) => (
+                <div key={each} className="scene-multisig-box-item">
+                  {each}
+                </div>
+              ))}
+            </div>
+
             <div className="scene-multisig-title" style={{ marginTop: 48 }}>
               Pending
+            </div>
+
+            <div className="scene-multisig-box">
+              {pending.map((each) => (
+                <div key={each} className="scene-multisig-box-item">
+                  this address approved: {each.Approved[0]} this address its where its going:{" "}
+                  {each.To} {Utilities.formatAsFilecoinConversion(each.Value)}
+                </div>
+              ))}
             </div>
           </div>
 
