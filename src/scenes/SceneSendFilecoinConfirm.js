@@ -29,9 +29,20 @@ export default class SceneSendFilecoinConfirm extends React.Component {
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
-              {this.props.context.estim.gasPremium}
+              {Utilities.formatAsFilecoinConversion(this.props.context.estim.gasLimit)}
             </h2>
-            <p className="body-paragraph">Estimated gas cost (AttoFIL)</p>
+            <p className="body-paragraph">
+              Filecoin gas limit maximum (gasLimit) ({this.props.context.estim.gasLimit} attoFIL) x
+              Maximum Filecoin charged per unit (gasFeeCap) ({this.props.context.estim.gasFeeCap}{" "}
+              attoFIL)
+            </p>
+          </React.Fragment>
+
+          <React.Fragment>
+            <h2 className="body-heading-two" style={{ marginTop: 24 }}>
+              {Utilities.formatAsFilecoinConversion(this.props.context.estim.gasPremium)}
+            </h2>
+            <p className="body-paragraph">Included gas premium for miner</p>
           </React.Fragment>
 
           <React.Fragment>
