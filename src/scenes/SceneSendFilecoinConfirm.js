@@ -29,12 +29,14 @@ export default class SceneSendFilecoinConfirm extends React.Component {
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
-              {Utilities.formatAsFilecoinConversion(this.props.context.estim.gasLimit)}
+              {Utilities.formatAsFilecoinConversion(
+                this.props.context.estim.gasLimit * this.props.context.estim.gasFeeCap
+              )}
             </h2>
             <p className="body-paragraph">
-              Filecoin gas limit maximum (gasLimit) ({this.props.context.estim.gasLimit} attoFIL) x
-              Maximum Filecoin charged per unit (gasFeeCap) ({this.props.context.estim.gasFeeCap}{" "}
-              attoFIL)
+              Gas limit maximum (gasLimit) ({this.props.context.estim.gasLimit}) x Maximum Filecoin
+              charged per unit (gasFeeCap) ({this.props.context.estim.gasFeeCap}) = Estimated cost
+              FIL/gas
             </p>
           </React.Fragment>
 
@@ -42,7 +44,10 @@ export default class SceneSendFilecoinConfirm extends React.Component {
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
               {Utilities.formatAsFilecoinConversion(this.props.context.estim.gasPremium)}
             </h2>
-            <p className="body-paragraph">Included gas premium for miner</p>
+            <p className="body-paragraph">
+              Gas premium ({this.props.context.estim.gasPremium} attoFIL) x unknown gas cost =
+              Included payment to miner.
+            </p>
           </React.Fragment>
 
           <React.Fragment>
