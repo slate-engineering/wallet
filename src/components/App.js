@@ -390,6 +390,14 @@ export default class App extends React.Component {
     return p;
   };
 
+  _handleAddSigner = ({ signer }) => {
+    console.log(signer);
+  };
+
+  _handleRemoveSigner = ({ signer }) => {
+    console.log(signer);
+  };
+
   _handleToggleTheme = () => {
     this.setState({ theme: this.state.theme !== "LIGHT" ? "LIGHT" : "DARK" });
   };
@@ -413,6 +421,8 @@ export default class App extends React.Component {
       onGetActorCode: this._handleGetActorCode,
       onDeserializeParams: this._handleDeserializeParams,
       onUpdate: this.update,
+      onRemoveSigner: this._handleRemoveSigner,
+      onAddSigner: this._handleAddSigner,
       accounts: this.state.accounts,
       config: this.state.config,
       settings: this.state.settings,

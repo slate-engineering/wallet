@@ -93,6 +93,8 @@ export default class SceneAddress extends React.Component {
           onGetActorCode={this.props.onGetActorCode}
           onDeserializeParams={this.props.onDeserializedParams}
           onDeleteAddress={this.props.onDeleteAddress}
+          onRemoveSigner={this.props.onRemoveSigner}
+          onAddSigner={this.props.onAddSigner}
           icon={iconElement}
         />
       );

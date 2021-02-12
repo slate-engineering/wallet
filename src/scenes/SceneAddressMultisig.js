@@ -12,6 +12,19 @@ import Tag from "~/src/components/Tag";
 import { ipcRenderer } from "electron";
 
 export default class SceneAddressMultisig extends React.Component {
+  state = {
+    signer: "",
+  };
+
+  _handleAddSigner = async () => {
+    const response = await this.props.onAddSigner({ signer: this.state.signer });
+    this.setState({ signer: "" });
+  };
+
+  _handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   render() {
     const address = this.props.accounts.addresses.find(
       (account) => account.address === this.props.context.address
@@ -36,26 +49,48 @@ export default class SceneAddressMultisig extends React.Component {
     return (
       <div className="scene">
         <div className="body">
-          <div className="scene-multisig-layout">
-            <div className="scene-multisig-layout-left">
-              <div className="scene-multisig-title">Signers</div>
+          <div className="scene-ms-layout">
+            <div className="scene-ms-layout-left">
+              <div className="scene-ms-title">Signers</div>
 
               {signers.length && (
-                <div className="scene-multisig-box">
+                <div className="scene-ms-box">
                   {signers.map((each) => (
-                    <div key={each} className="scene-multisig-box-item">
-                      {Utilities.getAlias(each, this.props.accounts, false)}
+                    <div key={each} className="scene-ms-box-item scene-ms-box-item--flex">
+                      <div className="scene-ms-box-item-left">
+                        {Utilities.getAlias(each, this.props.accounts, false)}
+                      </div>
+                      <div
+                        className="scene-ms-box-item-right"
+                        onClick={() => this.props.onRemoveSigner({ signer: each })}
+                      >
+                        remove
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
 
-              <div className="scene-multisig-title" style={{ marginTop: 48 }}>
+              <Input
+                onChange={this._handleChange}
+                value={this.state.signer}
+                name="signer"
+                title="Add signer"
+                style={{ marginTop: 24 }}
+              ></Input>
+
+              <div style={{ marginTop: 16 }}>
+                <Button loading={this.props.refreshing} onClick={this._handleAddSigner}>
+                  Add
+                </Button>
+              </div>
+
+              <div className="scene-ms-title" style={{ marginTop: 48 }}>
                 Pending
               </div>
 
               {pending.length && (
-                <div className="scene-multisig-box">
+                <div className="scene-ms-box">
                   {pending.map((each) => {
                     let approved = (
                       <React.Fragment>
@@ -66,7 +101,7 @@ export default class SceneAddressMultisig extends React.Component {
                     );
 
                     return (
-                      <div key={each} className="scene-multisig-box-item">
+                      <div key={each} className="scene-ms-box-item">
                         {approved} ➟ {Utilities.getAlias(each.To, this.props.accounts, true)}
                         <div className="tag tag--value">
                           {Utilities.formatAsFilecoinConversion(each.Value)}
@@ -78,7 +113,7 @@ export default class SceneAddressMultisig extends React.Component {
               )}
 
               {address.transactions && address.transactions.length ? (
-                <div className="scene-multisig-title" style={{ marginTop: 48, marginBottom: 16 }}>
+                <div className="scene-ms-title" style={{ marginTop: 48, marginBottom: 16 }}>
                   Past Transactions
                 </div>
               ) : null}
@@ -91,8 +126,8 @@ export default class SceneAddressMultisig extends React.Component {
               />
             </div>
 
-            <div className="scene-multisig-layout-right">
-              <div className="scene-multisig-title" style={{ marginTop: 4 }}>
+            <div className="scene-ms-layout-right">
+              <div className="scene-ms-title" style={{ marginTop: 4 }}>
                 Account Information
               </div>
 
