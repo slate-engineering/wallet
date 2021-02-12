@@ -41,7 +41,7 @@ export function getAlias(address, accounts, isElement = false) {
         const resolution = isEmpty(a.alias) ? address : a.alias;
         if (isElement) {
           return (
-            <strong className="transactions-tag transactions-tag--yours">
+            <strong className="tag tag--yours">
               {WALLET_ADDRESS_TYPES_SVG[a.type]} {resolution}
             </strong>
           );
@@ -58,7 +58,7 @@ export function getAlias(address, accounts, isElement = false) {
         const resolution = isEmpty(c.alias) ? address : c.alias;
         if (isElement) {
           return (
-            <strong className="transactions-tag">
+            <strong className="tag">
               {WALLET_ADDRESS_TYPES_SVG[c.type]} {resolution}
             </strong>
           );
@@ -67,6 +67,10 @@ export function getAlias(address, accounts, isElement = false) {
         return resolution;
       }
     }
+  }
+
+  if (isElement) {
+    return <strong className="tag">{address}</strong>;
   }
 
   return address;

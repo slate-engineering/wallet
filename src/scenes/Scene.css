@@ -39,7 +39,7 @@
 .scene-multisig-layout-left {
   flex-shrink: 0;
   width: 344px;
-  padding: 44px 48px 24px 24px;
+  padding: 4px 48px 24px 24px;
 }
 
 .scene-multisig-layout-right {
@@ -63,7 +63,7 @@
 
 .scene-multisig-box-item {
   font-size: 12px;
-  padding: 10px 16px 8px 16px;
+  padding: 10px 8px 8px 8px;
   border-bottom: 1px solid var(--main-border);
   
   &:last-child {

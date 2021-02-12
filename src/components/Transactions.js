@@ -98,12 +98,12 @@ class TransactionRow extends React.Component {
       <div className="transactions-row">
         <div>
           {fromElement} ➟ {toElement}&nbsp;
-          {this.state.msg ? value : null}
+          {this.state.msg ? <span className="tag tag--value">{value}</span> : null}
         </div>
         {this.state.msg ? (
           <ParamsInfo msg={this.state.msg} code={this.state.code} params={this.state.params} />
         ) : null}
-        <div className="transactions-row-cid">{this.state.txn.cid}</div>
+        {/* <div className="transactions-row-cid">{this.state.txn.cid}</div> */}
       </div>
     );
   }

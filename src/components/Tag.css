@@ -1,0 +1,22 @@
+.tag {
+  display: inline-flex;
+  font-size: 11px;
+  color: var(--main-tag-text);
+  border-radius: 3px;
+  background: var(--main-primary-accent);
+  font-weight: 600;
+  padding: 3px;
+  margin: 3px;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.tag--yours {
+  background: var(--main-green);
+}
+
+.tag--value {
+  background: var(--main-bg);
+  border: 1px solid var(--main-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
