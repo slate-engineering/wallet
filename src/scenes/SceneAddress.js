@@ -25,8 +25,20 @@ const getAlias = (props) => {
   return address.alias;
 };
 
+const getThreshold = (props) => {
+  const address = props.accounts.addresses.find(
+    (account) => account.address === props.context.address
+  );
+
+  return address.msigInfo ? address.msigInfo.threshold : null;
+};
+
 export default class SceneAddress extends React.Component {
-  state = { refreshing: undefined, alias: getAlias(this.props) };
+  state = {
+    refreshing: undefined,
+    alias: getAlias(this.props),
+    threshold: getThreshold(this.props),
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.context.address !== this.props.context.address) {
@@ -51,7 +63,13 @@ export default class SceneAddress extends React.Component {
       (account) => account.address === this.props.context.address
     );
 
-    await this.props.onUpdateAddress({ ...address, alias: this.state.alias });
+    const nextState = { ...address, alias: this.state.alias };
+
+    if (nextState.threshold) {
+      nextState.msigInfo = { ...nextState.msigInfo, threshold: this.state.threshold };
+    }
+
+    await this.props.onUpdateAddress(nextState);
   }, 600);
 
   render() {
@@ -85,11 +103,12 @@ export default class SceneAddress extends React.Component {
       return (
         <SceneAddressMultisig
           alias={this.state.alias}
+          threshold={this.state.threshold}
           context={this.props.context}
           accounts={this.props.accounts}
           refreshing={this.props.refreshing}
           onRefresh={this._handleRefresh}
-          onAliasChange={this._handleAliasChange}
+          onChange={this._handleAliasChange}
           onGetActorCode={this.props.onGetActorCode}
           onDeserializeParams={this.props.onDeserializedParams}
           onDeleteAddress={this.props.onDeleteAddress}

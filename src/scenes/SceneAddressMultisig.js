@@ -93,11 +93,11 @@ export default class SceneAddressMultisig extends React.Component {
                 <div className="scene-ms-box">
                   {pending.map((each) => {
                     let approved = (
-                      <React.Fragment>
+                      <span key={each}>
                         {each.Approved.map((each) => {
                           return Utilities.getAlias(each, this.props.accounts, true);
                         })}
-                      </React.Fragment>
+                      </span>
                     );
 
                     return (
@@ -177,7 +177,16 @@ export default class SceneAddressMultisig extends React.Component {
               </div>
 
               <Input
-                onChange={this.props.onAliasChange}
+                onChange={this.props.onChange}
+                value={this.props.threshold}
+                name="threshold"
+                title="Threshold"
+                description="Determine how many signed attempts must pass before this transaction can be completed."
+                style={{ marginTop: 48 }}
+              ></Input>
+
+              <Input
+                onChange={this.props.onChange}
                 value={this.props.alias}
                 name="alias"
                 title="Alias"
