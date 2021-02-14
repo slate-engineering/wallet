@@ -19,6 +19,7 @@ import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneContacts from "~/src/scenes/SceneContacts";
+import SceneSettings from "~/src/scenes/SceneSettings";
 
 const WALLET_ADDRESS_TYPES_SVG = {
   1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>◈</span>,
@@ -36,6 +37,7 @@ const WALLET_SCENE = {
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
   CONTACTS: <SceneContacts />,
+  SETTINGS: <SceneSettings />,
 };
 
 export default class App extends React.Component {

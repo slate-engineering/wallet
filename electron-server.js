@@ -167,6 +167,8 @@ app.on("ready", async () => {
 
   ipcMain.handle("get-transactions", async (event, address) => {
     console.log("getting transactions for", address);
+
+    // TODO(jim): Add this URL to config.
     try {
       const resp = await fetch(NEW_DEFAULT_CONFIG.INDEX_URL + "/index/msgs/for/" + address);
       console.log(resp);
@@ -517,9 +519,16 @@ app.on("ready", async () => {
       const p = path.join(__dirname, ".wallet", "config.json");
       const f = await fs.promises.readFile(p, "utf8");
       const oldConfig = JSON.parse(f);
-      const nextState = JSON.stringify({ ...oldConfig, ...nextConfig });
+      const updates = { ...oldConfig, ...nextConfig };
+      const nextState = JSON.stringify(updates);
       await fs.promises.writeFile(p, nextState, "utf8");
-      return { success: true };
+
+      provider = new NodejsProvider(updates.API_URL);
+
+      mainnet.fullNode.methods.MsigGetPending = {}; // Temporary hack until dep gets updated
+      client = new LotusRPC(provider, { schema: mainnet.fullNode });
+
+      return { ...updates };
     } catch (e) {
       console.log(e);
       return { error: "write-config error" };
@@ -543,11 +552,13 @@ app.on("ready", async () => {
       const p = path.join(__dirname, ".wallet", "settings.json");
       const f = await fs.promises.readFile(p, "utf8");
       const oldSettings = JSON.parse(f);
-      const nextState = JSON.stringify({ ...oldSettings, ...nextSettings });
+      const updates = { ...oldSettings, ...nextSettings };
+      const nextState = JSON.stringify(updates);
 
       await fs.promises.writeFile(p, nextState, "utf8");
+
+      return { ...updates };
     } catch (e) {
-      console.log(e);
       return { error: "write-settings error" };
     }
   });
@@ -595,7 +606,6 @@ app.on("ready", async () => {
   const settings = JSON.parse(settingsJSON);
 
   provider = new NodejsProvider(config.API_URL);
-
   mainnet.fullNode.methods.MsigGetPending = {}; // Temporary hack until dep gets updated
   client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
