@@ -502,6 +502,9 @@ export default class App extends React.Component {
               <span className={contactsClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
                 Contacts
               </span>
+              <span className={sendClassNames} onClick={() => this._handleNavigate("SETTINGS")}>
+                Settings
+              </span>
               <span
                 className={darkModeClassNames}
                 style={{ marginRight: 8 }}

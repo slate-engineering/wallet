@@ -10,7 +10,12 @@ export default class SceneSettings extends React.Component {
   render() {
     return (
       <div className="scene">
-        <div className="body">Settings</div>
+        <div className="body">
+          <h1 className="body-heading">Settings</h1>
+          <p className="body-paragraph" style={{ marginBottom: 48 }}>
+            WIP
+          </p>
+        </div>
       </div>
     );
   }
