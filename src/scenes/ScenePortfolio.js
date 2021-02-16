@@ -1,13 +1,13 @@
+import "~/src/scenes/Scene.css";
+
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 
-import Input from "~/src/components/Input";
-import Transactions from "~/src/components/Transactions.js";
-
 import { ipcRenderer } from "electron";
 
-import "~/src/scenes/Scene.css";
+import Input from "~/src/components/Input";
+import Transactions from "~/src/components/Transactions.js";
 
 export default class ScenePortfolio extends React.Component {
   render() {

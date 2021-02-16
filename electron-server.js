@@ -1,19 +1,20 @@
-import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
-import FilecoinApp from "@zondax/ledger-filecoin";
-import FilecoinSigning from "@zondax/filecoin-signing-tools";
 import * as Utilities from "~/src/common/utilities";
 import * as ActorMethods from "~/src/common/actor-methods";
-import fetch from "node-fetch";
-import fs from "fs";
-import path from "path";
-import url from "url";
-import flatCache from "flat-cache";
 
 import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs";
 import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { Converter, FilecoinNumber } from "@glif/filecoin-number";
 import { app, BrowserWindow, ipcMain, protocol } from "electron";
+
+import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
+import FilecoinApp from "@zondax/ledger-filecoin";
+import FilecoinSigning from "@zondax/filecoin-signing-tools";
+import fetch from "node-fetch";
+import fs from "fs";
+import path from "path";
+import url from "url";
+import flatCache from "flat-cache";
 
 const NEW_DEFAULT_SETTINGS = {
   settings: true,

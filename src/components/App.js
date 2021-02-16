@@ -2,13 +2,13 @@ import "~/src/scenes/Scene.css";
 import "~/src/components/App.css";
 import "~/src/components/Body.css";
 
-import { FilecoinNumber } from "@glif/filecoin-number";
-import { ipcRenderer } from "electron";
-
 import * as React from "react";
 import * as Utilities from "~/src/common/utilities";
 import * as SVG from "~/src/components/SVG.js";
 import * as Constants from "~/src/common/constants";
+
+import { FilecoinNumber } from "@glif/filecoin-number";
+import { ipcRenderer } from "electron";
 
 import SceneAddAddress from "~/src/scenes/SceneAddAddress";
 import SceneAddAddressLedger from "~/src/scenes/SceneAddAddressLedger";
