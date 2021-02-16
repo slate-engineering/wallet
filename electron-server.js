@@ -168,9 +168,14 @@ app.on("ready", async () => {
   ipcMain.handle("get-transactions", async (event, address) => {
     console.log("getting transactions for", address);
 
-    // TODO(jim): Add this URL to config.
+    const p = path.join(__dirname, ".wallet", "config.json");
+    const f = await fs.promises.readFile(p, "utf8");
+    const c = JSON.parse(f);
+
+    console.log({ c });
+
     try {
-      const resp = await fetch(NEW_DEFAULT_CONFIG.INDEX_URL + "/index/msgs/for/" + address);
+      const resp = await fetch(c.INDEX_URL + "/index/msgs/for/" + address);
       console.log(resp);
       return resp.json();
     } catch (e) {
@@ -524,8 +529,9 @@ app.on("ready", async () => {
       await fs.promises.writeFile(p, nextState, "utf8");
 
       provider = new NodejsProvider(updates.API_URL);
-
-      mainnet.fullNode.methods.MsigGetPending = {}; // Temporary hack until dep gets updated
+      // TODO(why):
+      // Hack until a patch is made.
+      mainnet.fullNode.methods.MsigGetPending = {};
       client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
       return { ...updates };

@@ -1,3 +1,5 @@
+import "~/src/scenes/Scene.css";
+
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
@@ -8,8 +10,6 @@ import { ipcRenderer } from "electron";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
 import LoaderSpinner from "~/src/components/LoaderSpinner";
-
-import "~/src/scenes/Scene.css";
 
 const SEARCH_DELAY = 1500;
 
