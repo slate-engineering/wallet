@@ -453,6 +453,10 @@ export default class App extends React.Component {
       "navigation-item",
       this.state.currentScene === "CONTACTS" ? "navigation-item--active" : null
     );
+    const settingsClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "SETTINGS" ? "navigation-item--active" : null
+    );
     const darkModeClassNames = Utilities.classNames(
       "navigation-item",
       this.state.theme === "DARK" ? "navigation-item--active" : null
@@ -502,7 +506,7 @@ export default class App extends React.Component {
               <span className={contactsClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
                 Contacts
               </span>
-              <span className={sendClassNames} onClick={() => this._handleNavigate("SETTINGS")}>
+              <span className={settingsClassNames} onClick={() => this._handleNavigate("SETTINGS")}>
                 Settings
               </span>
               <span
