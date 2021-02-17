@@ -127,29 +127,31 @@ export default class Transaction extends React.Component {
     console.log(this.props.onGetActorCode);
 
     const txns = this.props.address.transactions ?? [];
-    const items = txns.map((txn, index) => {
-      if (!txn.cid) {
-        console.log("invalid attempt", txn);
-        return null;
-      }
+    const items = txns.length
+      ? txns.map((txn, index) => {
+          if (!txn.cid) {
+            console.log("invalid attempt", txn);
+            return null;
+          }
 
-      if (txn.cid["/"]) {
-        console.log("incorrect cid value, patching but source is still damaged");
-        txn.cid = txn.cid["/"];
-      }
+          if (txn.cid["/"]) {
+            console.log("incorrect cid value, patching but source is still damaged");
+            txn.cid = txn.cid["/"];
+          }
 
-      return (
-        <TransactionRow
-          onGetMessage={this.props.onGetMessage}
-          onGetActorCode={this.props.onGetActorCode}
-          onDeserializeParams={this.props.onDeserializeParams}
-          key={`transactions-${index}-${txn.cid}`}
-          txn={txn}
-          address={this.props.address}
-          accounts={this.props.accounts}
-        />
-      );
-    });
+          return (
+            <TransactionRow
+              onGetMessage={this.props.onGetMessage}
+              onGetActorCode={this.props.onGetActorCode}
+              onDeserializeParams={this.props.onDeserializeParams}
+              key={`transactions-${index}-${txn.cid}`}
+              txn={txn}
+              address={this.props.address}
+              accounts={this.props.accounts}
+            />
+          );
+        })
+      : null;
 
     return <div className="transactions">{items}</div>;
   }
