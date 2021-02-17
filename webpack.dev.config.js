@@ -4,8 +4,6 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 const { spawn } = require("child_process");
 
-const DEFAULT_WEBPACK_INCLUDE_PATH = path.resolve(__dirname, "src");
-
 module.exports = {
   module: {
     rules: [

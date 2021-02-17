@@ -4,8 +4,6 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 
-const DEFAULT_WEBPACK_INCLUDE_PATH = path.resolve(__dirname, "src");
-
 module.exports = {
   module: {
     rules: [
@@ -15,7 +13,14 @@ module.exports = {
       },
       {
         test: /\.jsx?$/,
-        use: [{ loader: "babel-loader" }],
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+            },
+          },
+        ],
       },
       {
         test: /\.(jpe?g|png|gif)$/,

@@ -51,6 +51,9 @@ if (process.platform === "win32") {
   app.commandLine.appendSwitch("force-device-scale-factor", "1");
 }
 
+const icon = path.join(__dirname, "build", "icons", "mac", "icon.icns");
+console.log({ icon });
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     titleBarStyle: "hiddenInset",
@@ -61,7 +64,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
-    icon: path.join(__dirname, "build", "icon.png"),
+    icon: icon,
   });
 
   // NOTE(jim): HTML path for HTMLWebpackPlugin
