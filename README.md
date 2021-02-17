@@ -15,4 +15,9 @@ npm i -D electron-rebuild
 npm run start
 ```
 
-Ask Cake or Why if you have questions!
+### Package DMG
+
+```sh
+npm run package
+```
+
