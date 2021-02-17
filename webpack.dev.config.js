@@ -12,28 +12,18 @@ module.exports = {
       {
         test: /\.css$/,
         use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "postcss-loader" }],
-        include: [
-          DEFAULT_WEBPACK_INCLUDE_PATH,
-          path.resolve(__dirname, "node_modules/monaco-editor"),
-        ],
       },
       {
         test: /\.jsx?$/,
         use: [{ loader: "babel-loader" }],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
       },
       {
         test: /\.(jpe?g|png|gif)$/,
         use: [{ loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" }],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [{ loader: "file-loader?name=font/[name]__[hash:base64:5].[ext]" }],
-        include: [
-          DEFAULT_WEBPACK_INCLUDE_PATH,
-          path.resolve(__dirname, "node_modules/monaco-editor"),
-        ],
       },
     ],
   },

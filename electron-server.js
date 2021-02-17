@@ -54,13 +54,14 @@ if (process.platform === "win32") {
 function createWindow() {
   mainWindow = new BrowserWindow({
     titleBarStyle: "hiddenInset",
-    width: 1024,
-    height: 768,
+    width: 768,
+    height: 604,
     show: false,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
     },
+    icon: path.join(__dirname, "/src/assets/icon.png"),
   });
 
   // NOTE(jim): HTML path for HTMLWebpackPlugin

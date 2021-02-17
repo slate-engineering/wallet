@@ -11,29 +11,25 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
+        use: [MiniCSSExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
       {
         test: /\.jsx?$/,
         use: [{ loader: "babel-loader" }],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
       },
       {
         test: /\.(jpe?g|png|gif)$/,
         use: [{ loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" }],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         use: [{ loader: "file-loader?name=font/[name]__[hash:base64:5].[ext]" }],
-        include: DEFAULT_WEBPACK_INCLUDE_PATH,
       },
     ],
   },
   target: "electron-renderer",
   plugins: [
-    new HTMLWebpackPlugin({ title: "Filecoin Wallets" }),
+    new HTMLWebpackPlugin({ title: "Filecoin Wallet", template: "src/index.html" }),
     new MiniCSSExtractPlugin({
       filename: "bundle.css",
       chunkFilename: "[id].css",
@@ -41,7 +37,6 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("production"),
     }),
-    new MinifyPlugin(),
   ],
   stats: {
     colors: true,
