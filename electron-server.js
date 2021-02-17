@@ -61,7 +61,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
-    icon: path.join(__dirname, "/src/assets/icon.png"),
+    icon: path.join(__dirname, "build", "icon.png"),
   });
 
   // NOTE(jim): HTML path for HTMLWebpackPlugin

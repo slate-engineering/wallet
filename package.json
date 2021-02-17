@@ -21,7 +21,8 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "build": {
-    "appId": "com.company.Sovereign"
+    "appId": "com.company.Sovereign",
+    "files": ["**/*", "build/icon.*"]
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.1",
