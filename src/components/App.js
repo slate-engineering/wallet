@@ -152,7 +152,7 @@ export default class App extends React.Component {
     // normalize to using the robust address for the 'primary' key
     address = addrs.address;
 
-    const transactions = await ipcRenderer.invoke("get-transactions", address);
+    let transactions = await ipcRenderer.invoke("get-transactions-as-array", address);
 
     // If we are refreshing a multisig, also check the multisig state
     let msigInfo;
@@ -201,7 +201,7 @@ export default class App extends React.Component {
       }
     }
 
-    const transactions = await ipcRenderer.invoke("get-transactions", entry.address);
+    const transactions = await ipcRenderer.invoke("get-transactions-as-array", entry.address);
 
     const addresses = [
       { alias: entry.address, transactions: transactions, ...entry },

@@ -16,8 +16,14 @@ export default class ScenePortfolio extends React.Component {
     let balance = 0;
     let transactions = [];
     for (const a of this.props.accounts.addresses) {
-      console.log(a);
       balance = Number(balance) + Number(a.balance);
+      if (a.transactions && a.transactions.error) {
+        // TODO(jim):
+        // Sorry, we need to unify responses across API endpoints and clean this up.
+        console.log("Broken transaction write case.");
+        continue;
+      }
+
       transactions = [...a.transactions, ...transactions];
     }
 

@@ -170,7 +170,7 @@ app.on("ready", async () => {
     };
   });
 
-  ipcMain.handle("get-transactions", async (event, address) => {
+  ipcMain.handle("get-transactions-as-array", async (event, address) => {
     console.log("getting transactions for", address);
 
     const p = path.join(__dirname, ".wallet", "config.json");
@@ -181,13 +181,12 @@ app.on("ready", async () => {
 
     try {
       const resp = await fetch(c.INDEX_URL + "/index/msgs/for/" + address);
-      console.log(resp);
-      return resp.json();
+      const json = resp.json();
+
+      return json.length ? json : [];
     } catch (e) {
       console.log(e);
-      return {
-        error: e.message,
-      };
+      return [];
     }
   });
 
