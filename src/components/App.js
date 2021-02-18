@@ -20,6 +20,7 @@ import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneContacts from "~/src/scenes/SceneContacts";
 import SceneSettings from "~/src/scenes/SceneSettings";
+import SceneMessage from "~/src/scenes/SceneMessage";
 
 const WALLET_ADDRESS_TYPES_SVG = {
   1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>◈</span>,
@@ -38,6 +39,7 @@ const WALLET_SCENE = {
   ADDRESS: <SceneAddress />,
   CONTACTS: <SceneContacts />,
   SETTINGS: <SceneSettings />,
+  MESSAGE: <SceneMessage />,
 };
 
 export default class App extends React.Component {
@@ -191,6 +193,12 @@ export default class App extends React.Component {
     console.log(updateResponse);
 
     return await this.update();
+  };
+
+  _handleSendMessage = (payload) => {
+    alert("TODO: send it, view console to see payload");
+    console.log(payload);
+    return payload;
   };
 
   _handleAddPublicAddressWithExistingData = async (entry, nextNavigation) => {
@@ -418,6 +426,7 @@ export default class App extends React.Component {
       onAddPublicAddressWithExistingData: this._handleAddPublicAddressWithExistingData,
       onDeleteAddress: this._handleDeleteAddress,
       onSendFilecoin: this._handleSendFilecoin,
+      onSendMessage: this._handleSendMessage,
       onConfirmSendFilecoin: this._handleConfirmSendFilecoin,
       onGetMessage: this._handleGetMessage,
       onGetActorCode: this._handleGetActorCode,
@@ -448,6 +457,10 @@ export default class App extends React.Component {
     const sendClassNames = Utilities.classNames(
       "navigation-item",
       this.state.currentScene === "SEND" ? "navigation-item--active" : null
+    );
+    const messageClassNames = Utilities.classNames(
+      "navigation-item",
+      this.state.currentScene === "MESSAGE" ? "navigation-item--active" : null
     );
     const contactsClassNames = Utilities.classNames(
       "navigation-item",
@@ -502,6 +515,9 @@ export default class App extends React.Component {
               </span>
               <span className={sendClassNames} onClick={() => this._handleNavigate("SEND")}>
                 Send
+              </span>
+              <span className={messageClassNames} onClick={() => this._handleNavigate("MESSAGE")}>
+                Message
               </span>
               <span className={contactsClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
                 Contacts
