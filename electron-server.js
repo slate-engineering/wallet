@@ -255,6 +255,19 @@ app.on("ready", async () => {
     }
   });
 
+  ipcMain.handle("serialize-params", async (event, params) => {
+    try {
+      const encoded = FilecoinSigning.serializeParams(params);
+      return {
+        result: encoded,
+      };
+    } catch (e) {
+      return {
+        error: e.toString(),
+      };
+    }
+  });
+
   ipcMain.handle("signing-propose-multisig", async (event, msig, destination, signer, value) => {
     // TODO: this could just be done clientside if we could figure out how to import the library there
     const actor = await client.stateGetActor(signer, []);
