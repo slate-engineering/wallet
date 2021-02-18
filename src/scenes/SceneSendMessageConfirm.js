@@ -7,24 +7,26 @@ import Button from "~/src/components/Button";
 
 import "~/src/scenes/Scene.css";
 
-export default class SceneSendFilecoinConfirm extends React.Component {
+export default class SceneSendMessageConfirm extends React.Component {
   state = {
     loading: undefined,
   };
 
-  _handleSendFilecoinConfirm = async () => {
+  _handleSendMessageConfirm = async () => {
     this.setState({ loading: 1 });
-    const response = await this.props.onConfirmSendFilecoin({ ...this.props.context });
+    const response = await this.props.onConfirmSendMessage({ ...this.props.context });
     this.setState({ loading: undefined });
   };
 
   render() {
+    console.log(this.props.context);
     return (
       <div className="scene">
         <div className="body">
           <h1 className="body-heading">Confirm your Transaction</h1>
           <p className="body-paragraph">
-            Confirm the transaction you want to make from your account.
+            Confirm the message you are sending to the Filecoin Network from your address{" "}
+            {this.props.context.source}.
           </p>
 
           <React.Fragment>
@@ -39,6 +41,24 @@ export default class SceneSendFilecoinConfirm extends React.Component {
               FIL/gas
             </p>
           </React.Fragment>
+
+          {this.props.context.params ? (
+            <React.Fragment>
+              <h2 className="body-heading-two" style={{ marginTop: 24 }}>
+                {JSON.stringify(this.props.context.params)}
+              </h2>
+              <p className="body-paragraph">Parameters</p>
+            </React.Fragment>
+          ) : null}
+
+          {this.props.context.method ? (
+            <React.Fragment>
+              <h2 className="body-heading-two" style={{ marginTop: 24 }}>
+                {this.props.context.method}
+              </h2>
+              <p className="body-paragraph">Method</p>
+            </React.Fragment>
+          ) : null}
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 24 }}>
@@ -65,15 +85,15 @@ export default class SceneSendFilecoinConfirm extends React.Component {
           </React.Fragment>
 
           <React.Fragment>
-            <h2 className="body-heading-two" style={{ marginTop: 24 }}>
-              {this.props.context.fil}
+            <h2 className="body-heading-two" style={{ marginTop: 48, fontSize: 32 }}>
+              {Utilities.formatAsFilecoin(this.props.context.fil)}
             </h2>
-            <p className="body-paragraph">Amount</p>
+            <p className="body-paragraph">Total amount</p>
           </React.Fragment>
 
           <div style={{ marginTop: 24 }}>
-            <Button onClick={this._handleSendFilecoinConfirm} loading={this.state.loading}>
-              Send Filecoin transaction
+            <Button onClick={this._handleSendMessageConfirm} loading={this.state.loading}>
+              Finalize and send
             </Button>
           </div>
         </div>

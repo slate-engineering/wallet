@@ -16,7 +16,7 @@ import SceneAddAddressPublic from "~/src/scenes/SceneAddAddressPublic";
 import SceneAddress from "~/src/scenes/SceneAddress";
 import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
-import SceneSendFilecoinConfirm from "~/src/scenes/SceneSendFilecoinConfirm";
+import SceneSendMessageConfirm from "~/src/scenes/SceneSendMessageConfirm";
 import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneContacts from "~/src/scenes/SceneContacts";
 import SceneSettings from "~/src/scenes/SceneSettings";
@@ -34,7 +34,7 @@ const WALLET_SCENE = {
   ADD_ADDRESS_PUBLIC: <SceneAddAddressPublic />,
   ADD_ADDRESS_LEDGER: <SceneAddAddressLedger />,
   SEND: <SceneSendFilecoin />,
-  SEND_CONFIRM: <SceneSendFilecoinConfirm />,
+  SEND_CONFIRM: <SceneSendMessageConfirm />,
   TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
   CONTACTS: <SceneContacts />,
@@ -195,12 +195,6 @@ export default class App extends React.Component {
     return await this.update();
   };
 
-  _handleSendMessage = (payload) => {
-    alert("TODO: send it, view console to see payload");
-    console.log(payload);
-    return payload;
-  };
-
   _handleAddPublicAddressWithExistingData = async (entry, nextNavigation) => {
     for (let a of this.state.accounts.addresses) {
       if (entry.address === a.address) {
@@ -255,6 +249,20 @@ export default class App extends React.Component {
     );
   };
 
+  _handleSendMessage = ({ source, sourceAccount, signer, destination, fil, params, method }) => {
+    alert("TODO: sent it, view console to see payload");
+    console.log(payload);
+
+    // TODO(jim): Take out this return.
+    return payload;
+
+    // NOTE(why): When this is setup like _handleSendFilecoin you can
+    // remove this comment
+    /*
+    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg, params, method });
+    */
+  };
+
   _handleSendFilecoin = async ({ source, sourceAccount, signer, destination, fil }) => {
     console.log({ source, destination, fil });
 
@@ -304,7 +312,16 @@ export default class App extends React.Component {
     return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg });
   };
 
-  _handleConfirmSendFilecoin = async ({ source, destination, fil, actor, estim, msg }) => {
+  _handleConfirmSendMessage = async ({
+    source,
+    destination,
+    fil,
+    actor,
+    estim,
+    msg,
+    params,
+    method,
+  }) => {
     const account = this.state.accounts.addresses.find((each) => each.address === msg.from);
     account.actor = actor;
 
@@ -427,7 +444,7 @@ export default class App extends React.Component {
       onDeleteAddress: this._handleDeleteAddress,
       onSendFilecoin: this._handleSendFilecoin,
       onSendMessage: this._handleSendMessage,
-      onConfirmSendFilecoin: this._handleConfirmSendFilecoin,
+      onConfirmSendMessage: this._handleConfirmSendMessage,
       onGetMessage: this._handleGetMessage,
       onGetActorCode: this._handleGetActorCode,
       onDeserializeParams: this._handleDeserializeParams,
