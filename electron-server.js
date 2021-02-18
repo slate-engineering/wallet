@@ -5,7 +5,7 @@ import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs"
 import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 import { Converter, FilecoinNumber } from "@glif/filecoin-number";
-import { app, BrowserWindow, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, remote, ipcMain, protocol } from "electron";
 
 import TransportNodeHID from "@ledgerhq/hw-transport-node-hid";
 import FilecoinApp from "@zondax/ledger-filecoin";
@@ -50,6 +50,9 @@ if (process.platform === "win32") {
   app.commandLine.appendSwitch("high-dpi-support", "true");
   app.commandLine.appendSwitch("force-device-scale-factor", "1");
 }
+
+const APPLICATION_DATA_PATH = (app || remote.app).getPath("userData");
+console.log(APPLICATION_DATA_PATH);
 
 const icon = path.join(__dirname, "build", "icons", "mac", "icon.icns");
 console.log({ icon });
@@ -173,7 +176,7 @@ app.on("ready", async () => {
   ipcMain.handle("get-transactions-as-array", async (event, address) => {
     console.log("getting transactions for", address);
 
-    const p = path.join(__dirname, ".wallet", "config.json");
+    const p = path.join(APPLICATION_DATA_PATH, ".wallet", "config.json");
     const f = await fs.promises.readFile(p, "utf8");
     const c = JSON.parse(f);
 
@@ -496,7 +499,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("get-accounts", async (event) => {
     try {
-      const p = path.join(__dirname, ".wallet", "accounts.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "accounts.json");
       const f = await fs.promises.readFile(p, "utf8");
 
       return JSON.parse(f);
@@ -508,7 +511,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("write-accounts", async (event, nextAccountData) => {
     try {
-      const p = path.join(__dirname, ".wallet", "accounts.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "accounts.json");
       const f = await fs.promises.readFile(p, "utf8");
       const oldAccountData = JSON.parse(f);
       console.log("old", oldAccountData);
@@ -526,7 +529,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("get-config", async (event, data) => {
     try {
-      const p = path.join(__dirname, ".wallet", "config.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "config.json");
       const f = await fs.promises.readFile(p, "utf8");
 
       return JSON.parse(f);
@@ -538,7 +541,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("write-config", async (event, nextConfig) => {
     try {
-      const p = path.join(__dirname, ".wallet", "config.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "config.json");
       const f = await fs.promises.readFile(p, "utf8");
       const oldConfig = JSON.parse(f);
       const updates = { ...oldConfig, ...nextConfig };
@@ -560,7 +563,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("get-settings", async (event, data) => {
     try {
-      const p = path.join(__dirname, ".wallet", "settings.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "settings.json");
       const f = await fs.promises.readFile(p, "utf8");
 
       return JSON.parse(f);
@@ -572,7 +575,7 @@ app.on("ready", async () => {
 
   ipcMain.handle("write-settings", async (event, nextSettings) => {
     try {
-      const p = path.join(__dirname, ".wallet", "settings.json");
+      const p = path.join(APPLICATION_DATA_PATH, ".wallet", "settings.json");
       const f = await fs.promises.readFile(p, "utf8");
       const oldSettings = JSON.parse(f);
       const updates = { ...oldSettings, ...nextSettings };
@@ -586,15 +589,15 @@ app.on("ready", async () => {
     }
   });
 
-  const pathRoot = path.join(__dirname, ".wallet");
+  const pathRoot = path.join(APPLICATION_DATA_PATH, ".wallet");
 
   // NOTE(jim): Enable this line
   // if you need to wipe your state.
   // await fs.promises.rmdir(pathRoot, { recursive: true });
 
-  const pathSettings = path.join(__dirname, ".wallet", "settings.json");
-  const pathConfig = path.join(__dirname, ".wallet", "config.json");
-  const pathAccounts = path.join(__dirname, ".wallet", "accounts.json");
+  const pathSettings = path.join(APPLICATION_DATA_PATH, ".wallet", "settings.json");
+  const pathConfig = path.join(APPLICATION_DATA_PATH, ".wallet", "config.json");
+  const pathAccounts = path.join(APPLICATION_DATA_PATH, ".wallet", "accounts.json");
 
   const maybeRootExists = await fs.existsSync(pathRoot);
   if (!maybeRootExists) {

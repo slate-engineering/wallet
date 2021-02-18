@@ -18,13 +18,16 @@
     "start": "cross-env NODE_ENV=development webpack serve --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
     "package": "npm run build",
-    "postpackage": "electron-packager ./ --out=./builds --icon=./build/icons/mac/icon.icns --overwrite",
+    "postpackage": "electron-packager ./ --out=./builds --icon=./build/icons/mac/icon.icns --overwrite --platform=darwin",
     "make-icons": "electron-icon-maker --input=./src/assets/icon.png --output=./build"
   },
   "build": {
+    "productName": "Sovereign",
     "appId": "com.company.Sovereign",
     "files": [
       "**/*",
+      ".wallet",
+      ".wallet/**/*",
       "build/icon.*"
     ],
     "dmg": {
