@@ -9,12 +9,34 @@ import ParametersTable from "~/src/components/ParametersTable";
 
 import "~/src/scenes/Scene.css";
 
+const getFirstAddress = (props) => {
+  if (!props.accounts) {
+    return null;
+  }
+
+  if (!props.accounts.addresses) {
+    return null;
+  }
+
+  if (!props.accounts.addresses.length) {
+    return null;
+  }
+
+  for (let a of props.accounts.addresses) {
+    if (a.address) {
+      return a.address;
+    }
+  }
+
+  return null;
+};
+
 export default class SceneMessage extends React.Component {
   _parameters = null;
 
   state = {
     fil: 0,
-    source: undefined,
+    source: getFirstAddress(this.props),
     signer: undefined,
     method: "",
     destination: "",

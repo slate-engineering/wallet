@@ -8,10 +8,32 @@ import Button from "~/src/components/Button";
 
 import "~/src/scenes/Scene.css";
 
+const getFirstAddress = (props) => {
+  if (!props.accounts) {
+    return null;
+  }
+
+  if (!props.accounts.addresses) {
+    return null;
+  }
+
+  if (!props.accounts.addresses.length) {
+    return null;
+  }
+
+  for (let a of props.accounts.addresses) {
+    if (a.address) {
+      return a.address;
+    }
+  }
+
+  return null;
+};
+
 export default class SceneSendFilecoin extends React.Component {
   state = {
     fil: 0,
-    source: undefined,
+    source: getFirstAddress(this.props),
     signer: undefined,
     destination: "",
     loading: undefined,
