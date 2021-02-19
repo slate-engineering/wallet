@@ -1,5 +1,6 @@
 .tag {
-  display: inline-flex;
+  display: inline-block;
+  vertical-align: middle;
   font-size: 11px;
   color: var(--main-tag-text);
   border-radius: 3px;
@@ -7,8 +8,10 @@
   font-weight: 600;
   padding: 3px;
   margin: 3px;
-  overflow-wrap: normal;
+  max-width: 180px;
+  overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tag--yours {
