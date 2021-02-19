@@ -1,8 +1,10 @@
+import "~/src/components/Input.css";
+
 import * as React from "react";
 import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 
-import "~/src/components/Input.css";
+import FormSection from "~/src/components/FormSection";
 
 export default class Input extends React.Component {
   _unit;
@@ -56,15 +58,7 @@ export default class Input extends React.Component {
   render() {
     return (
       <div className="input-container" style={this.props.style}>
-        <div style={{ maxWidth: "480px" }}>
-          {!Utilities.isEmpty(this.props.title) ? (
-            <div className="description-label">{this.props.title}</div>
-          ) : null}
-
-          {!Utilities.isEmpty(this.props.description) ? (
-            <div className="description-body">{this.props.description}</div>
-          ) : null}
-        </div>
+        <FormSection title={this.props.title}>{this.props.description}</FormSection>
         <div style={{ position: "relative" }}>
           <input
             className="input"

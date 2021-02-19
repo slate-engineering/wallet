@@ -47,7 +47,7 @@ export default class App extends React.Component {
     currentScene: "PORTFOLIO",
     accounts: { addresses: [] },
     context: null,
-    theme: "LIGHT",
+    config: {},
   };
 
   getScene = (scene) => {
@@ -425,8 +425,13 @@ export default class App extends React.Component {
     console.log(signer);
   };
 
-  _handleToggleTheme = () => {
-    this.setState({ theme: this.state.theme !== "LIGHT" ? "LIGHT" : "DARK" });
+  _handleToggleTheme = async () => {
+    const config = await ipcRenderer.invoke("write-config", {
+      ...this.state.config,
+      theme: this.state.config.theme !== "LIGHT" ? "LIGHT" : "DARK",
+    });
+
+    await this.update();
   };
 
   render() {
@@ -460,9 +465,8 @@ export default class App extends React.Component {
 
     const rootClasses = Utilities.classNames(
       "root",
-      this.state.theme === "LIGHT" ? "root-theme-light" : "root-theme-dark"
+      this.state.config.theme === "LIGHT" ? "root-theme-light" : "root-theme-dark"
     );
-
     const portfolioClassNames = Utilities.classNames(
       "navigation-item",
       this.state.currentScene === "PORTFOLIO" ? "navigation-item--active" : null
@@ -489,7 +493,7 @@ export default class App extends React.Component {
     );
     const darkModeClassNames = Utilities.classNames(
       "navigation-item",
-      this.state.theme === "DARK" ? "navigation-item--active" : null
+      this.state.config && this.state.config.theme === "DARK" ? "navigation-item--active" : null
     );
 
     return (

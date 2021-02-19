@@ -1,0 +1,41 @@
+.form-section {
+  width: 100%;
+  max-width: 488px;
+}
+
+.form-section-title {
+  box-sizing: border-box;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0;
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.form-section-body {
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 12px;
+  display: block;
+  width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  
+  a {
+    font-weight: 400;
+    color: var(--main-primary);
+    cursor: pointer;
+    transition: 200ms ease color;
+    
+    :visited {
+      color: blue;
+    }
+    :hover {
+      color: blue;
+    }
+  }
+}
