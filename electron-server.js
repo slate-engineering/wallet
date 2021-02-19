@@ -184,7 +184,8 @@ app.on("ready", async () => {
 
     try {
       const resp = await fetch(c.INDEX_URL + "/index/msgs/for/" + address);
-      const json = resp.json();
+      const json = await resp.json();
+      console.log(json);
 
       return json.length ? json : [];
     } catch (e) {
