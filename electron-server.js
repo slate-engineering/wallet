@@ -636,8 +636,35 @@ app.on("ready", async () => {
   mainnet.fullNode.methods.MsigGetPending = {}; // Temporary hack until dep gets updated
   client = new LotusRPC(provider, { schema: mainnet.fullNode });
 
-  msgCache = flatCache.load("msgcache");
-  codeCache = flatCache.load("codecache");
+  // NOTE(jim):
+  // Electron demands that the cache paths are in a specific directory.
+  const cachePath = path.join(APPLICATION_DATA_PATH, "cache");
+  const maybeCachePathExists = await fs.existsSync(cachePath);
+  if (!maybeCachePathExists) {
+    console.log("Creating cache root...", cachePath);
+    await fs.promises.mkdir(cachePath);
+  }
+
+  const messageCachePath = path.join(APPLICATION_DATA_PATH, "cache", "msg");
+  const maybeMessageCacheExists = await fs.existsSync(messageCachePath);
+  if (!maybeMessageCacheExists) {
+    console.log("Creating cache message folder...", messageCachePath);
+    await fs.promises.mkdir(messageCachePath);
+  }
+
+  const codeCachePath = path.join(APPLICATION_DATA_PATH, "cache", "code");
+  const maybeCodeCacheExists = await fs.existsSync(codeCachePath);
+  if (!maybeCodeCacheExists) {
+    console.log("Creating code cache folder...", codeCachePath);
+    await fs.promises.mkdir(codeCachePath);
+  }
+
+  // NOTE(jim):
+  // We can force flat-cache to use a specific directory.
+  console.log("Loading message cache...", messageCachePath);
+  msgCache = flatCache.load("msgcache", messageCachePath);
+  console.log("Loading code cache...", codeCachePath);
+  codeCache = flatCache.load("codecache", codeCachePath);
 
   const filecoinNumber = new FilecoinNumber("10000", "attoFil");
 
