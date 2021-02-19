@@ -1,22 +1,19 @@
 .select-menu {
   box-sizing: border-box;
-  -webkit-appearance: none;
   width: 100%;
-  height: 40px;
+  max-width: 100%;
+  -webkit-appearance: none;
   background: var(--main-bg);
   color: var(--main-text);
   border-radius: 4px;
-  display: flex;
   font-size: 14px;
-  align-items: center;
-  justify-content: flex-start;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
   outline: 0;
   border: 1px solid var(--main-border);
   transition: 200ms ease all;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-  padding: 0 48px 0 16px;
+  padding: 12px 48px 12px 16px;
 }
 
 .select-menu-category {
@@ -29,6 +26,7 @@
   box-sizing: border-box;
   position: absolute;
   right: 12px;
+  top: 12px;
   margin-top: 1px;
 }
 
@@ -55,7 +53,7 @@
   box-sizing: border-box;
   display: inline-flex;
   position: relative;
-  height: 40px;
+  min-height: 40px;
   width: 100%;
 }
 
