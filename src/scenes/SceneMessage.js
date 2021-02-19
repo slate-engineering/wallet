@@ -150,28 +150,6 @@ export default class SceneMessage extends React.Component {
             address of choice.
           </p>
 
-          <Input
-            title="Method"
-            description="This is the Actor method for this message."
-            name="method"
-            style={{ marginTop: 48 }}
-            value={this.state.method}
-            onChange={this._handleChange}
-          ></Input>
-
-          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
-            Params
-          </h2>
-          <p className="body-paragraph" style={{ marginBottom: 12 }}>
-            You can add any number of parameters to this message.
-          </p>
-
-          <ParametersTable
-            ref={(c) => {
-              this._parameters = c;
-            }}
-          />
-
           <h2 className="body-heading-two" style={{ marginTop: 48 }}>
             Source wallet address
           </h2>
@@ -241,6 +219,28 @@ export default class SceneMessage extends React.Component {
             incorrect wallet address, this message submission could result in unrecoverable loss of
             some or all of your Filecoin tokens and message.
           </p>
+
+          <Input
+            title="Method"
+            description="This is the Actor method for this message."
+            name="method"
+            style={{ marginTop: 48 }}
+            value={this.state.method}
+            onChange={this._handleChange}
+          ></Input>
+
+          <h2 className="body-heading-two" style={{ marginTop: 48 }}>
+            Params
+          </h2>
+          <p className="body-paragraph" style={{ marginBottom: 12 }}>
+            You can add any number of parameters to this message.
+          </p>
+
+          <ParametersTable
+            ref={(c) => {
+              this._parameters = c;
+            }}
+          />
 
           <Input
             title="Filecoin Amount"
