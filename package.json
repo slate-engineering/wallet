@@ -1,6 +1,6 @@
 {
   "name": "sovereign",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "license": "MIT",
   "homepage": "",
@@ -31,7 +31,7 @@
       "build/icon.*"
     ],
     "dmg": {
-      "title": "Sovereign 0.0.2",
+      "title": "Sovereign 0.0.3",
       "icon": "build/icons/mac/icon.icns"
     }
   },
