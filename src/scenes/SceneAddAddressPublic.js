@@ -87,7 +87,10 @@ export default class SceneAddAddressPublic extends React.Component {
           {this.state.data ? (
             <React.Fragment>
               <h2 className="body-heading" style={{ marginTop: 48 }}>
-                {Utilities.formatAsFilecoinConversion(this.state.data.result.balance)}
+                {Utilities.formatAsFilecoinConversion(
+                  this.state.data.result.balance,
+                  this.props.price
+                )}
               </h2>
               <p className="body-paragraph">Balance</p>
 

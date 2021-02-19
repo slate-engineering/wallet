@@ -104,7 +104,7 @@ export default class SceneAddressMultisig extends React.Component {
                       <div key={each} className="scene-ms-box-item">
                         {approved} ➟ {Utilities.getAlias(each.To, this.props.accounts, true)}
                         <div className="tag tag--value">
-                          {Utilities.formatAsFilecoinConversion(each.Value)}
+                          {Utilities.formatAsFilecoinConversion(each.Value, this.props.price)}
                         </div>
                       </div>
                     );
@@ -152,7 +152,7 @@ export default class SceneAddressMultisig extends React.Component {
               {hasBalance ? (
                 <React.Fragment>
                   <h2 className="body-heading" style={{ marginTop: 24 }}>
-                    {Utilities.formatAsFilecoinConversion(address.balance)}
+                    {Utilities.formatAsFilecoinConversion(address.balance, this.props.price)}
                   </h2>
                   <p className="body-paragraph">Balance</p>
                 </React.Fragment>

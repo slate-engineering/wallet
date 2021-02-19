@@ -8,10 +8,17 @@ const WALLET_ADDRESS_TYPES_SVG = {
   3: "✢",
 };
 
-export function formatAsFilecoinConversion(number) {
+export function formatAsFilecoinConversion(number, price) {
   const filecoinNumber = new FilecoinNumber(`${number}`, "attofil");
   const inFil = filecoinNumber.toFil();
-  return `${formatAsFilecoin(inFil)}`;
+
+  let candidate = `${formatAsFilecoin(inFil)}`;
+
+  if (!isEmpty(price)) {
+    candidate = `${candidate} ($${Number(inFil) * Number(price)} USD)`;
+  }
+
+  return candidate;
 }
 
 export const debounce = (func, wait) => {

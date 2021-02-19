@@ -187,8 +187,14 @@ export default class SceneMessage extends React.Component {
               return {
                 value: each.address,
                 name: Utilities.isEmpty(each.alias)
-                  ? `${each.address} → ${Utilities.formatAsFilecoinConversion(each.balance)}`
-                  : `${each.alias} → ${Utilities.formatAsFilecoinConversion(each.balance)}`,
+                  ? `${each.address} → ${Utilities.formatAsFilecoinConversion(
+                      each.balance,
+                      this.props.price
+                    )}`
+                  : `${each.alias} → ${Utilities.formatAsFilecoinConversion(
+                      each.balance,
+                      this.props.price
+                    )}`,
               };
             })}
           />

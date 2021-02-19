@@ -143,7 +143,7 @@ export default class SceneAddress extends React.Component {
           {hasBalance ? (
             <React.Fragment>
               <h2 className="body-heading" style={{ marginTop: 24 }}>
-                {Utilities.formatAsFilecoinConversion(address.balance)}
+                {Utilities.formatAsFilecoinConversion(address.balance, this.props.price)}
               </h2>
               <p className="body-paragraph">Balance</p>
             </React.Fragment>

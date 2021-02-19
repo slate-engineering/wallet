@@ -86,7 +86,7 @@ export default class SceneSendMessageConfirm extends React.Component {
 
           <React.Fragment>
             <h2 className="body-heading-two" style={{ marginTop: 48, fontSize: 32 }}>
-              {Utilities.formatAsFilecoin(this.props.context.fil)}
+              {Utilities.formatAsFilecoin(this.props.context.fil, this.props.price)}
             </h2>
             <p className="body-paragraph">Total amount</p>
           </React.Fragment>

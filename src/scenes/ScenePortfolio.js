@@ -52,7 +52,7 @@ export default class ScenePortfolio extends React.Component {
           {balance > 0 ? (
             <React.Fragment>
               <h2 className="body-heading" style={{ marginTop: 24 }}>
-                {Utilities.formatAsFilecoinConversion(balance)}
+                {Utilities.formatAsFilecoinConversion(balance, this.props.price)}
               </h2>
               <p className="body-paragraph">Balance</p>
             </React.Fragment>
