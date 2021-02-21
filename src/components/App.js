@@ -73,6 +73,7 @@ export default class App extends React.Component {
 
     console.log({ accounts, settings, config, data });
 
+    // NOTE(jim): Ask Why to stop capitalizing the first letter of variables.
     this.setState({
       accounts,
       settings,
