@@ -78,7 +78,7 @@ export default class App extends React.Component {
       settings,
       config,
       currentScene: currentScene ? currentScene : this.state.currentScene,
-      price: data.price,
+      price: data.Price,
     });
 
     return { success: true };
