@@ -253,18 +253,78 @@ export default class App extends React.Component {
     );
   };
 
-  _handleSendMessage = ({ source, sourceAccount, signer, destination, fil, params, method }) => {
-    alert("TODO: sent it, view console to see payload");
-    console.log(payload);
+  _handleSendMessage = async ({
+    source,
+    sourceAccount,
+    signer,
+    destination,
+    fil,
+    params,
+    method,
+  }) => {
+    console.log({ source, destination, fil, method, params });
 
-    // TODO(jim): Take out this return.
-    return payload;
+    let num = new FilecoinNumber(fil, "FIL");
 
-    // NOTE(why): When this is setup like _handleSendFilecoin you can
-    // remove this comment
-    /*
-    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg, params, method });
-    */
+    let msg = null;
+    if (signer) {
+      if (params) {
+        // https://github.com/Zondax/filecoin-signing-tools/issues/351
+        return { error: "invoking methods with a multisig is currently not supported" };
+      }
+
+      // this is a multisig transaction...
+      let res = await ipcRenderer.invoke(
+        "signing-propose-multisig",
+        source,
+        destination,
+        signer,
+        num.toAttoFil()
+      );
+
+      if (res.error) {
+        alert(res.error);
+        return { error: res.error };
+      }
+
+      msg = res.result;
+    } else {
+      let encParams;
+      if (params) {
+        const resp = await ipcRenderer.invoke("serialize-params", params);
+        if (resp.error) {
+          alert(resp.error);
+          return { error: resp.error };
+        }
+        encParams = resp.result;
+      }
+
+      const actor = await ipcRenderer.invoke("get-actor", source);
+      if (actor.error) {
+        alert(actor.error);
+        return { error: actor.error };
+      }
+
+      msg = {
+        from: source,
+        to: destination,
+        value: num.toAttoFil(),
+        nonce: actor.nonce,
+        method: method,
+        params: encParams,
+      };
+    }
+
+    console.log("message to estimate: ", msg);
+
+    let estim = await ipcRenderer.invoke("estimate-gas", msg);
+    console.log("estimation: ", estim);
+    if (estim.error) {
+      alert(estim.error);
+      return { error: estim.error };
+    }
+
+    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg });
   };
 
   _handleSendFilecoin = async ({ source, sourceAccount, signer, destination, fil }) => {
