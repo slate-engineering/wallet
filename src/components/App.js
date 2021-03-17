@@ -68,7 +68,18 @@ export default class App extends React.Component {
     const accounts = await ipcRenderer.invoke("get-accounts");
     const settings = await ipcRenderer.invoke("get-settings");
     const config = await ipcRenderer.invoke("get-config");
-    const response = await fetch("https://api.chain.love/prices/now");
+    // NOTE(jim):
+    // A safe key to use for premium data. (Public key, not secret)
+    // Probably will run our rate up but I don't care.
+
+    /* NOTICE FROM IEX CLOUD
+    // https://iexcloud.io/docs/api/#authentication
+    Publishable API tokens are meant solely to identify your account with IEX Cloud, they aren’t secret. 
+    They can be published in places like your website JavaScript code, or in an iPhone or Android app.
+    */
+    const response = await fetch(
+      "https://cloud.iexapis.com/stable/crypto/filusdt/price?token=pk_aa330a89a4724944ae1a525879a19f2d"
+    );
     const data = await response.json();
 
     console.log({ accounts, settings, config, data });
