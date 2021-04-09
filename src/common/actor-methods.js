@@ -103,6 +103,37 @@ export const actorsByCode = {
     cidText: "fil/2/storageminer",
     methods: miner,
   },
+  // v3 actors
+  bafkqactgnfwc6mzpnfxgs5a: {
+    name: "init",
+    cidText: "fil/3/init",
+    methods: init,
+  },
+  bafkqaddgnfwc6mzpojsxoylsmq: {
+    name: "reward",
+    cidText: "fil/3/reward",
+    methods: reward,
+  },
+  bafkqaetgnfwc6mzpon2g64tbm5sxa33xmvza: {
+    name: "power",
+    cidText: "fil/3/storagepower",
+    methods: power,
+  },
+  bafkqae3gnfwc6mzpon2g64tbm5sw2ylsnnsxi: {
+    name: "market",
+    cidText: "fil/3/storagemarket",
+    methods: market,
+  },
+  bafkqadtgnfwc6mzpnv2wy5djonuwo: {
+    name: "multisig",
+    cidText: "fil/3/multisig",
+    methods: multisig,
+  },
+  bafkqaetgnfwc6mzpon2g64tbm5sw22lomvza: {
+    name: "miner",
+    cidText: "fil/3/storageminer",
+    methods: miner,
+  },
 };
 
 export function isMultisig(code) {
