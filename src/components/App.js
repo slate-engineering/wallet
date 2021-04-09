@@ -485,7 +485,7 @@ export default class App extends React.Component {
     const p = await ipcRenderer.invoke("deserialize-params", parameters, code["/"], method);
 
     if (p.error) {
-      alert(p.error);
+      console.error(p.error);
       return { error: p.error };
     }
 
