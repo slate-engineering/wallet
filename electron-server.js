@@ -183,11 +183,11 @@ app.on("ready", async () => {
     console.log({ c });
 
     try {
-      const resp = await fetch(c.INDEX_URL + "/index/msgs/for/" + address);
+      const resp = await fetch(`https://filaddr.page/${address}.json`);
       const json = await resp.json();
       console.log(json);
 
-      return json.length ? json : [];
+      return json.Messages ? json.Messages : [];
     } catch (e) {
       console.log(e);
       return [];
