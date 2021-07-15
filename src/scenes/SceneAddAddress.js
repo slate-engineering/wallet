@@ -13,15 +13,13 @@ export default class SceneAddAddress extends React.Component {
         <div className="body">
           <h1 className="body-heading">Add Filecoin Address</h1>
           <p className="body-paragraph" style={{ marginBottom: 48 }}>
-            Pick the option that makes the most sense! When you add a Filecoin address to your
-            Filecoin Wallet you will be able to send Filecoin, receive Filecoin, and view your
-            transaction history.
+            Pick from the options below.
           </p>
 
           <div className="body-card" onClick={() => this.props.onNavigate("ADD_ADDRESS_PUBLIC")}>
             <h2 className="body-heading-two">Add an existing public address</h2>
             <p className="body-paragraph">
-              Use this option if you already have a Filecoin address you want to add to this wallet.
+              Use this option if you have a Filecoin address you want to track with this wallet.
             </p>
           </div>
 
@@ -32,8 +30,8 @@ export default class SceneAddAddress extends React.Component {
           >
             <h2 className="body-heading-two">Connect your Ledger</h2>
             <p className="body-paragraph">
-              Do you have a Ledger device? Use this option if you want to connect your Ledger
-              addresses.
+              Do you have a Ledger device? Use this option if you want to connect your Filecoin
+              Ledger addresses.
             </p>
           </div>
         </div>

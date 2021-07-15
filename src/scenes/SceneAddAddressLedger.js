@@ -102,7 +102,6 @@ export default class SceneAddAddressPublic extends React.Component {
     let ledgerResp = await ipcRenderer.invoke("get-ledger-version");
 
     if (ledgerResp.error) {
-      console.log("ERROR MESSAGE: ", ledgerResp.error);
       this.setState({
         curState: "error",
         errMsg: ledgerResp.error,
@@ -110,7 +109,6 @@ export default class SceneAddAddressPublic extends React.Component {
       return;
     }
 
-    console.log(ledgerResp);
     const res = ledgerResp.result;
 
     if (res.device_locked) {

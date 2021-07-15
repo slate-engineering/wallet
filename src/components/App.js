@@ -17,15 +17,15 @@ import SceneAddress from "~/src/scenes/SceneAddress";
 import ScenePortfolio from "~/src/scenes/ScenePortfolio";
 import SceneSendFilecoin from "~/src/scenes/SceneSendFilecoin";
 import SceneSendMessageConfirm from "~/src/scenes/SceneSendMessageConfirm";
-import SceneTransactions from "~/src/scenes/SceneTransactions";
 import SceneContacts from "~/src/scenes/SceneContacts";
 import SceneSettings from "~/src/scenes/SceneSettings";
-import SceneMessage from "~/src/scenes/SceneMessage";
+
+const addressStyle = { width: 16, display: "inline-block", textAlign: "center" };
 
 const WALLET_ADDRESS_TYPES_SVG = {
-  1: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>◈</span>,
-  2: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>⁂</span>,
-  3: <span style={{ width: 16, display: "inline-block", textAlign: "center" }}>✢</span>,
+  1: <span style={addressStyle}>◈</span>,
+  2: <span style={addressStyle}>⁂</span>,
+  3: <span style={addressStyle}>✢</span>,
 };
 
 const WALLET_SCENE = {
@@ -35,11 +35,9 @@ const WALLET_SCENE = {
   ADD_ADDRESS_LEDGER: <SceneAddAddressLedger />,
   SEND: <SceneSendFilecoin />,
   SEND_CONFIRM: <SceneSendMessageConfirm />,
-  TRANSACTIONS: <SceneTransactions />,
   ADDRESS: <SceneAddress />,
   CONTACTS: <SceneContacts />,
   SETTINGS: <SceneSettings />,
-  MESSAGE: <SceneMessage />,
 };
 
 export default class App extends React.Component {
@@ -555,10 +553,6 @@ export default class App extends React.Component {
       "navigation-item",
       this.state.currentScene === "SEND" ? "navigation-item--active" : null
     );
-    const messageClassNames = Utilities.classNames(
-      "navigation-item",
-      this.state.currentScene === "MESSAGE" ? "navigation-item--active" : null
-    );
     const contactsClassNames = Utilities.classNames(
       "navigation-item",
       this.state.currentScene === "CONTACTS" ? "navigation-item--active" : null
@@ -613,9 +607,6 @@ export default class App extends React.Component {
               <span className={sendClassNames} onClick={() => this._handleNavigate("SEND")}>
                 Send
               </span>
-              <span className={messageClassNames} onClick={() => this._handleNavigate("MESSAGE")}>
-                Message
-              </span>
               <span className={contactsClassNames} onClick={() => this._handleNavigate("CONTACTS")}>
                 Contacts
               </span>
@@ -627,7 +618,7 @@ export default class App extends React.Component {
                 style={{ marginRight: 8 }}
                 onClick={this._handleToggleTheme}
               >
-                <SVG.Moon height="12px" />
+                ◑
               </span>
             </div>
             {sceneElement}

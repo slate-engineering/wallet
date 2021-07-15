@@ -19,7 +19,6 @@ export default class SceneSendMessageConfirm extends React.Component {
   };
 
   render() {
-    console.log(this.props.context);
     return (
       <div className="scene">
         <div className="body">

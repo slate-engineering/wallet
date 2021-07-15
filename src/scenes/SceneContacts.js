@@ -13,7 +13,7 @@ export default class SceneContacts extends React.Component {
         <div className="body">
           <h1 className="body-heading">Contacts</h1>
           <p className="body-paragraph" style={{ marginBottom: 48 }}>
-            Add Filecoin addresses you frequently send Filecoin to.
+            Add Filecoin addresses you frequently interact with.
           </p>
 
           <Contacts accounts={this.props.accounts} onUpdateAccounts={this.props.onUpdateAccounts} />

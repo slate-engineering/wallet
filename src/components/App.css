@@ -13,19 +13,87 @@
   src: url("../assets/GT-Zirkon-Medium.woff") format("woff");
 }
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -33,54 +101,67 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
   display: block;
 }
 
-html, body {
+html,
+body {
   width: 100%;
-  font-family: "GT-Zirkon-Book", -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
-  
+  font-family: "GT-Zirkon-Book", -apple-system, BlinkMacSystemFont, helvetica neue, helvetica, arial,
+    sans-serif;
+
   --main-green: #6fdc8c;
-  --main-primary-accent: #ffbf00;
-  --main-secondary-accent: #ffcf40;
+  --main-primary-accent: rgba(54, 71, 255, 1);
+  --main-secondary-accent: rgba(54, 71, 255, 0.75);
 }
 
-input, textarea {
-  font-family: "GT-Zirkon-Book", -apple-system,BlinkMacSystemFont,helvetica neue,helvetica,arial,sans-serif;
+input,
+textarea {
+  font-family: "GT-Zirkon-Book", -apple-system, BlinkMacSystemFont, helvetica neue, helvetica, arial,
+    sans-serif;
 }
 
 .root-theme-light {
-  --main-bg: #ffffff;
+  --main-bg: rgba(255, 255, 255, 1);
+  --main-sidebar-bg: rgba(245, 245, 245, 1);
+  --main-navigation-bg: rgba(235, 235, 235, 1);
   --main-text: #161616;
   --main-border: #c6c6c6;
   --main-border-secondary: #e0e0e0;
   --main-navigation-text: #ffffff;
-  --main-navigation-bg: #262626;
   --main-button-bg: #000000;
   --main-button-area-bg: var(--main-button-text);
   --main-button-text: #ffffff;
   --main-button-area-text: var(--main-button-bg);
   --main-tag-text: #161616;
-  --main-sidebar-bg: #f4f4f4;
   --main-sidebar-text: #262626;
   --main-placeholder: #6f6f6f;
 }
 
 .root-theme-dark {
-  --main-bg: #000000;
+  --main-bg: rgba(0, 0, 0, 1);
+  --main-sidebar-bg: rgba(10, 10, 10, 1);
+  --main-navigation-bg: rgba(20, 20, 20, 1);
   --main-text: #f4f4f4;
   --main-border: #525252;
   --main-border-secondary: #6f6f6f;
   --main-navigation-text: #ffffff;
-  --main-navigation-bg: #161616;
   --main-button-bg: #f4f4f4;
   --main-button-area-bg: var(--main-bg);
   --main-button-text: #161616;
   --main-button-area-text: var(--main-text);
   --main-tag-text: #161616;
-  --main-sidebar-bg: #262626;
   --main-sidebar-text: #8d8d8d;
   --main-placeholder: #a8a8a8;
 }
@@ -103,8 +184,8 @@ input, textarea {
   align-items: center;
   justify-content: flex-end;
   padding-left: 88px;
-  background-color: var(--main-navigation-bg);
   color: var(--main-navigation-text);
+  background-color: var(--main-navigation-bg);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -129,11 +210,11 @@ input, textarea {
   &::-webkit-scrollbar {
     display: none;
   }
-  
+
   &::after {
     -webkit-app-region: drag;
     z-index: 1;
-    content: '';
+    content: "";
     height: 100px;
     width: 180px;
     position: fixed;
@@ -174,7 +255,8 @@ input, textarea {
   cursor: pointer;
   user-select: none;
   transition: 200ms ease all;
-  
+  color: var(--main-text);
+
   &:hover {
     color: var(--main-secondary-accent);
   }
@@ -194,7 +276,7 @@ input, textarea {
   user-select: none;
   cursor: pointer;
   transition: 200ms ease all;
-  
+
   &:hover {
     color: var(--main-secondary-accent);
   }

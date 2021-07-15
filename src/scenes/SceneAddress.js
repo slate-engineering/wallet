@@ -3,10 +3,8 @@ import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 import * as Constants from "~/src/common/constants";
 
-import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
-import Transactions from "~/src/components/Transactions.js";
 import SceneAddressMultisig from "~/src/scenes/SceneAddressMultisig";
 
 import { ipcRenderer } from "electron";
@@ -122,13 +120,7 @@ export default class SceneAddress extends React.Component {
     return (
       <div className="scene">
         <div className="body">
-          <div className="body-inline-card">
-            <QRCode value={"fil:" + address.address} />
-          </div>
-
-          <h1 className="body-heading" style={{ marginTop: 16 }}>
-            {address.address}
-          </h1>
+          <h1 className="body-heading">{address.address}</h1>
           <p className="body-paragraph">Address</p>
 
           {hasType ? (
@@ -166,19 +158,6 @@ export default class SceneAddress extends React.Component {
               Refresh
             </Button>
           </div>
-
-          {address.transactions && address.transactions.length ? (
-            <h2 className="body-heading-two" style={{ marginTop: 48 }}>
-              Transactions
-            </h2>
-          ) : null}
-          <Transactions
-            accounts={this.props.accounts}
-            onGetMessage={this.props.onGetMessage}
-            onGetActorCode={this.props.onGetActorCode}
-            onDeserializeParams={this.props.onDeserializeParams}
-            address={address}
-          />
 
           <Input
             onChange={this._handleAliasChange}

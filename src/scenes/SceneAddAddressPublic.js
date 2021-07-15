@@ -62,7 +62,6 @@ export default class SceneAddAddressPublic extends React.Component {
   };
 
   render() {
-    console.log(this.state.data);
     return (
       <div className="scene">
         <div className="body">

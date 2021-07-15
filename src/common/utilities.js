@@ -8,6 +8,12 @@ const WALLET_ADDRESS_TYPES_SVG = {
   3: "✢",
 };
 
+export function noop() {}
+
+export function formatAsFilecoin(number) {
+  return `${number} FIL`;
+}
+
 export function formatAsFilecoinConversion(number, price) {
   const filecoinNumber = new FilecoinNumber(`${number}`, "attofil");
   const inFil = filecoinNumber.toFil();
@@ -33,57 +39,19 @@ export const debounce = (func, wait) => {
   };
 };
 
-export function formatAsFilecoin(number) {
-  return `${number} FIL`;
+export function toDate(data) {
+  const date = new Date(data);
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "long",
+  });
 }
-
-export function getAlias(address, accounts, isElement = false) {
-  if (!accounts) {
-    return address;
-  }
-
-  if (accounts.addresses) {
-    for (const a of accounts.addresses) {
-      if (a.address === address) {
-        const resolution = isEmpty(a.alias) ? address : a.alias;
-        if (isElement) {
-          return (
-            <strong className="tag tag--yours">
-              {WALLET_ADDRESS_TYPES_SVG[a.type]} {resolution}
-            </strong>
-          );
-        }
-
-        return resolution;
-      }
-    }
-  }
-
-  if (accounts.contacts) {
-    for (const c of accounts.contacts) {
-      if (c.address === address) {
-        const resolution = isEmpty(c.alias) ? address : c.alias;
-        if (isElement) {
-          return (
-            <strong className="tag">
-              {WALLET_ADDRESS_TYPES_SVG[c.type]} {resolution}
-            </strong>
-          );
-        }
-
-        return resolution;
-      }
-    }
-  }
-
-  if (isElement) {
-    return <strong className="tag">{address}</strong>;
-  }
-
-  return address;
-}
-
-export function noop() {}
 
 export function isEmpty(string) {
   if (string === 0) {
@@ -141,16 +109,48 @@ export function classNames() {
   return classes.join(" ");
 }
 
-export function toDate(data) {
-  const date = new Date(data);
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "long",
-  });
+export function getAlias(address, accounts, isElement = false) {
+  if (!accounts) {
+    return address;
+  }
+
+  if (accounts.addresses) {
+    for (const a of accounts.addresses) {
+      if (a.address === address) {
+        const resolution = isEmpty(a.alias) ? address : a.alias;
+        if (isElement) {
+          return (
+            <strong className="tag tag--yours">
+              {WALLET_ADDRESS_TYPES_SVG[a.type]} {resolution}
+            </strong>
+          );
+        }
+
+        return resolution;
+      }
+    }
+  }
+
+  if (accounts.contacts) {
+    for (const c of accounts.contacts) {
+      if (c.address === address) {
+        const resolution = isEmpty(c.alias) ? address : c.alias;
+        if (isElement) {
+          return (
+            <strong className="tag">
+              {WALLET_ADDRESS_TYPES_SVG[c.type]} {resolution}
+            </strong>
+          );
+        }
+
+        return resolution;
+      }
+    }
+  }
+
+  if (isElement) {
+    return <strong className="tag">{address}</strong>;
+  }
+
+  return address;
 }

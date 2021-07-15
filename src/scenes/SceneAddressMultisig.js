@@ -3,10 +3,8 @@ import * as SVG from "~/src/components/SVG.js";
 import * as Utilities from "~/src/common/utilities";
 import * as Constants from "~/src/common/constants";
 
-import QRCode from "qrcode.react";
 import Input from "~/src/components/Input";
 import Button from "~/src/components/Button";
-import Transactions from "~/src/components/Transactions";
 import Tag from "~/src/components/Tag";
 
 import { ipcRenderer } from "electron";
@@ -39,8 +37,6 @@ export default class SceneAddressMultisig extends React.Component {
     if (address.msigInfo && address.msigInfo.pending) {
       pending = address.msigInfo.pending;
     }
-
-    console.log(address);
 
     const hasDate = !Utilities.isEmpty(address.timestamp);
     const hasBalance = !Utilities.isEmpty(address.balance);
@@ -84,55 +80,11 @@ export default class SceneAddressMultisig extends React.Component {
                   Add
                 </Button>
               </div>
-
-              <div className="scene-ms-title" style={{ marginTop: 48 }}>
-                Pending
-              </div>
-
-              {pending.length && (
-                <div className="scene-ms-box">
-                  {pending.map((each) => {
-                    let approved = (
-                      <span key={each}>
-                        {each.Approved.map((each) => {
-                          return Utilities.getAlias(each, this.props.accounts, true);
-                        })}
-                      </span>
-                    );
-
-                    return (
-                      <div key={each} className="scene-ms-box-item">
-                        {approved} ➟ {Utilities.getAlias(each.To, this.props.accounts, true)}
-                        <div className="tag tag--value">
-                          {Utilities.formatAsFilecoinConversion(each.Value, this.props.price)}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {address.transactions && address.transactions.length ? (
-                <div className="scene-ms-title" style={{ marginTop: 48, marginBottom: 16 }}>
-                  Past Transactions
-                </div>
-              ) : null}
-              <Transactions
-                accounts={this.props.accounts}
-                onGetMessage={this.props.onGetMessage}
-                onGetActorCode={this.props.onGetActorCode}
-                onDeserializeParams={this.props.onDeserializeParams}
-                address={address}
-              />
             </div>
 
             <div className="scene-ms-layout-right">
               <div className="scene-ms-title" style={{ marginTop: 4 }}>
                 Account Information
-              </div>
-
-              <div className="body-inline-card" style={{ marginTop: 24 }}>
-                <QRCode value={"fil:" + address.address} />
               </div>
 
               <h1 className="body-heading" style={{ marginTop: 54 }}>

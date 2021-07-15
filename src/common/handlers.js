@@ -1,5 +1,6 @@
 import * as ActorMethods from "~/src/common/actor-methods";
 import * as HandlersUtilities from "~/src/common/handlers-utilities";
+import * as Utilities from "~/src/common/utilities";
 
 import path from "path";
 import fs from "fs";
@@ -385,7 +386,9 @@ const signMessage = {
       if (signer.type == 1 && !Utilities.isEmpty(signer.path)) {
         let pathForSender = signer.path;
         if (!global.memory.transport) {
-          global.memory.transport = await TransportNodeHID.open(""); // TODO: pull this out into a shared 'getTransport' func
+          global.memory.transport = await TransportNodeHID.open("");
+          // TODO(why):
+          // pull this out into a shared 'getTransport' func
         }
 
         console.log("sign-message ... about to sign ... ", { message });
@@ -405,7 +408,7 @@ const signMessage = {
         console.log("sign-message ... serialized ...", { serialized });
 
         let serbuf = new Buffer(serialized, "hex");
-        const app = new FilecoinApp(transport);
+        const app = new FilecoinApp(global.memory.transport);
         const sigResp = await app.sign(pathForSender, serbuf);
 
         console.log("sign-message ... signature response ... ", { sigResp });
@@ -513,14 +516,14 @@ const getLedgerVersion = {
         global.memory.transport = await TransportNodeHID.open("");
       }
 
-      const app = new FilecoinApp(transport);
+      const app = new FilecoinApp(global.memory.transport);
       const version = await app.getVersion();
       console.log("get-ledger-version ... ", { version });
       return {
         result: version,
       };
     } catch (e) {
-      transport = null;
+      global.memory.transport = null;
       console.log("get-ledger-version error ... ", e);
       return {
         error: e.toString(),

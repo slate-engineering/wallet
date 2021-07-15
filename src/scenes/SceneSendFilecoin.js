@@ -111,8 +111,6 @@ export default class SceneSendFilecoin extends React.Component {
       destination: this.state.destination,
     });
 
-    console.log(response);
-
     if (response.error) {
       this.setState({ loading: undefined });
       return { error: response.error };
@@ -120,8 +118,6 @@ export default class SceneSendFilecoin extends React.Component {
   };
 
   render() {
-    console.log(this.state);
-
     return (
       <div className="scene">
         <div className="body">

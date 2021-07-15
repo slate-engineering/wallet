@@ -12,14 +12,14 @@
   min-height: 10%;
   min-width: 10%;
   width: 100%;
-  overflow: hidden;  
+  overflow: hidden;
   overflow-y: scroll;
   animation: CTATransition-fade-in 200ms ease;
-  
+
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
   }
-  
+
   /* Track */
   &::-webkit-scrollbar-track {
     background: var(--main-primary-accent);
@@ -71,7 +71,7 @@
   font-size: 12px;
   padding: 10px 8px 8px 8px;
   border-bottom: 1px solid var(--main-border);
-  
+
   &:last-child {
     border-bottom: 0px;
   }
@@ -89,7 +89,7 @@
   cursor: pointer;
   text-transform: uppercase;
   line-height: 12px;
-  
+
   &:hover {
     color: var(--main-primary-accent);
   }

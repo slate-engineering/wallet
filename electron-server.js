@@ -68,8 +68,8 @@ console.log("loading globals ... ", global.memory);
 function createWindow() {
   mainWindow = new BrowserWindow({
     titleBarStyle: "hiddenInset",
-    width: 768,
-    height: 604,
+    width: 640,
+    height: 556,
     show: false,
     frame: false,
     webPreferences: {

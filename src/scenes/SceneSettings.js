@@ -23,7 +23,6 @@ export default class SceneSettings extends React.Component {
   }
 
   _handleChange = (e) => {
-    console.log(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
 
     this._handleChangeDebounced();
@@ -31,15 +30,10 @@ export default class SceneSettings extends React.Component {
 
   _handleChangeDebounced = Utilities.debounce(async () => {
     const config = await ipcRenderer.invoke("write-config", { ...this.state });
-
-    console.log(config);
-
     await this.props.onUpdate();
   }, 200);
 
   render() {
-    console.log(this.props.config);
-
     const options = [
       {
         value: "DARK",
@@ -54,8 +48,6 @@ export default class SceneSettings extends React.Component {
         label: this.state.theme === "light" ? "Light mode is enabled" : "Light mode is disabled",
       },
     ];
-
-    console.log(this.state);
 
     return (
       <div className="scene">
