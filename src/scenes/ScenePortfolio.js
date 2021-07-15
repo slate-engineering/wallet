@@ -29,9 +29,9 @@ export default class ScenePortfolio extends React.Component {
 
           {!hasAddresses ? (
             <div className="body-card" onClick={() => this.props.onNavigate("ADD_ADDRESS")}>
-              <h2 className="body-heading-two">Add or create your address</h2>
+              <h2 className="body-heading-two">Add your addresses</h2>
               <p className="body-paragraph">
-                To start using this wallet. Add or create your address.
+                To start using this wallet. Add your addresses that are on the network.
               </p>
             </div>
           ) : null}

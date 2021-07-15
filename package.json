@@ -1,26 +1,10 @@
 {
   "name": "sovereign",
   "version": "0.0.3",
-  "description": "",
+  "description": "A Filecoin wallet",
   "license": "MIT",
   "homepage": "",
-  "engines": {
-    "node": ">=9.0.0",
-    "npm": ">=5.0.0",
-    "yarn": ">=1.0.0"
-  },
-  "browserslist": [
-    "last 4 versions"
-  ],
   "main": "main.js",
-  "scripts": {
-    "prod": "cross-env NODE_ENV=production webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
-    "start": "cross-env NODE_ENV=development webpack serve --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
-    "package": "npm run build",
-    "postpackage": "electron-packager ./ --out=./builds --icon=./build/icons/mac/icon.icns --overwrite --platform=darwin",
-    "make-icons": "electron-icon-maker --input=./src/assets/icon.png --output=./build"
-  },
   "build": {
     "productName": "Sovereign",
     "appId": "com.company.Sovereign",
@@ -34,6 +18,13 @@
       "title": "Sovereign 0.0.3",
       "icon": "build/icons/mac/icon.icns"
     }
+  },
+  "scripts": {
+    "production": "cross-env NODE_ENV=production webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
+    "dev": "cross-env NODE_ENV=development webpack serve --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
+    "package": "npm run build",
+    "postpackage": "electron-packager ./ --out=./builds --icon=./build/icons/mac/icon.icns --overwrite --platform=darwin"
   },
   "dependencies": {
     "@babel/core": "^7.14.5",
@@ -60,23 +51,21 @@
   },
   "devDependencies": {
     "babel-loader": "^8.2.2",
-    "babel-minify-webpack-plugin": "^0.3.1",
     "cross-env": "^7.0.3",
-    "css-loader": "^5.2.7",
-    "electron": "^11.4.10",
+    "css-loader": "^5.0.1",
+    "electron": "^11.4.9",
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "^15.2.0",
-    "electron-rebuild": "^2.3.5",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.2",
-    "mini-css-extract-plugin": "^2.1.0",
-    "postcss-import": "^14.0.2",
-    "postcss-loader": "^6.1.1",
-    "postcss-nested": "^5.0.5",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.3.9",
+    "postcss-import": "^14.0.0",
+    "postcss-loader": "^4.1.0",
+    "postcss-nested": "^5.0.3",
     "postcss-preset-env": "^6.7.0",
-    "postcss-pxtorem": "^6.0.0",
-    "style-loader": "^3.1.0",
-    "webpack": "^5.44.0",
+    "postcss-pxtorem": "^5.1.1",
+    "style-loader": "^3.0.0",
+    "webpack": "^5.42.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   }

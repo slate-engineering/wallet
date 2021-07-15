@@ -213,11 +213,10 @@ const getMessage = {
 const getBalance = {
   key: "get-balance",
   method: async (event, address) => {
+    let type = 0;
     try {
       console.log("get-balance ...", { address });
       const client = await HandlersUtilities.getClient();
-
-      let type = 0;
       if (address.startsWith("f1")) {
         type = 1;
       }
@@ -541,7 +540,7 @@ const getLedgerAddress = {
         global.memory.transport = await TransportNodeHID.open("");
       }
 
-      const app = new FilecoinApp(transport);
+      const app = new FilecoinApp(global.memory.transport);
       const addrInfo = await app.getAddressAndPubKey(path);
       console.log("get-ledger-address ... ", { addrInfo });
       return {
