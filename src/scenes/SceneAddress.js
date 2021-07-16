@@ -50,13 +50,25 @@ export default class SceneAddress extends React.Component {
     this.setState({ refreshing: undefined });
   };
 
+  _handleAddSigner = async () => {
+    const response = await this.props.onAddSigner({ signer: this.state.signer });
+    console.log(response);
+    this.setState({ signer: "" });
+  };
+
+  _handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+
+    return this._handleSaveDebounced();
+  };
+
   _handleAliasChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
 
-    return this._handleAliasSaveDebounced();
+    return this._handleSaveDebounced();
   };
 
-  _handleAliasSaveDebounced = Utilities.debounce(async () => {
+  _handleSaveDebounced = Utilities.debounce(async () => {
     const address = this.props.accounts.addresses.find(
       (account) => account.address === this.props.context.address
     );
@@ -88,33 +100,24 @@ export default class SceneAddress extends React.Component {
       );
     }
 
+    let signers = [];
+    if (address.msigInfo && address.msigInfo.signers) {
+      signers = address.msigInfo.signers;
+    }
+
+    let pending = [];
+    if (address.msigInfo && address.msigInfo.pending) {
+      pending = address.msigInfo.pending;
+    }
+
     const hasDate = !Utilities.isEmpty(address.timestamp);
     const hasBalance = !Utilities.isEmpty(address.balance);
     const hasType = address.type > 0;
+    const isMultiSig = address.type === 2;
 
     let iconElement = null;
     if (hasType) {
       iconElement = WALLET_ADDRESS_TYPES_SVG[address.type];
-    }
-
-    if (address.type === 2) {
-      return (
-        <SceneAddressMultisig
-          alias={this.state.alias}
-          threshold={this.state.threshold}
-          context={this.props.context}
-          accounts={this.props.accounts}
-          refreshing={this.props.refreshing}
-          onRefresh={this._handleRefresh}
-          onChange={this._handleAliasChange}
-          onGetActorCode={this.props.onGetActorCode}
-          onDeserializeParams={this.props.onDeserializedParams}
-          onDeleteAddress={this.props.onDeleteAddress}
-          onRemoveSigner={this.props.onRemoveSigner}
-          onAddSigner={this.props.onAddSigner}
-          icon={iconElement}
-        />
-      );
     }
 
     return (
@@ -167,6 +170,53 @@ export default class SceneAddress extends React.Component {
             description="Give your address an alias to make it easier to remember."
             style={{ marginTop: 48 }}
           ></Input>
+
+          {isMultiSig ? (
+            <Input
+              onChange={this.props.onChange}
+              value={this.props.threshold}
+              name="threshold"
+              title="Threshold"
+              description="Determine how many signed attempts must pass before this transaction can be completed."
+              style={{ marginTop: 48 }}
+            ></Input>
+          ) : null}
+
+          {signers.length ? (
+            <div className="scene-ms-box">
+              {signers.map((each) => (
+                <div key={each} className="scene-ms-box-item scene-ms-box-item--flex">
+                  <div className="scene-ms-box-item-left">
+                    {Utilities.getAlias(each, this.props.accounts, false)}
+                  </div>
+                  <div
+                    className="scene-ms-box-item-right"
+                    onClick={() => this.props.onRemoveSigner({ signer: each })}
+                  >
+                    remove
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          {isMultiSig ? (
+            <React.Fragment>
+              <Input
+                onChange={this._handleChange}
+                value={this.state.signer}
+                name="signer"
+                title="Add signer"
+                style={{ marginTop: 24 }}
+              ></Input>
+
+              <div style={{ marginTop: 16 }}>
+                <Button loading={this.props.refreshing} onClick={this._handleAddSigner}>
+                  Add
+                </Button>
+              </div>
+            </React.Fragment>
+          ) : null}
 
           <h2 className="body-heading-two" style={{ marginTop: 48 }}>
             Delete this address

@@ -271,41 +271,21 @@ export default class App extends React.Component {
     params,
     method,
   }) => {
-    console.log({ source, destination, fil, method, params });
+    console.log({ source, destination, fil, params, method });
+    let message = null;
+    let filecoin = new FilecoinNumber(fil, "FIL");
+    let type = signer ? "MULTISIG" : "REGULAR";
 
-    let num = new FilecoinNumber(fil, "FIL");
-
-    let msg = null;
-    if (signer) {
+    // NOTE(jim): Regular transactions
+    if (type === "REGULAR") {
+      let encodedParams = null;
       if (params) {
-        // https://github.com/Zondax/filecoin-signing-tools/issues/351
-        return { error: "invoking methods with a multisig is currently not supported" };
-      }
-
-      // this is a multisig transaction...
-      let res = await ipcRenderer.invoke(
-        "signing-propose-multisig",
-        source,
-        destination,
-        signer,
-        num.toAttoFil()
-      );
-
-      if (res.error) {
-        alert(res.error);
-        return { error: res.error };
-      }
-
-      msg = res.result;
-    } else {
-      let encParams;
-      if (params) {
-        const resp = await ipcRenderer.invoke("serialize-params", params);
-        if (resp.error) {
-          alert(resp.error);
-          return { error: resp.error };
+        const response = await ipcRenderer.invoke("serialize-params", params);
+        if (response.error) {
+          alert(response.error);
+          return { error: response.error };
         }
-        encParams = resp.result;
+        encodedParams = response.result;
       }
 
       const actor = await ipcRenderer.invoke("get-actor", source);
@@ -314,37 +294,19 @@ export default class App extends React.Component {
         return { error: actor.error };
       }
 
-      msg = {
+      message = {
         from: source,
         to: destination,
-        value: num.toAttoFil(),
+        value: filecoin.toAttoFil(),
         nonce: actor.nonce,
         method: method,
-        params: encParams,
+        params: encodedParams,
       };
     }
 
-    console.log("message to estimate: ", msg);
-
-    let estim = await ipcRenderer.invoke("estimate-gas", msg);
-    console.log("estimation: ", estim);
-    if (estim.error) {
-      alert(estim.error);
-      return { error: estim.error };
-    }
-
-    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg });
-  };
-
-  _handleSendFilecoin = async ({ source, sourceAccount, signer, destination, fil }) => {
-    console.log({ source, destination, fil });
-
-    let num = new FilecoinNumber(fil, "FIL");
-
-    let msg = null;
-    if (signer) {
-      // this is a multisig transaction...
-      let res = await ipcRenderer.invoke(
+    // NOTE(jim): This will create a multisig message.
+    if (type === "MULTISIG") {
+      let mutliResponse = await ipcRenderer.invoke(
         "signing-propose-multisig",
         source,
         destination,
@@ -352,37 +314,29 @@ export default class App extends React.Component {
         num.toAttoFil()
       );
 
-      if (res.error) {
-        alert(res.error);
-        return { error: res.error };
+      if (multiResponse.error) {
+        alert(multiResponse.error);
+        return { error: multiResponse.error };
       }
 
-      msg = res.result;
-    } else {
-      const actor = await ipcRenderer.invoke("get-actor", source);
-      if (actor.error) {
-        alert(actor.error);
-        return { error: actor.error };
-      }
-
-      msg = {
-        from: source,
-        to: destination,
-        value: num.toAttoFil(),
-        nonce: actor.nonce,
-      };
+      message = multiResponse.result;
     }
 
-    console.log("message to estimate: ", msg);
-
-    let estim = await ipcRenderer.invoke("estimate-gas", msg);
-    console.log("estimation: ", estim);
-    if (estim.error) {
-      alert(estim.error);
-      return { error: estim.error };
+    console.log("message: ", { message });
+    let estimation = await ipcRenderer.invoke("estimate-gas", message);
+    console.log("estimation: ", { estimation });
+    if (estimation.error) {
+      alert(estimination.error);
+      return { error: estimination.error };
     }
 
-    return this._handleNavigate("SEND_CONFIRM", { source, destination, fil, estim, msg });
+    return this._handleNavigate("SEND_CONFIRM", {
+      source,
+      destination,
+      fil,
+      estim: estimation,
+      msg: message,
+    });
   };
 
   _handleConfirmSendMessage = async ({
@@ -520,7 +474,7 @@ export default class App extends React.Component {
       onAddPublicAddress: this._handleAddPublicAddress,
       onAddPublicAddressWithExistingData: this._handleAddPublicAddressWithExistingData,
       onDeleteAddress: this._handleDeleteAddress,
-      onSendFilecoin: this._handleSendFilecoin,
+      onSendFilecoin: this._handleSendMessage,
       onSendMessage: this._handleSendMessage,
       onConfirmSendMessage: this._handleConfirmSendMessage,
       onGetMessage: this._handleGetMessage,

@@ -109,6 +109,8 @@ export default class SceneSendFilecoin extends React.Component {
       sourceAccount: this.state.sourceAccount,
       signer: this.state.signer,
       destination: this.state.destination,
+      params: null,
+      method: null,
     });
 
     if (response.error) {

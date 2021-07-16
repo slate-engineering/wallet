@@ -12,7 +12,7 @@ import { NodejsProvider } from "@filecoin-shipyard/lotus-client-provider-nodejs"
 import { LotusRPC } from "@filecoin-shipyard/lotus-client-rpc";
 import { mainnet } from "@filecoin-shipyard/lotus-client-schema";
 
-const MULTI_SIG_ACTOR_ID = "bafkqadtgnfwc6mrpnv2wy5djonuwo";
+const MULTI_SIG_ACTOR_ID = "bafkqadtgnfwc6njpnv2wy5djonuwo";
 
 const getAccounts = {
   key: "get-accounts",
@@ -226,7 +226,7 @@ const getBalance = {
 
       const actor = await client.stateGetActor(address, []);
       console.log("get-balance result ...", { actor });
-      if (address.startsWith("f2")) {
+      if (address.startsWith("f0") || address.startsWith("f2")) {
         if (actor.Code["/"] === MULTI_SIG_ACTOR_ID) {
           type = 2;
         }
@@ -346,6 +346,8 @@ const serializeParams = {
   },
 };
 
+// proposal ui
+// proposal response
 const signingProposeMultisig = {
   key: "signing-propose-multisig",
   method: async (event, msig, destination, signer, value) => {
@@ -442,6 +444,8 @@ const signMessage = {
   },
 };
 
+// Multisig
+// You need this to get signers.
 const getMultiSigInfo = {
   key: "get-multisig-info",
   method: async (event, addr) => {
