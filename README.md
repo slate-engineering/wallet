@@ -12,7 +12,7 @@ EXPERIMENTAL. DO NOT USE UNLESS YOU ARE ONE HUNDRED PERCENT SURE YOU KNOW WHAT Y
 npm install
 npm i -D electron-rebuild
 ./node_modules/.bin/electron-rebuild
-npm run start
+npm run dev
 ```
 
 ### Package DMG
