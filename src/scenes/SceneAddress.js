@@ -44,6 +44,22 @@ export default class SceneAddress extends React.Component {
     }
   }
 
+  _handleGetMSInfo = async () => {
+    const account = this.props.accounts.addresses.find(
+      (account) => account.address === this.props.context.address
+    );
+
+    console.log(account);
+
+    const response = await ipcRenderer.invoke("get-multisig-info", { address: account.address });
+
+    if (response && response.error) {
+      return alert(response.error);
+    }
+
+    console.log(response);
+  };
+
   _handleRefresh = async ({ address }) => {
     this.setState({ refreshing: 1 });
     const response = await this.props.onRefreshAddress({ address });
@@ -160,6 +176,16 @@ export default class SceneAddress extends React.Component {
             >
               Refresh
             </Button>
+
+            {isMultiSig ? (
+              <Button
+                style={{ marginLeft: 16 }}
+                loading={this.state.refreshing}
+                onClick={() => this._handleGetMSInfo({ addr: address.address })}
+              >
+                Get MultiSig Data
+              </Button>
+            ) : null}
           </div>
 
           <Input

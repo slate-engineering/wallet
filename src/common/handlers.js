@@ -387,9 +387,9 @@ const signMessage = {
       if (signer.type == 1 && !Utilities.isEmpty(signer.path)) {
         let pathForSender = signer.path;
         if (!global.memory.transport) {
-          global.memory.transport = await TransportNodeHID.open("");
-          // TODO(why):
-          // pull this out into a shared 'getTransport' func
+          return {
+            error: "There is no ledger connection open.",
+          };
         }
 
         console.log("sign-message ... about to sign ... ", { message });
@@ -448,15 +448,15 @@ const signMessage = {
 // You need this to get signers.
 const getMultiSigInfo = {
   key: "get-multisig-info",
-  method: async (event, addr) => {
+  method: async (event, data) => {
     try {
-      console.log("get-multisig-info", { addr });
+      console.log("get-multisig-info", { data });
       const client = await HandlersUtilities.getClient();
-      const actor = await client.stateGetActor(addr, []);
-
-      if (actor.Code["/"] !== "bafkqadtgnfwc6mrpnv2wy5djonuwo") {
+      const actor = await client.stateGetActor(data.address, []);
+      console.log("get-multisig-info... actor ... ", actor);
+      if (actor.Code["/"] !== MULTI_SIG_ACTOR_ID) {
         return {
-          error: addr + " is not a multisig account",
+          error: `${data.address} is not a multisig account`,
         };
       }
     } catch (e) {
@@ -466,9 +466,10 @@ const getMultiSigInfo = {
       };
     }
 
+    const client = await HandlersUtilities.getClient();
     let out = null;
     try {
-      const resp = await client.stateReadState(addr, []);
+      const resp = await client.stateReadState(data.address, []);
       const state = resp.State;
       out = {
         balance: resp.Balance,
@@ -487,7 +488,7 @@ const getMultiSigInfo = {
     }
 
     try {
-      out.pending = await client.msigGetPending(addr, []);
+      out.pending = await client.msigGetPending(data.address, []);
     } catch (e) {
       console.log(e);
       return {
@@ -539,11 +540,11 @@ const getLedgerAddress = {
   key: "get-ledger-address",
   method: async (event, path) => {
     try {
-      console.log("get-ledger-address ... ");
       if (!global.memory.transport) {
-        global.memory.transport = await TransportNodeHID.open("");
+        return {
+          error: "There is no ledger connection open.",
+        };
       }
-
       const app = new FilecoinApp(global.memory.transport);
       const addrInfo = await app.getAddressAndPubKey(path);
       console.log("get-ledger-address ... ", { addrInfo });

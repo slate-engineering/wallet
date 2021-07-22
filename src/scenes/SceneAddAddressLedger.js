@@ -14,16 +14,16 @@ class LedgerStatus extends React.Component {
     loadingMap: {},
   };
 
-  _handleAddPublicAddress = async ({ address, path, compressedPK }) => {
-    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: 1 } });
+  _handleAddPublicAddress = async (fields) => {
+    this.setState({ loadingMap: { ...this.state.loadingMap, [fields.address]: 1 } });
 
     const response = await this.props.onAddPublicAddress({
-      address,
-      path,
-      compressedPK,
+      address: fields.address,
+      path: fields.path,
+      compressedPK: fields.compressedPK,
     });
 
-    this.setState({ loadingMap: { ...this.state.loadingMap, [address]: undefined } });
+    this.setState({ loadingMap: { ...this.state.loadingMap, [fields.address]: undefined } });
   };
 
   render() {
@@ -47,14 +47,19 @@ class LedgerStatus extends React.Component {
 
       case "addresses":
         let addrs = this.props.addresses ?? [];
-        const items = addrs.map((a) => {
+        const items = addrs.map((a, index) => {
           const existing = this.props.existingAddresses.find(
             (each) => each.address === a.addrString
           );
 
           const loading = this.state.loadingMap[a.addrString];
-
-          console.log(a);
+          if (!Utilities.isEmpty(a.error_message) && !a.addrString) {
+            return (
+              <li className="body-address-item" key={`${a.path}`}>
+                ({a.return_code}) {a.error_message}
+              </li>
+            );
+          }
 
           return (
             <li className="body-address-item" key={a.addrString}>
@@ -103,7 +108,6 @@ export default class SceneAddAddressPublic extends React.Component {
 
   async checkForLedger() {
     let ledgerResp = await ipcRenderer.invoke("get-ledger-version");
-
     if (ledgerResp.error) {
       this.setState({
         curState: "error",
@@ -113,7 +117,6 @@ export default class SceneAddAddressPublic extends React.Component {
     }
 
     const res = ledgerResp.result;
-
     if (res.device_locked) {
       this.setState({
         curState: "locked",
@@ -136,7 +139,7 @@ export default class SceneAddAddressPublic extends React.Component {
           curState: "error",
           errMsg: resp.error,
         });
-        return;
+        continue;
       }
 
       let addrInfo = resp.result;

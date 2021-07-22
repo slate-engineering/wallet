@@ -38,7 +38,7 @@
     "@filecoin-shipyard/lotus-client-rpc": "^0.2.1",
     "@filecoin-shipyard/lotus-client-schema": "^3.0.1",
     "@glif/filecoin-number": "^1.1.0",
-    "@ledgerhq/hw-transport-node-hid": "^6.1.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.2.0",
     "@zondax/filecoin-signing-tools": "^0.15.0",
     "@zondax/ledger-filecoin": "^0.11.2",
     "babel-plugin-module-resolver": "^4.1.0",
